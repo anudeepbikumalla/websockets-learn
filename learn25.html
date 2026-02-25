@@ -468,7 +468,39 @@
   
 
   
-  <!-- ✅ MARK COMPLETE -->
+  
+
+  <!-- 🌍 REAL-WORLD SCENARIOS -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:#111827;border:1px solid rgba(251,191,36,.2);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#fbbf24">🌍 Testing WebSockets — Who Does This?</div>
+      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Slack Engineering</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Slack tests WebSocket reconnection by simulating network drops in CI. They found a bug where rapid disconnect/reconnect caused duplicate messages.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Epic Games (Fortnite)</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Load tests simulate 100-player lobbies to ensure the WebSocket game server handles rapid-fire events (100+ messages/second) without lag.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏦</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Stripe</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Stripe's WebSocket integration tests verify that payment status webhooks arrive within 200ms. Slow delivery = lost revenue for merchants.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
     <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>

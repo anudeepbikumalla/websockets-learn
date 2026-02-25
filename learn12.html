@@ -864,7 +864,53 @@
   
 
   
-  <!-- ✅ MARK COMPLETE -->
+  
+
+  <!-- 🌍 REAL-WORLD SCENARIOS -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:#111827;border:1px solid rgba(251,191,36,.2);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#fbbf24">🌍 WS vs SSE vs Polling — Who Uses What?</div>
+      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📨</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Gmail (SSE)</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Gmail's notification system uses Server-Sent Events — the server pushes "You have new mail" without the client asking. SSE auto-reconnects if the connection drops.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🐦</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Twitter/X Feed (Long Polling → WS)</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Twitter originally used Long Polling for the timeline. They switched to WebSocket because polling wasted bandwidth with millions of users.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📊</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">GitHub Actions (SSE)</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Build logs stream via SSE — the server pushes each log line as it happens. No need for the client to send anything back.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Online Games (WebSocket)</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Games need full-duplex (player sends inputs, server sends world state). SSE can't do this — WebSocket is the only option.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
+          <div>
+            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Facebook Messenger (WebSocket)</div>
+            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Messenger needs two-way real-time communication. They use WebSocket with a custom MQTT protocol for efficiency.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
     <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
