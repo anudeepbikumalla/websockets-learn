@@ -61,15 +61,22 @@ function processWithPromise(data) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// SERVER A — Port 8080
-// PATTERN 1: Using .on() event handlers  (addEventListener / EventEmitter)
-// PATTERN 3: Callback-based server processing
-// PATTERN 4: async/await server processing
+// SERVER SETUP
+// Consolidated for Cloud Deployment (Single Port)
 // ═════════════════════════════════════════════════════════════════════════════
-const httpServer = http.createServer((_, res) => res.end("WS Teaching Server\n"));
-const wssWithOn = new WebSocket.Server({ server: httpServer });
+const wssWithOn = new WebSocket.Server({ noServer: true });
+const wssWithoutOn = new WebSocket.Server({ noServer: true });
 
-// ✅ PATTERN 1 — .on("connection") to get the socket, then .on() for all events
+const httpServer = http.createServer((req, res) => {
+  if (req.url === "/health") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    return res.end("ok");
+  }
+  res.writeHead(404);
+  res.end("WS Teaching Server - Use WebSocket to connect\n");
+});
+
+// ✅ PATTERN 1, 3, 4 — Logic for wssWithOn
 wssWithOn.on("connection", (ws, req) => {
   const ip = req.socket.remoteAddress;
   log.on(`New client connected from ${ip}`);
@@ -83,43 +90,24 @@ wssWithOn.on("connection", (ws, req) => {
     serverCode: "ws.on('message', (data) => { ... })",
   }));
 
-  // ✅ PATTERN 1 — .on("message") listens to incoming messages
+  // Logic remains the same...
   ws.on("message", async (raw) => {
-    log.on(`.on('message') fired — raw bytes received`);
-    log.teach("ws.on('message', handler) ← EventEmitter style listener");
-
     const text = raw.toString();
     let msg;
     try { msg = JSON.parse(text); } catch { msg = { type: "raw", data: text }; }
 
-    // ── PATTERN 3: callback-request ────────────────────────────────────────
     if (msg.type === "callback-request") {
-      log.cb(`callback-request received for: "${msg.data}"`);
-      log.teach("PATTERN 3: calling processWithCallback(data, (err,result) => {...})");
       processWithCallback(msg.data, (err, result) => {
-        if (err) {
-          log.err(`Callback error: ${err.message}`);
-          ws.send(JSON.stringify({ type: "callback-error", error: err.message }));
-        } else {
-          log.cb(`Callback succeeded — sending result back`);
-          ws.send(JSON.stringify({ type: "callback-response", pattern: "WITH CALLBACK", result }));
-        }
+        if (err) ws.send(JSON.stringify({ type: "callback-error", error: err.message }));
+        else ws.send(JSON.stringify({ type: "callback-response", pattern: "WITH CALLBACK", result }));
       });
-
-      // ── PATTERN 4: async-request ───────────────────────────────────────────
     } else if (msg.type === "async-request") {
-      log.nocb(`async-request received for: "${msg.data}"`);
-      log.teach("PATTERN 4: using 'await processWithPromise(data)' — no callback!");
       try {
         const result = await processWithPromise(msg.data);
-        log.nocb(`Async succeeded — sending result back`);
         ws.send(JSON.stringify({ type: "async-response", pattern: "WITHOUT CALLBACK (async/await)", result }));
       } catch (err) {
-        log.err(`Async error: ${err.message}`);
         ws.send(JSON.stringify({ type: "async-error", error: err.message }));
       }
-
-      // ── Echo ───────────────────────────────────────────────────────────────
     } else {
       ws.send(JSON.stringify({
         type: "echo",
@@ -131,20 +119,44 @@ wssWithOn.on("connection", (ws, req) => {
     }
   });
 
-  // ✅ PATTERN 1 — .on("close") and .on("error")
-  ws.on("close", (code) => {
-    log.on(`.on('close') fired. Code: ${code}`);
-    log.teach("ws.on('close', handler) ← fires when client disconnects");
-  });
-  ws.on("error", (err) => {
-    log.err(`.on('error') fired: ${err.message}`);
-  });
+  ws.on("close", (code) => log.on(`.on('close') fired. Code: ${code}`));
+  ws.on("error", (err) => log.err(`.on('error') fired: ${err.message}`));
+});
+
+// ✅ PATTERN 2 — Logic for wssWithoutOn (Direct Properties)
+wssWithoutOn.on("connection", (ws, req) => {
+  log.noon(`New client connected (Pattern 2)`);
+
+  ws.send(JSON.stringify({
+    type: "server-lesson",
+    pattern: "PATTERN 2 — WITHOUT .on()",
+    port: 8081,
+    message: "Connected to Port 8081! Server uses ws.onmessage = (event) {}",
+    serverCode: "ws.onmessage = (event) => { ... }",
+  }));
+
+  ws.onmessage = (event) => {
+    const text = event.data.toString();
+    let msg;
+    try { msg = JSON.parse(text); } catch { msg = { data: text }; }
+
+    ws.send(JSON.stringify({
+      type: "echo",
+      pattern: "PATTERN 2 — WITHOUT .on()",
+      echo: `[Port 8081 ws.onmessage] You sent: "${msg.data || text}"`,
+      serverCode: "ws.onmessage = (event) => { ... }",
+      note: "onmessage only allows ONE handler. .on() allows multiple.",
+      timestamp: new Date().toISOString(),
+    }));
+  };
+
+  ws.onclose = (event) => log.noon(`ws.onclose fired. Code: ${event.code}`);
+  ws.onerror = (event) => log.err(`ws.onerror fired`);
 });
 
 // ─── Start servers ────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 8080;
 
-// Update Server A to handle both if we're on a single port (like Render)
 httpServer.on("upgrade", (request, socket, head) => {
   const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
 
@@ -153,19 +165,9 @@ httpServer.on("upgrade", (request, socket, head) => {
       wssWithoutOn.emit("connection", ws, request);
     });
   } else {
-    // Default to Pattern 1
     wssWithOn.handleUpgrade(request, socket, head, (ws) => {
       wssWithOn.emit("connection", ws, request);
     });
-  }
-});
-
-// Add health check for deployments
-httpServer.on("request", (req, res) => {
-  if (req.url === "/health") {
-    res.writeHead(200);
-    res.end("ok");
-    return;
   }
 });
 
@@ -183,15 +185,16 @@ ${C.bold}${C.blue}╔═══════════════════�
   `);
 });
 
-// If local and not explicitly restricted, we can still open 8081 for backward compat
+// If local, open 8081 for backward compat with legacy files
 if (!process.env.PORT) {
   try {
-    const wss8081 = new WebSocket.Server({ port: 8081 });
-    wss8081.on("connection", (ws) => {
-      // Proxy to the same singleton logic if wanted, or just keep legacy
-      wssWithoutOn.emit("connection", ws); 
+    const wssLocal8081 = new WebSocket.Server({ port: 8081 });
+    wssLocal8081.on("connection", (ws, req) => {
+      // Just emit to the Pattern 2 logic
+      wssWithoutOn.emit("connection", ws, req);
     });
     console.log(`${C.yellow}[LOCAL] Also listening on Port 8081 for legacy learn files${C.reset}`);
-  } catch (e) {}
+  } catch (e) { }
 }
+
 
