@@ -520,7 +520,13 @@
     <h1>Broadcasting 📢</h1>
     <p>One client sends a message — the server forwards it to <em>every</em> connected client instantly. The backbone of
       every live feed, chat room, and real-time dashboard.</p>
+  
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid #fbbf2430">🟡 Intermediate</span>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.2)">⏱️ ~7 min read</span>
+    <a href="learn5.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);text-decoration:none">🔗 Prereq: Lesson 5: Reconnect</a>
   </div>
+</div>
 
   <div class="page">
 
@@ -750,7 +756,97 @@
 
   
 
-  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  
+
+  <!-- 🧠 TEST YOURSELF QUIZ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+        <span>🧠 Test Yourself</span>
+        <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/3 answered</span>
+      </div>
+      <div style="padding:18px">
+        <div id="quiz_9817_q0" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. What is <code>wss.clients</code>?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. An array of client names</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. A Set of all connected WebSocket objects</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. A single client reference</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. A Map of userIds</button>
+          </div>
+          <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q1" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. How do you broadcast to everyone EXCEPT the sender?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Use a filter()</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Check client !== ws in the forEach loop</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Use a separate broadcast server</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Send to wss.others</button>
+          </div>
+          <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q2" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">3. Why check <code>readyState === OPEN</code> before sending?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. For better performance</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Because some clients may have disconnected</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It's optional</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. To avoid duplicate messages</button>
+          </div>
+          <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const answers = [1, 1, 1];
+      const explains = ['wss.clients is a live Set that automatically tracks all currently connected WebSocket connections.', 'In the forEach, add <code>if (client !== ws)</code> to skip the connection that sent the original message.', 'Between getting the client list and sending, a client might disconnect. Sending to a closed socket throws an error.'];
+      let answered = new Set();
+      let correct = 0;
+      window.quiz_9817_check = function(qi, oi) {
+        if (answered.has(qi)) return;
+        answered.add(qi);
+        const isCorrect = oi === answers[qi];
+        if (isCorrect) correct++;
+        // Style the selected option
+        const btn = document.getElementById("quiz_9817_q" + qi + "_o" + oi);
+        btn.style.background = isCorrect ? "rgba(34,197,94,.15)" : "rgba(248,113,113,.15)";
+        btn.style.borderColor = isCorrect ? "#22c55e" : "#f87171";
+        btn.style.color = isCorrect ? "#22c55e" : "#f87171";
+        btn.textContent = (isCorrect ? "✅ " : "❌ ") + btn.textContent;
+        // If wrong, highlight correct answer
+        if (!isCorrect) {
+          const correctBtn = document.getElementById("quiz_9817_q" + qi + "_o" + answers[qi]);
+          correctBtn.style.background = "rgba(34,197,94,.15)";
+          correctBtn.style.borderColor = "#22c55e";
+          correctBtn.style.color = "#22c55e";
+        }
+        // Disable all options for this question
+        for(let j=0; j<4; j++) {
+          const b = document.getElementById("quiz_9817_q" + qi + "_o" + j);
+          if(b) b.style.pointerEvents = "none";
+        }
+        // Show explanation
+        const exp = document.getElementById("quiz_9817_q" + qi + "_explain");
+        exp.style.display = "block";
+        exp.style.background = isCorrect ? "rgba(34,197,94,.08)" : "rgba(248,113,113,.08)";
+        exp.style.borderLeft = "3px solid " + (isCorrect ? "#22c55e" : "#f87171");
+        exp.style.color = "#cbd5e1";
+        exp.innerHTML = (isCorrect ? "✅ Correct! " : "❌ Not quite. ") + explains[qi];
+        // Update score
+        const scoreEl = document.getElementById("quiz_9817_score");
+        scoreEl.textContent = correct + "/3 correct";
+        if (answered.size === 3) {
+          scoreEl.style.color = correct === 3 ? "#22c55e" : correct >= 2 ? "#fbbf24" : "#f87171";
+          scoreEl.style.fontWeight = "700";
+        }
+      };
+    })();
+  </script>
+
+<!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
     <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">

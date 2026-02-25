@@ -498,7 +498,87 @@
 
   
 
-  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  
+
+  <!-- 🧠 TEST YOURSELF QUIZ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+        <span>🧠 Test Yourself</span>
+        <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/2 answered</span>
+      </div>
+      <div style="padding:18px">
+        <div id="quiz_9817_q0" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. What does load testing tell you?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Code quality</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. How many concurrent users your server can handle before breaking</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Security vulnerabilities</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Code formatting issues</button>
+          </div>
+          <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q1" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. Why ramp up load gradually instead of all at once?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. It's more realistic</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. To find exactly where performance degrades</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. All-at-once doesn't work</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Gradual is faster</button>
+          </div>
+          <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const answers = [1, 1];
+      const explains = ["Load testing simulates hundreds/thousands of clients to find your server's breaking point.", 'Gradual ramp-up (10→100→1000) pinpoints the exact user count where performance starts degrading.'];
+      let answered = new Set();
+      let correct = 0;
+      window.quiz_9817_check = function(qi, oi) {
+        if (answered.has(qi)) return;
+        answered.add(qi);
+        const isCorrect = oi === answers[qi];
+        if (isCorrect) correct++;
+        // Style the selected option
+        const btn = document.getElementById("quiz_9817_q" + qi + "_o" + oi);
+        btn.style.background = isCorrect ? "rgba(34,197,94,.15)" : "rgba(248,113,113,.15)";
+        btn.style.borderColor = isCorrect ? "#22c55e" : "#f87171";
+        btn.style.color = isCorrect ? "#22c55e" : "#f87171";
+        btn.textContent = (isCorrect ? "✅ " : "❌ ") + btn.textContent;
+        // If wrong, highlight correct answer
+        if (!isCorrect) {
+          const correctBtn = document.getElementById("quiz_9817_q" + qi + "_o" + answers[qi]);
+          correctBtn.style.background = "rgba(34,197,94,.15)";
+          correctBtn.style.borderColor = "#22c55e";
+          correctBtn.style.color = "#22c55e";
+        }
+        // Disable all options for this question
+        for(let j=0; j<4; j++) {
+          const b = document.getElementById("quiz_9817_q" + qi + "_o" + j);
+          if(b) b.style.pointerEvents = "none";
+        }
+        // Show explanation
+        const exp = document.getElementById("quiz_9817_q" + qi + "_explain");
+        exp.style.display = "block";
+        exp.style.background = isCorrect ? "rgba(34,197,94,.08)" : "rgba(248,113,113,.08)";
+        exp.style.borderLeft = "3px solid " + (isCorrect ? "#22c55e" : "#f87171");
+        exp.style.color = "#cbd5e1";
+        exp.innerHTML = (isCorrect ? "✅ Correct! " : "❌ Not quite. ") + explains[qi];
+        // Update score
+        const scoreEl = document.getElementById("quiz_9817_score");
+        scoreEl.textContent = correct + "/2 correct";
+        if (answered.size === 2) {
+          scoreEl.style.color = correct === 2 ? "#22c55e" : correct >= 2 ? "#fbbf24" : "#f87171";
+          scoreEl.style.fontWeight = "700";
+        }
+      };
+    })();
+  </script>
+
+<!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
     <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">

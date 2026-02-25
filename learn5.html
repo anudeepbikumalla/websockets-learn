@@ -667,7 +667,13 @@
     <h1>Error Handling &amp; Auto-Reconnect 🔄</h1>
     <p>Real apps never assume the connection stays up forever. Learn to detect failures and bounce back automatically.
     </p>
+  
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid #fbbf2430">🟡 Intermediate</span>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.2)">⏱️ ~10 min read</span>
+    <a href="learn4.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);text-decoration:none">🔗 Prereq: Lesson 4: Chat App</a>
   </div>
+</div>
 
   <div class="page">
 
@@ -1000,7 +1006,107 @@
 
   
 
-  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  
+
+  <!-- 🧠 TEST YOURSELF QUIZ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+        <span>🧠 Test Yourself</span>
+        <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/4 answered</span>
+      </div>
+      <div style="padding:18px">
+        <div id="quiz_9817_q0" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. Close code <code>1000</code> means…</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Connection error</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Server crashed</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Normal, intentional close</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Timeout</button>
+          </div>
+          <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q1" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. What is exponential backoff?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Retrying faster each time</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Waiting longer between each retry (1s, 2s, 4s, 8s...)</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Disconnecting after one failure</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Sending multiple connection requests at once</button>
+          </div>
+          <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q2" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">3. Should you put reconnect logic in the <code>error</code> event?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Yes, always</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. No — put it in the close event</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It doesn't matter</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only on the server</button>
+          </div>
+          <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q3" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">4. What formula gives you capped exponential backoff?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q3_o0" onclick="quiz_9817_check(3,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. retries * 1000</button>
+            <button id="quiz_9817_q3_o1" onclick="quiz_9817_check(3,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Math.min(1000 * 2 ** retries, 30000)</button>
+            <button id="quiz_9817_q3_o2" onclick="quiz_9817_check(3,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Math.random() * 5000</button>
+            <button id="quiz_9817_q3_o3" onclick="quiz_9817_check(3,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. retries + 1000</button>
+          </div>
+          <div id="quiz_9817_q3_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const answers = [2, 1, 1, 1];
+      const explains = ['Code 1000 = clean, intentional close. Both sides agreed to disconnect. No need to reconnect.', 'Exponential backoff doubles the wait time between retries, avoiding flooding a struggling server.', 'The error event is always followed by a close event. Put reconnect logic in close to avoid double-reconnecting.', 'This doubles the delay each retry (1s→2s→4s→8s) but caps it at 30 seconds to avoid absurd waits.'];
+      let answered = new Set();
+      let correct = 0;
+      window.quiz_9817_check = function(qi, oi) {
+        if (answered.has(qi)) return;
+        answered.add(qi);
+        const isCorrect = oi === answers[qi];
+        if (isCorrect) correct++;
+        // Style the selected option
+        const btn = document.getElementById("quiz_9817_q" + qi + "_o" + oi);
+        btn.style.background = isCorrect ? "rgba(34,197,94,.15)" : "rgba(248,113,113,.15)";
+        btn.style.borderColor = isCorrect ? "#22c55e" : "#f87171";
+        btn.style.color = isCorrect ? "#22c55e" : "#f87171";
+        btn.textContent = (isCorrect ? "✅ " : "❌ ") + btn.textContent;
+        // If wrong, highlight correct answer
+        if (!isCorrect) {
+          const correctBtn = document.getElementById("quiz_9817_q" + qi + "_o" + answers[qi]);
+          correctBtn.style.background = "rgba(34,197,94,.15)";
+          correctBtn.style.borderColor = "#22c55e";
+          correctBtn.style.color = "#22c55e";
+        }
+        // Disable all options for this question
+        for(let j=0; j<4; j++) {
+          const b = document.getElementById("quiz_9817_q" + qi + "_o" + j);
+          if(b) b.style.pointerEvents = "none";
+        }
+        // Show explanation
+        const exp = document.getElementById("quiz_9817_q" + qi + "_explain");
+        exp.style.display = "block";
+        exp.style.background = isCorrect ? "rgba(34,197,94,.08)" : "rgba(248,113,113,.08)";
+        exp.style.borderLeft = "3px solid " + (isCorrect ? "#22c55e" : "#f87171");
+        exp.style.color = "#cbd5e1";
+        exp.innerHTML = (isCorrect ? "✅ Correct! " : "❌ Not quite. ") + explains[qi];
+        // Update score
+        const scoreEl = document.getElementById("quiz_9817_score");
+        scoreEl.textContent = correct + "/4 correct";
+        if (answered.size === 4) {
+          scoreEl.style.color = correct === 4 ? "#22c55e" : correct >= 3 ? "#fbbf24" : "#f87171";
+          scoreEl.style.fontWeight = "700";
+        }
+      };
+    })();
+  </script>
+
+<!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
     <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">

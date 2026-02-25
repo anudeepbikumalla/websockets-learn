@@ -760,7 +760,97 @@
 
   
 
-  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  
+
+  <!-- 🧠 TEST YOURSELF QUIZ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+        <span>🧠 Test Yourself</span>
+        <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/3 answered</span>
+      </div>
+      <div style="padding:18px">
+        <div id="quiz_9817_q0" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. What does <code>ws.ping()</code> do?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Sends a chat message</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Sends a built-in ping frame to check if client is alive</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Closes the connection</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Requests data from client</button>
+          </div>
+          <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q1" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. What happens if a client doesn't respond to a ping?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Nothing</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. The server should terminate the connection</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. The client auto-reconnects</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. A new ping is sent faster</button>
+          </div>
+          <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+        <div id="quiz_9817_q2" style="margin-bottom:20px">
+          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">3. How often should you run heartbeat checks?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Every 100ms</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Every 1 second</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Every 30 seconds</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Every 10 minutes</button>
+          </div>
+          <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const answers = [1, 1, 2];
+      const explains = ['Ping is a built-in WebSocket protocol frame. Browsers automatically respond with a pong frame.', 'No pong response means the client is dead. Call <code>ws.terminate()</code> to free up server resources.', '30 seconds is the sweet spot — frequent enough to detect dead connections, infrequent enough to avoid overhead.'];
+      let answered = new Set();
+      let correct = 0;
+      window.quiz_9817_check = function(qi, oi) {
+        if (answered.has(qi)) return;
+        answered.add(qi);
+        const isCorrect = oi === answers[qi];
+        if (isCorrect) correct++;
+        // Style the selected option
+        const btn = document.getElementById("quiz_9817_q" + qi + "_o" + oi);
+        btn.style.background = isCorrect ? "rgba(34,197,94,.15)" : "rgba(248,113,113,.15)";
+        btn.style.borderColor = isCorrect ? "#22c55e" : "#f87171";
+        btn.style.color = isCorrect ? "#22c55e" : "#f87171";
+        btn.textContent = (isCorrect ? "✅ " : "❌ ") + btn.textContent;
+        // If wrong, highlight correct answer
+        if (!isCorrect) {
+          const correctBtn = document.getElementById("quiz_9817_q" + qi + "_o" + answers[qi]);
+          correctBtn.style.background = "rgba(34,197,94,.15)";
+          correctBtn.style.borderColor = "#22c55e";
+          correctBtn.style.color = "#22c55e";
+        }
+        // Disable all options for this question
+        for(let j=0; j<4; j++) {
+          const b = document.getElementById("quiz_9817_q" + qi + "_o" + j);
+          if(b) b.style.pointerEvents = "none";
+        }
+        // Show explanation
+        const exp = document.getElementById("quiz_9817_q" + qi + "_explain");
+        exp.style.display = "block";
+        exp.style.background = isCorrect ? "rgba(34,197,94,.08)" : "rgba(248,113,113,.08)";
+        exp.style.borderLeft = "3px solid " + (isCorrect ? "#22c55e" : "#f87171");
+        exp.style.color = "#cbd5e1";
+        exp.innerHTML = (isCorrect ? "✅ Correct! " : "❌ Not quite. ") + explains[qi];
+        // Update score
+        const scoreEl = document.getElementById("quiz_9817_score");
+        scoreEl.textContent = correct + "/3 correct";
+        if (answered.size === 3) {
+          scoreEl.style.color = correct === 3 ? "#22c55e" : correct >= 2 ? "#fbbf24" : "#f87171";
+          scoreEl.style.fontWeight = "700";
+        }
+      };
+    })();
+  </script>
+
+<!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
     <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
