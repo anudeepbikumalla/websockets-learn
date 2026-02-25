@@ -15,7 +15,7 @@
       box-sizing: border-box;
     }
 
-        :root {
+    :root {
       --bg: #ffffff;
       --card: #f8fafc;
       --card2: #f1f5f9;
@@ -447,29 +447,60 @@
       background: var(--card2);
       color: var(--text);
     }
-  
+
     /* ── MOBILE RESPONSIVE ── */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 1.6rem !important; }
-      .hero p { font-size: .88rem !important; }
-      .page { padding: 24px 16px !important; }
-      .two-col { grid-template-columns: 1fr !important; }
-      .stats { flex-wrap: wrap; gap: 12px; }
-      .code, pre { font-size: .7rem !important; }
-      .nav-bar, [style*="justify-content:center"][style*="padding:24px"] { 
-        flex-direction: column; align-items: center; 
+      .hero h1 {
+        font-size: 1.6rem !important;
+      }
+
+      .hero p {
+        font-size: .88rem !important;
+      }
+
+      .page {
+        padding: 24px 16px !important;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr !important;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .code,
+      pre {
+        font-size: .7rem !important;
+      }
+
+      .nav-bar,
+      [style*="justify-content:center"][style*="padding:24px"] {
+        flex-direction: column;
+        align-items: center;
       }
     }
+
     @media (max-width: 480px) {
-      .hero { padding: 40px 16px 32px !important; }
-      .hero h1 { font-size: 1.3rem !important; }
-      section { margin-bottom: 24px !important; }
+      .hero {
+        padding: 40px 16px 32px !important;
+      }
+
+      .hero h1 {
+        font-size: 1.3rem !important;
+      }
+
+      section {
+        margin-bottom: 24px !important;
+      }
     }
-</style>
+  </style>
   <script src="config.js"></script>
 
   <script src="progress.js"></script>
-  
+
 </head>
 
 <body>
@@ -498,17 +529,29 @@
         <div class="stat-num">∞</div>
         <div class="stat-label">Live Demos</div>
       </div>
-    
-    <div id="progressSection" style="max-width:500px;margin:20px auto 0;padding:0 20px">
+    </div> <!-- Close stats div properly -->
+
+    <!-- ADVANCED PATTERNS CTA -->
+    <a href="patterns.html"
+      style="display:inline-flex;align-items:center;gap:10px;margin-top:28px;padding:12px 24px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);border-radius:12px;color:var(--purple);text-decoration:none;font-weight:700;transition:transform .2s;box-shadow:0 4px 12px rgba(124,58,237,.06)">
+      <span style="font-size:1.2rem">🚀</span>
+      Interactive Advanced Patterns Demo
+      <span style="font-size:1.2rem">→</span>
+    </a>
+
+    <div id="progressSection" style="max-width:500px;margin:28px auto 0;padding:0 20px">
       <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:6px">
         <span style="color:#94a3b8" id="progressLabel">0 / 28 lessons complete</span>
         <span style="color:var(--dim);font-weight:700" id="progressPercent">0%</span>
       </div>
-      <div style="height:8px;border-radius:99px;background:rgba(255,255,255,0.02);overflow:hidden;border:1px solid rgba(255,255,255,0.06)">
-        <div id="progressFill" style="height:100%;width:0%;border-radius:99px;background:rgba(255,255,255,0.2);transition:width .6s ease"></div>
+      <div
+        style="height:8px;border-radius:99px;background:rgba(255,255,255,0.02);overflow:hidden;border:1px solid rgba(255,255,255,0.06)">
+        <div id="progressFill"
+          style="height:100%;width:0%;border-radius:99px;background:rgba(255,255,255,0.2);transition:width .6s ease">
+        </div>
       </div>
     </div>
-</div>
+  </div>
   </div>
 
   <div class="page">
@@ -954,7 +997,8 @@
       </a>
     </div>
 
-    <div style="margin-top:36px;padding:18px;background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:12px;">
+    <div
+      style="margin-top:36px;padding:18px;background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:12px;">
       <div
         style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">
         📁 Local File Paths</div>
