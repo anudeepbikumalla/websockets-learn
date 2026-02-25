@@ -580,7 +580,58 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: End-To-End Encrypted (E2EE) Chat</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A secure messaging app guarantees that even the backend server administrators cannot read user messages. Standard SSL/TLS (wss://) only encrypts the traffic between the Browser and the Server, but the Node.js server itself sees the payload in plaintext.<br><br>**The End-to-End Flow:** The developers implement pure E2EE using the Web Crypto API. When Alice wants to message Bob, Alice's browser encrypts the chat message using Bob's public key mathematically *before* it ever touches the WebSocket. The payload pushed across `ws.send()` is undecipherable gibberish (Ciphertext). The Node server blindly records the gibberish to the database and broadcasts it to Bob. When Bob receives it, his browser uses his private secret key to decrypt the payload natively, rendering the plaintext. The server never knew what the message said.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// CLIENT A (Alice): Encrypting the payload before transmission
+async function sendEncryptedMessage(text, bobsPublicKey) {
+  // 1. Encode string to native bytes
+  const encoded = new TextEncoder().encode(text);
+  
+  // 2. Encrypt entirely in the browser using the Web Crypto API
+  const ciphertextBuffer = await window.crypto.subtle.encrypt(
+    { name: "RSA-OAEP" },
+    bobsPublicKey, 
+    encoded
+  );
+  
+  // 3. Send the raw encrypted ArrayBuffer down the pipe
+  // The Node server just sees an array of random math digits.
+  ws.send(ciphertextBuffer);
+}
+
+// CLIENT B (Bob): Decrypting the payload upon receipt
+ws.onmessage = async (event) =&gt; {
+  const ciphertextBuffer = await event.data.arrayBuffer();
+  
+  // 4. Decrypt using Bob's highly secure local Private Key
+  const decryptedBuffer = await window.crypto.subtle.decrypt(
+    { name: "RSA-OAEP" },
+    bobsPrivateKey, // Stored locally, never sent to server!
+    ciphertextBuffer
+  );
+  
+  // 5. Decode back to a readable string
+  const plainText = new TextDecoder().decode(decryptedBuffer);
+  console.log("Secret Message:", plainText);
+};</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

@@ -544,7 +544,82 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Defending Against CSWSH Attacks</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Unlike HTTP API calls governed by strict CORS headers, the WebSocket protocol does not have a Same-Origin Policy. If a user is logged into their bank in Tab 1, and opens `hacker.com` in Tab 2, `hacker.com` can run Javascript to silently open a WebSocket to `wss://bank.com`. The browser will automatically attach the user's cookies to the handshake! If the bank doesn't verify the origin, the hacker can drain the user's account.<br><br>**The End-to-End Flow:** The banking server MUST implement Cross-Site WebSocket Hijacking (CSWSH) protection. During the initial HTTP Handshake phase (`server.on('upgrade')`), the backend explicitly reads the standard `Origin` header attached by the browser. If `req.headers.origin` does not match `https://bank.com`, the server instantly aborts the TCP upgrade and destroys the socket socket before it fully opens. This perfectly neutralizes the attack.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// The CSWSH Defense Mechanism
+server.on('upgrade', (request, socket, head) =&gt; {
+  const origin = request.headers.origin;
+
+  // 1. A Strict Whitelist is Mandatory
+  const allowedOrigins = [
+    'https://mybank.com',
+    'https://app.mybank.com'
+  ];
+
+  // 2. Terminate the TCP socket if the Domain does not match
+  if (!allowedOrigins.includes(origin)) {
+    console.error(`Blocked malicious CSWSH attempt from ${origin}`);
+    socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+    socket.destroy();
+    return; // Halt Execution
+  }
+
+  // 3. Safe to proceed with the upgrade
+  wss.handleUpgrade(request, socket, head, (ws) =&gt; {
+    wss.emit('connection', ws, request);
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Secure URL WSS Connections</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A developer deploys their Node server to Heroku, which provides an SSL certificate automatically. But the HTML client code hardcodes `new WebSocket('ws://app.herokuapp.com')`. Chrome detects Mixed Content: attempting to open an unencrypted `ws://` connection from a secure `https://` web page. Chrome instantly blocks it to prevent Man-in-the-Middle (MITM) attacks.<br><br>**The End-to-End Flow:** The developer must use dynamic protocol detection. If the HTML page is loaded over `https:`, the Javascript automatically constructs the WebSocket URL using `wss:` (WebSocket Secure, which encrypts payload frames identically to TLS). If testing locally on `http:`, it uses `ws:`. This ensures production packets are encrypted and immune to packet-sniffing.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Dynamic Protocol Detection
+// Automatically switch between unencrypted (Dev) and secure (Production)
+
+const isSecure = window.location.protocol === 'https:';
+
+// ws:// for localhost, wss:// for production SSL
+const wsProtocol = isSecure ? 'wss://' : 'ws://';
+
+// Construct the URL dynamically based on where the app is hosted
+const wsUrl = `${wsProtocol}${window.location.host}/api/chat`;
+
+const ws = new WebSocket(wsUrl);
+
+ws.onopen = () =&gt; console.log(`Connected securely: ${isSecure}`);</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

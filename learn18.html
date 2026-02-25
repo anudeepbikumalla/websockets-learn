@@ -634,7 +634,100 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: The Offline Queue Manager</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A sales rep is filling out a complex form on a CRM web-app while riding the subway. The train goes into a tunnel, the WebSocket closes (`readyState === 3`). If the rep clicks 'Save Changes', calling `ws.send()` on a closed socket will throw a fatal Javascript exception, crushing the app and losing their typed data.<br><br>**The End-to-End Flow:** The developer wraps the native WebSockets API inside an Object. When the app calls `MySocket.send(data)`, the wrapper checks `ws.readyState`. If it is OPEN, it fires normally. If it is CLOSED or CONNECTING, it strictly intercepts the data and pushes it into a local memory Array (the Offline Queue). Meanwhile, a background Exponential Backoff loop is trying to reconnect. When the train exits the tunnel and the `onopen` event finally fires, the wrapper locks the queue, iterates through the Array, fires every saved packet to the server in order, and then flushes the array to zero.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>class ResilientSocket {
+  constructor(url) {
+    this.url = url;
+    this.offlineQueue = []; // Local RAM Buffer
+    this.connect();
+  }
+  
+  connect() {
+    this.ws = new WebSocket(this.url);
+    
+    this.ws.onopen = () =&gt; {
+      // Train exited the tunnel! Flush the backlog!
+      console.log(`Flushing ${this.offlineQueue.length} queued packets.`);
+      
+      while (this.offlineQueue.length &gt; 0) {
+        // Shift pulls the oldest message from the front of the array
+        const payload = this.offlineQueue.shift(); 
+        this.ws.send(payload);
+      }
+    };
+    
+    this.ws.onclose = () =&gt; setTimeout(() =&gt; this.connect(), 2000);
+  }
+
+  // The rest of your app calls THIS safely, never knowing if it's offline!
+  sendSafe(data) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(data));
+    } else {
+      console.warn("Offline! Queuing packet for later.");
+      this.offlineQueue.push(JSON.stringify(data));
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: The UI 'Syncing' Status Banner</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** If the app is buffering clicks into memory, the user has no idea. They will click 'Save Data' 5 times in frustration because the screen didn't load. When the connection restores, 5 duplicate packets will blast the server.<br><br>**The End-to-End Flow:** The wrapper class broadcasts its internal state changes to the UI layer. When the socket drops, it triggers a DOM function that shows a red 'Offline: Changes saved locally' banner, and greys out the main submit buttons to prevent furious clicking. When the connection restores, the wrapper triggers 'Syncing...' while it flushes the queue, and then finally turns green 'Online'.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Listen to native events to drive the UI state
+ws.addEventListener('close', () =&gt; {
+  document.getElementById('networkBanner').style.background = 'red';
+  document.getElementById('networkBanner').innerText = 'Offline - Working Local';
+  
+  // Visually disable critical buttons to prevent spam queues
+  document.getElementById('checkoutBtn').disabled = true;
+});
+
+ws.addEventListener('open', () =&gt; {
+  // If the queue has items, show yellow Syncing state
+  if (offlineQueue.length &gt; 0) {
+    document.getElementById('networkBanner').style.background = 'orange';
+    document.getElementById('networkBanner').innerText = 'Syncing...';
+  } else {
+    // Green Online state
+    document.getElementById('networkBanner').style.background = 'green';
+    document.getElementById('networkBanner').innerText = 'Online';
+    document.getElementById('checkoutBtn').disabled = false;
+  }
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

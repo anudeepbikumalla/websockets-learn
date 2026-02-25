@@ -847,7 +847,82 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Aggressive Zombie Connection Cleanup (Ping/Pong)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When mobile users drive through tunnels, their phones drop network packets but often fail to send the formal TCP `FIN` packet to gracefully close the connection. The server assumes the user is still online and keeps the WebSocket object in RAM. If 50,000 'zombie' connections stack up, the server runs out of memory and crashes.<br><br>**The End-to-End Flow:** The server acts aggressively to prune dead connections. Every 30 seconds, a massive `setInterval` loops through every active client. It checks a boolean flag `ws.isAlive`. If it's false, the server terminates the connection to free RAM. If it's true, it flips it to `false` and sends a tiny native WebSocket `Ping` frame down the wire. The biological browser automatically replies with a `Pong` frame natively (no JS needed). When the server receives the `Pong`, it flips `isAlive` back to `true`, sparing the client from the next execution of the grim reaper loop.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Run the Grim Reaper loop every 30 seconds
+setInterval(() =&gt; {
+  wss.clients.forEach((ws) =&gt; {
+    // If they didn't answer the LAST ping, they are a Zombie. Kill them.
+    if (ws.isAlive === false) return ws.terminate();
+
+    // Mark them as guilty until proven innocent
+    ws.isAlive = false; 
+    ws.ping(); // Send the native Ping frame
+  });
+}, 30000);
+
+// When a new client connects
+wss.on('connection', (ws) =&gt; {
+  ws.isAlive = true;
+  
+  // Native listener for the automatic Browser 'Pong' reply
+  ws.on('pong', () =&gt; {
+    ws.isAlive = true; // Mark them safe!
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Client-Side Keep-Alive Interval</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Some cloud Load Balancers (like AWS ALB or Nginx) are configured to aggressively terminate idling TCP connections after 60 seconds of silence to save resources. If an application requires a user to sit on a page reading an article for 5 minutes without interacting, the load balancer will silently sever the WebSocket.<br><br>**The End-to-End Flow:** The frontend Developer implements a 'Keep-Alive' heartbeat. When the connection opens, a Javascript `setInterval` starts ticking every 25 seconds. It pushes a tiny, meaningless JSON payload `{ type: 'HEARTBEAT' }` up to the server. The server receives it, but the application routing logic intentionally ignores it. However, because data physically traveled across the TCP pipe, the AWS Load Balancer resets its 60-second idle timer, keeping the connection perfectly alive indefinitely.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client-Side Javascript
+const ws = new WebSocket('wss://api.example.com');
+let keepAliveTimer;
+
+ws.addEventListener('open', () =&gt; {
+  // Start ticking to prevent Load Balancer idle timeouts
+  keepAliveTimer = setInterval(() =&gt; {
+    // Send a tiny payload just to force traffic across the wire
+    ws.send(JSON.stringify({ type: 'HEARTBEAT' }));
+  }, 25000); 
+});
+
+// CRITICAL: Always clear intervals when connections close to prevent memory leaks!
+ws.addEventListener('close', () =&gt; {
+  clearInterval(keepAliveTimer);
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

@@ -633,7 +633,54 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Clean Architectural Teardown</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The application is massive, with WebSockets, Audio Contexts, and Canvas elements. When a user navigates away from the page (or a React Component unmounts), if the developer fails to actively sever these connections, the browser experiences major 'Memory Leaks'. Over a few hours, the browser consumes 4GB of RAM and completely freezes.<br><br>**The End-to-End Flow:** The developer implements a standardized 3-step 'Teardown Sequence' triggered on component exit. 1) It executes `clearInterval(heartbeat)` to kill background loops. 2) It removes native DOM listeners (`window.removeEventListener`) that reference the socket. 3) It forcefully calls `ws.close(1000, 'User navigation')` to formally terminate the TCP tunnel. Finally, it sets `ws = null` to allow the Javascript Garbage Collector to permanently incinerate the WebSocket object from physical RAM.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>class NetworkManager {
+  constructor() {
+    this.ws = new WebSocket('wss://api.com');
+    this.pingTimer = setInterval(() =&gt; this.ws.send('PING'), 5000);
+    
+    // Natively bind to the browser's unload/close event
+    window.addEventListener('beforeunload', this.cleanup);
+  }
+
+  // The Master Teardown Engine
+  cleanup = () =&gt; {
+    console.log("Commencing Master Teardown Sequence...");
+    
+    // 1. Immediately halt all background intervals
+    clearInterval(this.pingTimer);
+    
+    // 2. Formally close the network tunnel with correct standard code
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.close(1000, "Normal Closure - App Unmounting");
+    }
+    
+    // 3. Detach listeners to unbind memory references
+    window.removeEventListener('beforeunload', this.cleanup);
+    
+    // 4. Annihilate the variable so the JS Garbage Collector can claim the RAM
+    this.ws = null;
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

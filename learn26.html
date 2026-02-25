@@ -600,7 +600,53 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: AWS API Gateway + Lambda WebSockets</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A startup builds an app that gets 0 users at night, but 50,000 active WebSocket users during a random 10-minute TV broadcast. Running massive EC2 servers 24/7 costs $5,000/month, wasting money on empty idle time.<br><br>**The End-to-End Flow:** They migrate fully to a Serverless architecture using AWS API Gateway WebSockets. Instead of a Node server holding sockets in RAM, AWS manages all 50,000 physical TCP connections automatically. When a user sends a message, AWS spins up a momentary Lambda function, passes the message to it, runs the business logic, and destroys the Lambda a microsecond later. The company now pays exactly $0.00 during the night, and only pennies per million messages during the live broadcast.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Serverless Lambda Function answering an incoming WS message
+const { ApiGatewayManagementApiClient, PostToConnectionCommand } = require('@aws-sdk/client-apigatewaymanagementapi');
+
+exports.handler = async (event) =&gt; {
+  // 1. AWS API Gateway passes the connection ID automatically
+  const connectionId = event.requestContext.connectionId;
+  const payload = JSON.parse(event.body);
+  
+  // 2. Process logic (e.g. save to DynamoDB)
+  await db.save(payload.chatMessage);
+  
+  // 3. To talk BACK to the user, we issue a Command to AWS API Gateway
+  const client = new ApiGatewayManagementApiClient({ 
+    endpoint: `https://${event.requestContext.domainName}/${event.requestContext.stage}` 
+  });
+  
+  const command = new PostToConnectionCommand({
+    ConnectionId: connectionId,
+    Data: Buffer.from(JSON.stringify({ status: "Message Saved!" }))
+  });
+
+  // Execute the command, AWS physically pushes the packet
+  await client.send(command);
+  
+  // 4. The Lambda dies instantly. No lingering servers!
+  return { statusCode: 200 };
+};</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

@@ -935,7 +935,83 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Server-Sent Events (SSE) Ticker</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A stock market website needs to stream live prices to users. Prices are one-way (Server to Client). The developers consider WebSockets, but realize WebSockets require complex manual reconnection logic, ping/pong heartbeats to keep load balancers happy, and don't natively work with HTTP/2 multiplexing.<br><br>**The End-to-End Flow:** The developers choose **Server-Sent Events (SSE)**. SSE operates entirely over standard HTTP. The server returns a `Content-Type: text/event-stream` header and keeps the HTTP request open indefinitely, flushing string data whenever a price changes. The browser's native `EventSource` API handles everything automatically—if the connection drops, the browser automatically reconnects without a single line of custom Javascript. It's the perfect, lightweight solution for unidirectional data.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Server (Express.js): Push-only data 
+app.get('/live-feed', (req, res) =&gt; {
+  // Set the magic headers to keep the HTTP request open forever
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive'
+  });
+
+  // Push data every 1 second
+  setInterval(() =&gt; {
+    res.write(`data: ${JSON.stringify({ price: 420.69 })}\n\n`);
+  }, 1000);
+});
+
+// Client: EventSource is built into all modern browsers natively!
+const source = new EventSource('/live-feed');
+source.onmessage = (e) =&gt; console.log("New Price:", e.data);
+// Note: No reconnect logic needed! EventSource reconnects automatically.</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: HTTP Long-Polling Fallback</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A major enterprise application is deployed to hospitals. Hospital IT networks are notoriously strict—they employ deep packet inspection firewalls that aggressively block all non-standard traffic, including the HTTP 101 WebSocket Upgrade request. If the app relies solely on WebSockets, it completely breaks for 30% of their enterprise customers.<br><br>**The End-to-End Flow:** The architects build an **HTTP Long-Polling Fallback**. The client attempts a WebSocket connection first. If it fails due to network restrictions, the client catches the error and silently switches to Long Polling. The browser sends a standard HTTP GET request. The server deliberately *hangs* the request, refusing to answer until new data arrives (e.g., 20 seconds later). When data finally arrives, the server completes the response. The instant the browser receives the data, it fires off a brand new HTTP GET request, creating a chain of pseudo-real-time updates that perfectly bypasses corporate firewalls.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client SDK fallback logic
+async function startLongPolling() {
+  try {
+    // 1. Send an HTTP request. The server will intentionally stall it.
+    const response = await fetch('https://api.myapp.com/poll-messages');
+    
+    // 2. 20 seconds later, the server finally replies with new data!
+    const data = await response.json();
+    processIncomingMessage(data);
+    
+  } catch (error) {
+    // Handle standard network timeouts
+    console.warn("Poll timeout, restarting...");
+  } finally {
+    // 3. The exact millisecond the request finishes, fire a brand new one!
+    // This creates an infinite, unbroken chain of hanging requests.
+    startLongPolling();
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

@@ -610,7 +610,97 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Redis List as a Ring Buffer</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When a new user joins a Twitch live stream chat, the chat box is completely empty. This is jarring and kills engagement, as they have no idea what the last 20 seconds of conversation were about.<br><br>**The End-to-End Flow:** The architects build a 'History Replay' buffer. When anyone sends a message, before broadcasting it, the Node.js server pushes the JSON object into a Redis List called `room_45_history`. Crucially, to prevent Redis from running out of RAM, they instantly run `LTRIM room_45_history 0 49`. This explicitly forces Redis to delete the oldest messages, acting as a perfect sliding window of the last 50 messages. When the new user joins, Node executes an `LRANGE`, grabs those 50 messages, and blasts them to the new user in a `HISTORY_SYNC` payload so their screen instantly populates.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const MAX_HISTORY = 50;
+
+async function saveHistoryAndBroadcast(roomId, messageObj) {
+  const redisKey = `room_history:${roomId}`;
+  const payloadStr = JSON.stringify(messageObj);
+
+  // 1. Push strictly to the top of the Redis Array (List)
+  await redis.lpush(redisKey, payloadStr);
+  
+  // 2. The Ring Buffer constraint: Slice off anything past index 49!
+  // This guarantees O(1) memory usage in Redis.
+  await redis.ltrim(redisKey, 0, MAX_HISTORY - 1);
+  
+  // 3. Proceed with standard broadcasting
+  broadcastToRoom(roomId, messageObj);
+}
+
+// When a brand new user connects to the room
+async function joinRoom(ws, roomId) {
+  // Fetch the entirety of the 50-item list
+  const history = await redis.lrange(`room_history:${roomId}`, 0, -1);
+  
+  // Blast it down the wire immediately
+  ws.send(JSON.stringify({ type: 'HISTORY_SYNC', data: history }));
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Client-side Array Deduping</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** In distributed systems, timing is chaotic. The new user asks the server for the History. While the database is fetching it, somebody sends a live `CHAT_MSG` to the room. The server broadcasts it. The client receives `CHAT_MSG`, renders it. A millisecond later, the `HISTORY_SYNC` payload arrives from the database... and it contains that exact same message. The client accidentally renders it twice!<br><br>**The End-to-End Flow:** The frontend must implement Idempotency (safe deduplication). Every message generated must have a unique UUID (`msgId`). The React/JS frontend maintains a `Set` of all rendered `msgIds`. When the massive `HISTORY_SYNC` array arrives, the frontend loops through it, checking `renderedSet.has(msg.id)`. It simply ignores any duplicates, pushing only truly new messages to the visual DOM.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const renderedMessageIds = new Set();
+const chatDom = document.getElementById('chat');
+
+function renderMessage(msg) {
+  // CRITICAL: Prevent duplicate rendering from race conditions
+  if (renderedMessageIds.has(msg.id)) return;
+  
+  // Mark it as rendered
+  renderedMessageIds.add(msg.id);
+  
+  // Physically draw it on the screen
+  const div = document.createElement('div');
+  div.innerText = msg.text;
+  chatDom.appendChild(div);
+}
+
+ws.onmessage = (event) =&gt; {
+  const payload = JSON.parse(event.data);
+  
+  // Handled exactly the same way!
+  if (payload.type === 'LIVE_CHAT') renderMessage(payload.data);
+  
+  // The history arrays just get dumped directly into the same function
+  if (payload.type === 'HISTORY_SYNC') {
+    payload.data.reverse().forEach(renderMessage);
+  }
+};</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

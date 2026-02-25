@@ -842,7 +842,76 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Horizontal Scaling with Redis Pub/Sub</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A chat app goes viral and hits 100,000 active users. A single Node.js server tops out around 30,000 concurrent WebSocket connections before crashing. The team spins up 4 servers behind a Load Balancer. User A connects to Server 1. User B connects to Server 2. When User A sends a chat message, it hits Server 1, but Server 1 has no idea who User B is. The chat is broken.<br><br>**The End-to-End Flow:** The architecture integrates a central Redis database using Pub/Sub (Publish/Subscribe). When User A sends a message to Server 1, Server 1 'Publishes' that payload to Redis. Redis instantly blasts that exact payload to Server 2, Server 3, and Server 4. Server 2 receives the Redis event and pushes it down the WebSocket pipe to User B. The servers now act as a unified cluster, allowing infinite horizontal scaling.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const Redis = require('ioredis');
+const redisSub = new Redis(); // Dedicated connection for Listening
+const redisPub = new Redis(); // Dedicated connection for Talking
+
+// 1. Subscribe to the global back-channel
+redisSub.subscribe('global_chat_relay');
+
+// 2. When ANY server in the world publishes to Redis, it triggers this:
+redisSub.on('message', (channel, payload) =&gt; {
+  // We forward the payload to ALL clients connected to THIS specific server
+  wss.clients.forEach(client =&gt; client.send(payload));
+});
+
+wss.on('connection', (ws) =&gt; {
+  ws.on('message', (msg) =&gt; {
+    // 3. When a local user speaks, we blast it to Redis so other servers hear it!
+    redisPub.publish('global_chat_relay', msg);
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: The 'Sticky Sessions' Requirement</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When scaling WebSockets behind an AWS Application Load Balancer (ALB) or NGINX, a standard round-robin configuration will send a client's HTTP Handshake request to Server A. If their Wi-Fi drops 10 minutes later and the browser attempts to auto-reconnect, the Load Balancer might randomly route them to Server B. If Server A was actively holding their specific Room configurations in local RAM, the user's state is completely lost.<br><br>**The End-to-End Flow:** The DevOps engineer specifically configures the Load Balancer to enable **Sticky Sessions** (sometimes called Session Affinity). When the initial Handshake completes, the ALB issues a specialized tracking Cookie to the browser. If the connection drops, the browser automatically sends that Cookie during the reconnect attempt. The ALB reads the Cookie and forces the new TCP connection to route back to the exact same Node.js pod (Server A), preserving all in-memory application state.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code># Architecture Configuration (Not Javascript)
+# When setting up WebSockets in Nginx, you must instruct the proxy 
+# to hash the client's IP address to ensure they always hit the same backend.
+
+upstream websocket_cluster {
+    # The 'ip_hash' directive creates Sticky Sessions automatically!
+    ip_hash; 
+    
+    server 10.0.0.1:8080; # Node Server 1
+    server 10.0.0.2:8080; # Node Server 2
+    server 10.0.0.3:8080; # Node Server 3
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

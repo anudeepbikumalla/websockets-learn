@@ -875,7 +875,89 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Live Audio Streaming (Web Audio API)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A startup is building a competitor to Clubhouse or Discord Voice. Sending raw audio data as Base64 strings inside JSON objects introduces a 33% file size bloat and massive CPU overhead for encoding/decoding, creating unacceptable latency for live conversation.<br><br>**The End-to-End Flow:** WebSockets natively support Binary Frames. The frontend asks the server for audio and specifically sets `ws.binaryType = 'arraybuffer'`. The backend streams raw, unencoded Opus or MP3 packets directly over the wire as raw bytes. The browser receives these pure binary chunks, hands them directly to the native C++ `AudioContext` engine in the browser (bypassing the Javascript engine's garbage collector), and plays the audio instantly with near-zero latency.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client: Set the socket to expect raw binary hardware buffers
+const ws = new WebSocket('wss://radio.stream/live');
+ws.binaryType = "arraybuffer";
+
+// Initialize the browser's high-performance audio engine
+const audioContext = new AudioContext();
+
+ws.addEventListener('message', async (event) =&gt; {
+  // Intercept the raw binary packet
+  if (event.data instanceof ArrayBuffer) {
+    
+    // Decode the raw MP3/Opus frames
+    const audioBuffer = await audioContext.decodeAudioData(event.data);
+    
+    // Create a playback source and route it to the speakers
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+    source.start(); 
+  }
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Large File Uploader (Chunking)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A user wants to upload a 2GB 4K video file. Standard HTTP POST requests for a 2GB file will often fail midway through, forcing the user to start over from 0%. It also ties up an entire HTTP worker on the backend for several minutes.<br><br>**The End-to-End Flow:** The developer uses the HTML5 File API to slice the massive 2GB file into tiny 64 Kilobyte chunks on the frontend. A recursive WebSocket function grabs the first 64kb Blob and pushes it down the pipe as binary data. The backend receives the chunk, appends it to a file stream on the hard drive, and replies with 'ACK' (Acknowledge). The frontend receives the 'ACK' and immediately fires the next 64kb chunk. If the connection drops, the client simply resumes uploading from the exact chunk it left off on!</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client: Upload a massive file in stable, resilient chunks
+const fileInput = document.getElementById('uploader').files[0];
+const CHUNK_SIZE = 64 * 1024; // 64 Kilobytes
+
+let offset = 0;
+
+function uploadNextChunk() {
+  if (offset &gt;= fileInput.size) {
+    return console.log("Upload 100% Complete!");
+  }
+  
+  // Slice a tiny native Blob out of the massive file
+  const chunk = fileInput.slice(offset, offset + CHUNK_SIZE);
+  
+  // Send the raw binary chunk (No JSON stringification!)
+  ws.send(chunk); 
+  offset += CHUNK_SIZE;
+}
+
+// When the server confirms it saved the chunk, fire the next one!
+ws.addEventListener('message', (e) =&gt; { 
+  if (e.data === 'ACK') uploadNextChunk(); 
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

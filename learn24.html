@@ -586,7 +586,95 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Worker Thread Offloading</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Node.js executes Javascript on a single thread. If User A sends a WebSocket request to generate a 4000x4000 PDF report, Node spends 5 full seconds processing it. During those 5 seconds, Node literally cannot process `onmessage` events from User B, C, or D. The entire server hangs.<br><br>**The End-to-End Flow:** To prevent the Event Loop from blocking, the architect offloads the heavy work to a Node.js Worker Thread. When the massive PDF request arrives, the primary thread simply passes the data to a background CPU thread and instantly goes back to listening for new WebSocket messages. 5 seconds later, the background Thread finishes, hands the PDF bytes back to the primary thread, which then pushes the data down User A's socket. Concurrent perfection!</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const { Worker } = require('worker_threads');
+
+ws.on('message', (msg) =&gt; {
+  const data = JSON.parse(msg);
+  
+  if (data.type === 'GENERATE_REPORT') {
+    // 1. DO NOT parse the PDF here! It will block the entire server!
+    
+    // 2. Spin up a separate CPU thread entirely
+    const worker = new Worker('./pdf-generator-thread.js', { 
+      workerData: data.payload 
+    });
+    
+    // 3. Listen for the background thread to finish its job
+    worker.on('message', (pdfBuffer) =&gt; {
+      // 4. Thread finished! Stream it down the pipe safely.
+      ws.send(pdfBuffer);
+    });
+    
+    worker.on('error', (err) =&gt; console.error(err));
+  }
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Batching High-Velocity Broadcasts</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A cryptocurrency exchange streams 5,000 price ticks per second. If the server executes `wss.clients.forEach(c => c.send(tick))` 5,000 times a second, it saturates the TCP adapter and the client's browser crashes trying to trigger 5,000 DOM repaints a second.<br><br>**The End-to-End Flow:** The server employs a **Message Batcher**. Instead of broadcasting every tick instantly, the server pushes the ticks into a RAM array. A `setInterval` runs exactly 10 times a second (100ms). When the interval fires, it JSON-stringifies the *entire array of 500 ticks* into a single string, broadcasts that single enormous packet, and then clears the array. The client receives 1 packet, loops through the 500 ticks in one pass, updates the React state once, triggering only 1 DOM repaint. CPU load drops by 90%.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>let tickBuffer = [];
+
+// 1. When a new trade happens, just store it in RAM temporarily
+function onCryptoTrade(trade) {
+  tickBuffer.push(trade);
+}
+
+// 2. The Global Broadcaster Loop (Runs exactly 10x a second)
+setInterval(() =&gt; {
+  if (tickBuffer.length === 0) return; // Nothing to batc
+  
+  // Stringify the entire array ONCE to save CPU
+  const batchPayload = JSON.stringify({
+    type: 'BATCH_UPDATE',
+    data: tickBuffer
+  });
+  
+  // Blast it to all clients
+  wss.clients.forEach((client) =&gt; {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(batchPayload);
+    }
+  });
+  
+  // Clear the buffer for the next 100ms window!
+  tickBuffer = []; 
+  
+}, 100);</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

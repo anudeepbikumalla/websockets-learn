@@ -647,7 +647,96 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Measuring Per-Packet Processing Time</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A multiplayer browser game experiences micro-stutters every 3 minutes. The developers suspect the Node.js server is freezing while doing heavy pathfinding calculations on incoming WebSockets, but they need mathematical proof.<br><br>**The End-to-End Flow:** The engineers implement precise performance tracking on the backend. When a `PLAYER_MOVE` packet arrives, they capture the exact CPU microsecond using `process.hrtime.bigint()`. They execute the pathfinding algorithm. Immediately after, they record the time again, calculate the difference in milliseconds, and log it to a specialized APM (Application Performance Monitoring) tool like Datadog. If a specific packet takes longer than 16ms (which causes framedrops at 60Hz), the system triggers an alert.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>ws.on('message', (msg) =&gt; {
+  // 1. Snapshot the high-resolution CPU atomic clock (nanoseconds!)
+  const start = process.hrtime.bigint();
+  
+  const payload = JSON.parse(msg);
+  
+  if (payload.type === 'HEAVY_CALC') {
+    // 2. Execute the potentially slow, blocking logic
+    calculateComplexPathfinding(payload.data);
+  }
+  
+  // 3. Snapshot the clock again
+  const end = process.hrtime.bigint();
+  
+  // 4. Convert nanoseconds to elegant milliseconds
+  const timeTakenMs = Number(end - start) / 1000000;
+  
+  // Log anything that ruins the 60FPS threshold (16.6ms)
+  if (timeTakenMs &gt; 16) {
+    console.warn(`Performance Warning: Core event took ${timeTakenMs}ms`);
+  }
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: The UI 'Ping' Latency Display</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Gamers want to know their latency to the server. If the connection degrades to 300ms, they want the UI to show a red signal bar so they know to move closer to their router.<br><br>**The End-to-End Flow:** The frontend client initiates a custom 'Echo Ping'. It records `performance.now()`, attaches that timestamp inside a JSON payload, and fires it at the server. The server receives it and instantly fires the exact same JSON back (without processing anything). The frontend receives the echo, checks `performance.now()` again, subtracts the embedded timestamp, and divides by 2 to calculate the one-way trip latency. It then updates the UI to show 'Ping: 45ms'.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>let pingInterval;
+
+ws.addEventListener('open', () =&gt; {
+  // Fire a latency probe every second
+  pingInterval = setInterval(() =&gt; {
+    // Inject the exact high-res millisecond we fired the packet
+    const payload = { type: 'LATENCY_PROBE', sentAt: performance.now() };
+    ws.send(JSON.stringify(payload));
+  }, 1000);
+});
+
+ws.addEventListener('message', (event) =&gt; {
+  const data = JSON.parse(event.data);
+  
+  if (data.type === 'LATENCY_PROBE_REPLY') {
+    // Snapshot the clock the instant the packet returns
+    const returnedAt = performance.now();
+    
+    // Calculate total Round Trip Time (RTT)
+    const roundTripTime = returnedAt - data.sentAt;
+    
+    // Update the UI
+    document.getElementById('pingDisplay').innerText = `${Math.round(roundTripTime)} ms`;
+    
+    if (roundTripTime &gt; 150) {
+      document.getElementById('pingDisplay').style.color = 'red';
+    }
+  }
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

@@ -656,7 +656,89 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: The Debounced 'Typing' Broadcaster</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When a user types a message in iMessage, their phone can generate 10 'keydown' events per second. If the frontend blasts a WebSocket payload for every single keystroke, it will hammer the backend with millions of useless packets per minute, draining the user's mobile battery and burning server bandwidth.<br><br>**The End-to-End Flow:** The frontend developer implements a **Debouncer**. When the user presses a key, it pushes *one* `TYPING_START` packet over the WebSocket, and then sets a local Javascript variable: `isTyping = true`. Any further keystrokes are ignored by the network layer while `isTyping` is true. Simultaneously, a `setTimeout` clock starts ticking for 2000ms. Every time the user hits a key, the clock resets. If the user pauses typing for 2 full seconds, the clock hits zero, `isTyping` flips to `false`, and exactly *one* `TYPING_STOP` packet is sent to the server.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>let typingTimeout;
+let isTyping = false;
+
+document.getElementById('chatBox').addEventListener('input', () =&gt; {
+  // 1. Only notify the server on the VERY FIRST keystroke
+  if (!isTyping) {
+    isTyping = true;
+    ws.send(JSON.stringify({ type: "TYPING_START" }));
+  }
+
+  // 2. Reset the countdown timer mathematically on EVERY keystroke
+  clearTimeout(typingTimeout);
+  
+  // 3. If silence persists for 2s, notify the server we stopped
+  typingTimeout = setTimeout(() =&gt; {
+    isTyping = false;
+    ws.send(JSON.stringify({ type: "TYPING_STOP" }));
+  }, 2000);
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: The UI Rendering Clean-up</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The application shows 'Bob is typing...' at the bottom of the screen. If Bob's laptop suddenly loses power mid-sentence, his browser will never send the `TYPING_STOP` packet to the server. The UI will be permanently stuck claiming Bob is typing forever.<br><br>**The End-to-End Flow:** The frontend receiving the events must defend itself against network ghosting. When the frontend receives `TYPING_START` from the server, it renders the UI bubble and starts its *own* local 3-second `setTimeout`. If it receives another `TYPING_START` or normal chat message from Bob, it clears the timer. If 3 seconds pass in total silence, the frontend's local timer automatically destroys the 'Bob is typing' bubble, preventing permanent UI glitches.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const activeTypers = new Map();
+
+ws.onmessage = (event) =&gt; {
+  const data = JSON.parse(event.data);
+
+  if (data.type === 'TYPING_START') {
+    // Show the UI bubble natively
+    renderTypingBubble(data.user);
+    
+    // Clear any existing self-destruct timer for this specific user
+    clearTimeout(activeTypers.get(data.user));
+    
+    // Start a fresh 3-second self-destruct timer
+    const killTimer = setTimeout(() =&gt; {
+      removeTypingBubble(data.user);
+      activeTypers.delete(data.user);
+    }, 3000); // UI defensive clean-up
+    
+    activeTypers.set(data.user, killTimer);
+  }
+  
+  if (data.type === 'TYPING_STOP') {
+    removeTypingBubble(data.user);
+  }
+};</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

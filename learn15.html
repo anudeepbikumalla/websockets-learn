@@ -652,7 +652,95 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Global Presence Registry (Who's Online)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A collaborative whiteboard app (like Figma) needs to show exactly who is currently viewing the canvas. If the server just blindly broadcasts 'User connected', and user closes their laptop causing an ungraceful disconnect, their avatar might stay on the screen forever as a 'ghost'.<br><br>**The End-to-End Flow:** The Node.js server maintains a single source of truth in RAM: a JavaScript `Map()`. As soon as a user joins, the Map sets `onlineUsers.set(userId, { name, color })`. The server then pushes a global broadcast: `USER_JOINED`. Crucially, when the WebSocket drops (either gracefully or via a timeout), the `ws.onclose` event fires. This handler immediately deletes the user from the Map `onlineUsers.delete(userId)`, and broadcasts a global `USER_LEFT` event. The frontends receive this and instantly erase the avatar from the UI.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// The Single Source of Truth for Presence
+const onlineUsers = new Map();
+
+wss.on('connection', (ws, req) =&gt; {
+  // Extract user info from the initial handshake
+  const userId = req.url.split('?id=')[1]; 
+  
+  // 1. Add to Registry
+  onlineUsers.set(userId, { joinedAt: Date.now() });
+  
+  // 2. Broadcast the 'Join' to everyone else
+  broadcast({ type: 'PRESENCE_JOIN', user: userId });
+  
+  // 3. Send the NEW kid the entire current roster immediately
+  ws.send(JSON.stringify({ 
+    type: 'PRESENCE_SYNC', 
+    roster: Array.from(onlineUsers.entries()) 
+  }));
+
+  ws.on('close', () =&gt; {
+    // 4. Remove from Map and broadcast the 'Leave'
+    onlineUsers.delete(userId);
+    broadcast({ type: 'PRESENCE_LEAVE', user: userId });
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Multi-Tab Presence Deduplication</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A user opens WhatsApp Web in 4 different browser tabs simultaneously. If the backend naivey maps `userId` to a single WebSocket, the 4th tab will overwrite the 1st tab in the Map. When they close exactly 1 tab, the server fires `USER_LEFT` and all their friends see them go offline, even though they still have 3 tabs open!<br><br>**The End-to-End Flow:** The backend Map does not map `userId -> socket`. It maps `userId -> Set(sockets)`. When the user opens Tab 1, the Set is created `(Size: 1)` and `USER_JOINED` is broadcasted. When Tab 2 opens, the socket is just added to the Set `(Size: 2)`. When Tab 1 closes, the socket is removed `(Size: 1)`. Because the Size is greater than 0, the server knows the user is still physically online somewhere, so it *suppresses* the `USER_LEFT` broadcast. The broadcast only fires when the Set size hits exactly 0.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const userSessions = new Map(); // Map&lt;UserId, Set&lt;WebSocket&gt;&gt;
+
+function handleUserConnect(ws, userId) {
+  if (!userSessions.has(userId)) {
+    // This is their FIRST tab opening. Tell the world they are online!
+    userSessions.set(userId, new Set());
+    broadcast({ type: 'STATUS_ONLINE', userId });
+  }
+  
+  // Add this specific browser tab to their active sessions
+  userSessions.get(userId).add(ws);
+}
+
+function handleUserDisconnect(ws, userId) {
+  const sessions = userSessions.get(userId);
+  if (!sessions) return;
+  
+  sessions.delete(ws); // Remove this specific tab
+  
+  if (sessions.size === 0) {
+    // ZERO tabs left! They are truly offline now.
+    broadcast({ type: 'STATUS_OFFLINE', userId });
+    userSessions.delete(userId); // Memory cleanup
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

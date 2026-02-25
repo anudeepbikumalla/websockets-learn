@@ -573,7 +573,101 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: React Component Unmount Memory Leaks</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** In React, a developer puts `const ws = new WebSocket(...)` directly inside a `<ChatRoom>` component. The user navigates between the 'Home' and 'Chat' pages 10 times. Because React completely destroys and rebuilds the component each time, the browser ends up opening 10 physical WebSocket connections simultaneously. Background network traffic explodes, battery drains, and the server crashes from ghost connections.<br><br>**The End-to-End Flow:** WebSockets must be cleanly managed inside a `useEffect` hook. The initialization of the socket happens when the component Mounts. Most importantly, the `useEffect` must return a 'Cleanup Function'. When React destroys the component (Unmounts), React executes this cleanup function, which forcefully executes `ws.close()`. This ensures absolute 1:1 parity between what is on the screen and what is on the network adapter.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>import React, { useEffect, useState } from 'react';
+
+function LiveTicker({ symbol }) {
+  const [price, setPrice] = useState(0);
+
+  useEffect(() =&gt; {
+    // 1. Component Mounts: Open the hardware connection
+    const ws = new WebSocket(`wss://api.stocks.com/ticker/${symbol}`);
+    
+    ws.onmessage = (e) =&gt; {
+      setPrice(JSON.parse(e.data).currentPrice);
+    };
+
+    // 2. Component Unmounts (or 'symbol' changes): Clean up!
+    return () =&gt; {
+      console.log(`Cleaning up old connection to ${symbol}`);
+      
+      // Forcefully kill the hardware connection to free RAM/Ports
+      if (ws.readyState !== WebSocket.CLOSED) {
+        ws.close(); 
+      }
+    };
+  }, [symbol]); // Re-run if they search for a new stock
+
+  return &lt;div&gt;{symbol}: ${price}&lt;/div&gt;;
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: The Global 'useWebSocket' Custom Hook</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Three different UI components deeply nested in the React tree (Navbar, Chatbox, Profile) all need access to send data down the same WebSocket pipeline. Passing the `ws` object down through 10 layers of React props (Prop Drilling) makes the codebase an unmaintainable nightmare.<br><br>**The End-to-End Flow:** The architect abstracts the pure network logic into a Custom React Hook (`useWebSocket`) wrapped inside a React Context Provider. The App wraps this Provider at the very highest level (above the Router). The Provider automatically handles the single global connection and reconnection logic. Any nested component simply imports `useWebSocket()`, which grants them instant access to the `sendMessage()` function and the unified `lastMessage` state object, completely bypassing prop-drilling.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>import { createContext, useContext, useEffect, useRef } from 'react';
+
+// 1. Create a global 'Cloud' bucket holding the network pipe
+const WsContext = createContext(null);
+
+export function WebSocketProvider({ children }) {
+  const wsRef = useRef(null); // Keep reference across renders
+
+  useEffect(() =&gt; {
+    // Initialize exactly ONCE at the app root level
+    wsRef.current = new WebSocket('wss://api.global.com');
+    return () =&gt; wsRef.current.close();
+  }, []);
+
+  // Expose a clean, safe wrapper function, NOT the raw socket
+  const triggerEvent = (eventName, data) =&gt; {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ eventName, data }));
+    }
+  };
+
+  return (
+    &lt;WsContext.Provider value={{ triggerEvent }}&gt;
+      {children}
+    &lt;/WsContext.Provider&gt;
+  );
+}
+
+// 2. Any deep component can grab the function instantly
+export const useAppSocket = () =&gt; useContext(WsContext);</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

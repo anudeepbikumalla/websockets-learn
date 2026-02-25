@@ -657,7 +657,79 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Emitting Custom Namespaces (Socket.io)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** In native WebSockets, everything is blasted through a single `onmessage` event listener, forcing you to build huge `switch` statements to figure out if the JSON is a chat system, an admin alert, or a map update. It's tedious to write raw routers from scratch.<br><br>**The End-to-End Flow:** The developer switches to the **Socket.io** library, which abstracts the physical connection away. Socket.io natively supports 'Event Emitting'. Instead of sending raw JSON, the client explicitly fires `.emit('map_move', {x: 5})`. The Server doesn't use `onmessage`. It explicitly binds `.on('map_move', handler)`. This creates beautiful, declarative, perfectly separated event endpoints that act exactly like HTTP routing right out of the box.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Server (Node.js + Socket.io)
+const io = require('socket.io')(3000);
+
+io.on('connection', (socket) =&gt; {
+  console.log(`User connected: ${socket.id}`);
+
+  // Beautifully clean routing by string names!
+  socket.on('send_chat', (data) =&gt; {
+    // Automatically broadcast to everyone ELSE (excludes the sender) natively!
+    socket.broadcast.emit('new_chat', data); 
+  });
+
+  socket.on('player_moved', (data) =&gt; {
+    validateCheatEngine(data);
+    io.emit('update_map', data); // Broadcast to EVERYONE naturally
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: The Magic HTTP Fallback (Engine.IO)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A user is employing a strict corporate proxy that completely strips the `Upgrade: websocket` HTTP header. If they use a native `new WebSocket()`, the connection instantly fails with a fatal 400 error, locking them out of the application.<br><br>**The End-to-End Flow:** The developers rely on Socket.io, which internally runs an engine called Engine.IO. When the page loads, Socket.io doesn't even try to open a WebSocket. It purposely sends a standard HTTP Long-Polling GET request first. Because it's HTTP, the corporate proxy allows it. Socket.io establishes the data stream. *Then*, in the background, it quietly attempts to probe the port with a WebSocket upgrade. If the proxy blocks it, Socket.io shrugs and seamlessly continues using HTTP Long-Polling. If it succeeds, it gracefully 'Upgrades' the transport to WebSockets without losing a single packet. The user remains connected either way.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client UI logic
+// There's no magical code required. Socket.io's magic is automatic!
+import { io } from "socket.io-client";
+
+// This will FIRST fire an HTTP XHR request: /socket.io/?EIO=4&transport=polling
+// Then it will automatically attempt an HTTP 101 Upgrade: /socket.io/?...transport=websocket
+const socket = io("https://api.myplatform.com");
+
+socket.on("connect", () =&gt; {
+  // You can actually inspect which physical transport won the negotiation!
+  console.log(`Currently using underlying protocol: ${socket.io.engine.transport.name}`); // "polling" or "websocket"
+  
+  // As the silent background upgrade happens, this event fires
+  socket.io.engine.on("upgrade", () =&gt; {
+    console.log(`Massive speed boost! Upgraded to: ${socket.io.engine.transport.name}`); // "websocket"
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

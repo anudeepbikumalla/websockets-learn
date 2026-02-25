@@ -796,7 +796,91 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Secure Dashboard Authentication (JWT)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A financial dashboard cannot allow unauthenticated users to open a WebSocket and stream live banking data. However, the native `new WebSocket()` API in the browser does not support custom HTTP headers (like `Authorization: Bearer <token>`). This breaks standard JWT authentication flows.<br><br>**The End-to-End Flow:** To bypass this browser limitation, the frontend attaches the JSON Web Token directly as a URL Query Parameter when initiating the handshake (`wss://api.com?token=xyz`). On the Node.js backend, instead of passing the raw socket to the WebSocket library immediately, the server intercepts the raw HTTP `upgrade` event. It extracts the token from the URL, cryptographically verifies the JWT, and only if valid, explicitly calls `handleUpgrade()`. If the token is fake or expired, the backend instantly destroys the TCP socket before the WebSocket protocol even starts, ensuring absolute security.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Server-side: Intercepting the raw HTTP Upgrade request
+server.on('upgrade', async (request, socket, head) =&gt; {
+  // 1. Parse the URL to find the appended token
+  const url = new URL(request.url, 'http://localhost');
+  const token = url.searchParams.get('token');
+
+  try {
+    // 2. Cryptographically verify the JWT (e.g., using jsonwebtoken library)
+    const user = await verifyJwt(token); 
+    
+    // 3. Success! Formally authorize the WebSocket handshake
+    wss.handleUpgrade(request, socket, head, (ws) =&gt; {
+      ws.user = user; // Attach custom user data directly to the session!
+      wss.emit('connection', ws, request);
+    });
+  } catch (err) {
+    // 4. Failure! Destroy the physical TCP connection instantly
+    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    socket.destroy();
+  }
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: The Initial 'Hello' Auth Payload</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Sometimes URL parameters are logged in plaintext by corporate proxies or AWS CloudTrail, making them a security risk for passing sensitive auth tokens. The application needs a way to authenticate *after* the connection opens, but *before* allowing the user to do anything else.<br><br>**The End-to-End Flow:** The server accepts all WebSocket connections blindly. However, it flags the connection state as `isAuthenticated = false`. It waits patiently. The client's very first message over the open pie must be a JSON payload containing `{ type: 'AUTH', token: '...' }`. If the client sends anything else (like a chat message), or if it takes longer than 5 seconds to send the Auth packet, the server executes `ws.close(4003)` to forcefully kick the client. Once authenticated, the server flips the boolean and allows normal traffic to flow.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>wss.on('connection', (ws) =&gt; {
+  // Lock down this specific socket
+  let isAuthenticated = false;
+  
+  // Set a strict 5-second deadline for the client to prove who they are
+  const authTimeout = setTimeout(() =&gt; ws.close(4008, 'Auth Timeout'), 5000);
+  
+  ws.on('message', (msg) =&gt; {
+    const data = JSON.parse(msg);
+    
+    // Gatekeeper Logic
+    if (!isAuthenticated) {
+      if (data.type === 'AUTH' && isValidDbToken(data.token)) {
+        isAuthenticated = true;
+        clearTimeout(authTimeout); // Cancel the deadline
+        ws.send(JSON.stringify({ type: 'AUTH_SUCCESS' }));
+      } else {
+        ws.close(4003, 'Invalid Token');
+      }
+      return; // Stop execution!
+    }
+    
+    // Process normal application messages here...
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

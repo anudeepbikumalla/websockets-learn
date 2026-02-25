@@ -630,7 +630,94 @@
 
   </div>
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Testing Disconnections (Chaos Monkey)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The team has written incredible exponential backoff logic for when the Wi-Fi drops. But they need to run an automated Jest integration test to mathematically prove that the UI shows the red 'Offline' banner immediately, and reconnects at exactly 1s, 2s, and 4s intervals. They cannot unplug physical Ethernet cables during an automated CI/CD pipeline run.<br><br>**The End-to-End Flow:** The QA Engineer uses testing tools (like Mock-Socket or Puppeteer) to inject Chaos. Inside the test suite, they script the mock server server to forcefully execute `.close()` on the active connection exactly 500ms into the test. They then use Jest's timer controls `jest.advanceTimersByTime(1000)` to instantly snap time forward. They write an `expect(banner.isVisible()).toBe(true)` to prove the UI reacted to the drop. They snap time forward 4 more times to verify the backoff multiplier is working perfectly without having to wait in real time.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>import { Server } from 'mock-socket';
+
+test('UI properly executes 2x exponential backoff on drop', async () =&gt; {
+  // 1. Boot up a Fake WebSocket Server that intercepts browser calls
+  const mockServer = new Server('ws://localhost:8080');
+  
+  // 2. Initialize our App React Component which connects automatically
+  render(&lt;App /&gt;); 
+  
+  // 3. CHAOS: Deliberately kill the server instantly
+  mockServer.close(); 
+  
+  // 4. Assert UI updated
+  expect(screen.getByText('Offline - Retrying...')).toBeInTheDocument();
+  
+  // 5. Fast-forward through Javascript Time (Skip waiting!)
+  jest.advanceTimersByTime(2000); // Should retry here
+  jest.advanceTimersByTime(4000); // Should retry again here
+  
+  // Write expects to verify the connect() function was called exactly twice!
+  expect(connectionSpies.attemptCount).toBe(2);
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Validating Strict JSON Contracts</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The frontend expects `{ type: 'METRICS', data: [1, 2, 3] }`. Another developer accidentally pushes backend code that sends `{ type: 'METRICS', val: [1, 2, 3] }`. The frontend code tries to parse `data.map()` and throws a fatal `TypeError: undefined is not a function`, crashing the entire client application silently.<br><br>**The End-to-End Flow:** The architecture mandates strict Schema Validation during testing using libraries like Zod or Joi. During the automated CI/CD loop, a Node test script connects to the Staging WebSocket server. It blasts 50 permutations of 'garbage' packets, malformed JSON, missing nested objects, and integers-as-strings. If the backend fails to catch ANY of the invalid frames or crashes with an unhandled exception, the build instantly fails and refuses to deploy to Production.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const WebSocket = require('ws');
+
+describe('Security Payload Integrity', () =&gt; {
+  let ws;
+
+  beforeAll((done) =&gt; {
+    ws = new WebSocket('wss://staging-api.com/chat');
+    ws.on('open', done);
+  });
+
+  afterAll(() =&gt; ws.close());
+
+  it('Server should safely reject payloads missing the "data" object', (done) =&gt; {
+    // Sending a mathematically broken packet (Missing core properties)
+    const maliciousPayload = JSON.stringify({ type: 'UPDATE_PROFILE' });
+    ws.send(maliciousPayload);
+    
+    // The server should instantly reply with exactly our standard Error schema
+    ws.on('message', (msg) =&gt; {
+      const response = JSON.parse(msg);
+      // Assert the backend did not crash, but correctly returned a 400 rejection
+      expect(response.error).toBe('Invalid Schema: missing data layer');
+      expect(response.status).toBe(400);
+      done();
+    });
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
