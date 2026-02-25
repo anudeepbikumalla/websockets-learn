@@ -776,7 +776,7 @@
       [0, 1, 2].forEach(i => {
         document.getElementById(`dot${i}`).className = 'client-dot on';
         document.getElementById(`msgs${i}`).innerHTML = '';
-        addMsg(i, '✅ Connected to ws://localhost:8080', false);
+        addMsg(i, '✅ Connected to ' + getWsUrl(8080), false);
       });
       document.getElementById('connCount').textContent = '3 connected';
       document.getElementById('btnConnect').disabled = true;

@@ -25,8 +25,10 @@ function getWsUrl(defaultPort = 8080) {
   }
 
   // 2. 기본값 결정
-  // 로컬 호스트일 경우 개발 서버 사용, 그렇지 않으면 실제 배포된 Render 서버 사용
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  // 로컬 호스트이거나 파일 직접 실행(file://)일 경우 개발 서버 사용, 그렇지 않으면 실제 배포된 Render 서버 사용
+  const isLocal = window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname === '';
 
   if (isLocal) {
     return `ws://localhost:${defaultPort}`;

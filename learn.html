@@ -1269,7 +1269,7 @@
       if (ws && ws.readyState < 2) ws.close();
 
       setStep(0);
-      setStatus('connecting', 'Connecting...', 'Opening a WebSocket connection to ws://localhost:8080');
+      const wsUrl = getWsUrl(8080); setStatus('connecting', 'Connecting...', 'Opening a WebSocket connection to ' + wsUrl);
       log('sys', 'STEP 1', '📞 new WebSocket(getWsUrl(8080)) — dialing the server...');
       explain('<strong>Step 1 → Connecting:</strong> You just wrote <code style="font-family:monospace">new WebSocket(url)</code>. The browser is now trying to reach the server. This is like your phone ringing on the other end.');
 
