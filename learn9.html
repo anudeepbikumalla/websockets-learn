@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 9 — Heartbeat & Ping-Pong</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34, 197, 94, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(34, 197, 94, .1);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-num.c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    .box-head.c-red {
+      color: var(--red);
+    }
+
+    .box-head.c-orange {
+      color: var(--orange);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .ev {
+      color: #fbbf24;
+    }
+
+    /* HEARTBEAT VISUALIZER */
+    .hb-demo {
+      background: var(--card);
+      border: 1px solid rgba(34, 197, 94, .2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .hb-topbar {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .pulse-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+      transition: background .3s;
+    }
+
+    .pulse-dot.alive {
+      background: var(--green);
+      animation: heartbeat 1.2s ease-in-out infinite;
+    }
+
+    .pulse-dot.dead {
+      background: var(--red);
+    }
+
+    @keyframes heartbeat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.25);
+        box-shadow: 0 0 8px rgba(34, 197, 94, .5);
+      }
+    }
+
+    .hb-timeline {
+      height: 80px;
+      padding: 12px 16px;
+      background: var(--card3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+    }
+
+    .hb-beat {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .6rem;
+      font-weight: 700;
+      transition: all .3s;
+    }
+
+    .hb-beat.ping {
+      background: rgba(56, 189, 248, .2);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, .3);
+    }
+
+    .hb-beat.pong {
+      background: rgba(34, 197, 94, .2);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .3);
+    }
+
+    .hb-beat.miss {
+      background: rgba(248, 113, 113, .2);
+      color: var(--red);
+      border: 1px solid rgba(248, 113, 113, .3);
+    }
+
+    .hb-log {
+      height: 120px;
+      overflow-y: auto;
+      padding: 10px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .72rem;
+      background: var(--card3);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .lg {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lg-t {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .lg.ping .lg-m {
+      color: var(--blue);
+    }
+
+    .lg.pong .lg-m {
+      color: var(--green);
+    }
+
+    .lg.miss .lg-m {
+      color: var(--red);
+    }
+
+    .lg.sys .lg-m {
+      color: var(--dim);
+    }
+
+    .hb-controls {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: #0a0d16;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .counter {
+      margin-left: auto;
+      font-size: .78rem;
+      color: var(--muted);
+    }
+
+    .counter span {
+      color: var(--green);
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .golden {
+      background: rgba(34, 197, 94, .05);
+      border: 1px solid rgba(34, 197, 94, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim);
+    }
+
+    .hl.yellow {
+      border-color: var(--yellow);
+      background: rgba(251, 191, 36, .05);
+      color: var(--dim);
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--green);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--green);
+      color: #052e16;
+      border-color: var(--green);
+    }
+
+    .nav-btn.home {
+      background: var(--card2);
+    }
+
+    code.mono {
+      font-family: monospace;
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 9</div>
+    <h1>Heartbeat & Ping-Pong 💓</h1>
+    <p>WebSocket connections silently die all the time — load balancers, routers, and mobile networks kill idle
+      connections. Learn how to keep them alive.</p>
+  </div>
+  <div class="page">
+
+    <!-- 1: The Problem -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">1</div>
+        <div>
+          <div class="sec-title">Why connections silently die 💀</div>
+          <div class="sec-sub">The invisible killers of long-running WebSocket connections</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-red">❌ The silent killers</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// These kill your connection WITHOUT firing</span><br>
+              <span class="cm">// the WebSocket 'close' event:</span><br><br>
+              <span class="ev">Load balancers</span>: kill idle after 60–120s<br>
+              <span class="ev">NAT routers</span>: drop idle TCP after 5min<br>
+              <span class="ev">Mobile networks</span>: cut connection on sleep<br>
+              <span class="ev">Corporate firewalls</span>: block long idle connections
+            </div>
+            <p class="note-sm" style="color:var(--red)">Your app thinks it's connected. It's not. Messages are lost
+              silently. 😱</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-green">✅ The solution: Ping-Pong</div>
+          <div class="box-body">
+            <p style="margin-bottom:10px">Send a small "are you alive?" message every 30s. If no reply — reconnect.</p>
+            <div class="code">
+              <span class="cm">// The heartbeat pattern:</span><br>
+              Client <span class="ev">→</span> Server: <span class="str">"ping"</span><br>
+              Server <span class="ev">→</span> Client: <span class="str">"pong"</span><br><br>
+              <span class="cm">// If no pong in 10s → connection is dead</span><br>
+              <span class="cm">// → call ws.close() and reconnect</span>
+            </div>
+            <p class="note-sm" style="color:var(--green)">The WebSocket protocol has built-in ping/pong frames — but the
+              browser JS API doesn't expose them. So we implement our own at the application level.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2: The Pattern -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">The Heartbeat Pattern — client side 💻</div>
+          <div class="sec-sub">Send a ping every 30s, wait 10s for a pong, reconnect if none</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">&lt;/&gt; client.js — heartbeat implementation</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">let</span> ws, pingTimer, pongTimer;<br><br>
+            <span class="kw">function</span> <span class="fn">connect</span>() {<br>
+            &nbsp;&nbsp;ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
+              class="str">'ws://localhost:8080'</span>);<br><br>
+            &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">startHeartbeat</span>(); <span class="cm">// begin
+              pinging</span><br>
+            &nbsp;&nbsp;});<br><br>
+            &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (e) => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (e.data === <span class="str">'pong'</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">clearTimeout</span>(pongTimer); <span class="cm">// got
+              it — cancel timeout</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;});<br><br>
+            &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, () => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">stopHeartbeat</span>();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">setTimeout</span>(connect, <span class="ev">3000</span>); <span
+              class="cm">// reconnect</span><br>
+            &nbsp;&nbsp;});<br>
+            }<br><br>
+            <span class="kw">function</span> <span class="fn">startHeartbeat</span>() {<br>
+            &nbsp;&nbsp;pingTimer = <span class="fn">setInterval</span>(() => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="str">'ping'</span>); <span
+              class="cm">// send ping</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// if no pong in 10s → connection is dead</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;pongTimer = <span class="fn">setTimeout</span>(() => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">close</span>(); <span class="cm">// kill it — close
+              event triggers reconnect</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}, <span class="ev">10000</span>);<br>
+            &nbsp;&nbsp;}, <span class="ev">30000</span>); <span class="cm">// ping every 30s</span><br>
+            }<br><br>
+            <span class="kw">function</span> <span class="fn">stopHeartbeat</span>() {<br>
+            &nbsp;&nbsp;<span class="fn">clearInterval</span>(pingTimer);<br>
+            &nbsp;&nbsp;<span class="fn">clearTimeout</span>(pongTimer);<br>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="box" style="margin-top:16px">
+        <div class="box-head c-yellow">&lt;/&gt; server.js — reply to ping</div>
+        <div class="box-body">
+          <div class="code">
+            ws.<span class="fn">on</span>(<span class="str">'message'</span>, (raw) => {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> msg = raw.<span class="fn">toString</span>();<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (msg === <span class="str">'ping'</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="str">'pong'</span>); <span
+              class="cm">// that's it!</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>;<br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;<span class="cm">// handle other messages normally…</span><br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3: Live Demo -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">3</div>
+        <div>
+          <div class="sec-title">▶️ Heartbeat Demo</div>
+          <div class="sec-sub">Watch ping/pong in real-time — simulate a missed pong to see reconnect</div>
+        </div>
+      </div>
+      <div class="hb-demo">
+        <div class="hb-topbar">
+          <div class="pulse-dot" id="pulseDot"></div>
+          <span id="hbStatus">Disconnected — click Start to begin</span>
+        </div>
+        <div class="hb-timeline" id="hbTimeline">
+          <div style="font-size:.7rem;color:var(--muted);white-space:nowrap">Heartbeat timeline will appear here…</div>
+        </div>
+        <div class="hb-log" id="hbLog">
+          <div class="lg sys"><span class="lg-t">—</span><span class="lg-m">Start the heartbeat to see ping/pong
+              events</span></div>
+        </div>
+        <div class="hb-controls">
+          <button class="btn btn-green" id="btnStart" onclick="startHB()">▶ Start Heartbeat</button>
+          <button class="btn btn-yellow" id="btnMiss" onclick="missNextPong()" disabled>⚠️ Miss Next Pong</button>
+          <button class="btn btn-red" id="btnStop" onclick="stopHB()" disabled>⏹ Stop</button>
+          <div class="counter">Pings: <span id="pingCount">0</span> | Pongs: <span id="pongCount">0</span> | Misses:
+            <span id="missCount" style="color:var(--red)">0</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: Timing Guide -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">4</div>
+        <div>
+          <div class="sec-title">Timing Guide ⏱️</div>
+          <div class="sec-sub">Recommended intervals for different environments</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-yellow">📋 Ping interval recommendations</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// General web apps (most common):</span><br>
+            pingInterval: <span class="ev">30000</span>ms <span class="cm">// ping every 30s</span><br>
+            pongTimeout: <span class="ev">10000</span>ms <span class="cm">// wait 10s for pong</span><br><br>
+            <span class="cm">// Mobile apps (aggressive NAT):</span><br>
+            pingInterval: <span class="ev">15000</span>ms <span class="cm">// ping every 15s</span><br>
+            pongTimeout: <span class="ev">5000</span>ms <span class="cm">// wait 5s for pong</span><br><br>
+            <span class="cm">// Behind AWS ALB / nginx:</span><br>
+            pingInterval: <span class="ev">55000</span>ms <span class="cm">// just under ALB's 60s idle
+              timeout</span><br>
+            pongTimeout: <span class="ev">10000</span>ms
+          </div>
+          <div class="hl yellow">
+            <strong style="color:var(--yellow)">Rule of thumb:</strong> set your ping interval to less than the smallest
+            idle timeout in your infrastructure. AWS ALB = 60s → ping every 55s.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5: Rules -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">5</div>
+        <div>
+          <div class="sec-title">⚡ Heartbeat Rules</div>
+          <div class="sec-sub">Production checklist</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Heartbeat Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">💓</div>
+            <div class="rule-text"><strong>Always implement heartbeats</strong> in production — every long-lived
+              WebSocket app needs them.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">⏰</div>
+            <div class="rule-text"><strong>Stop timers on disconnect</strong> — always call clearInterval and
+              clearTimeout in the close handler, or you'll create ghost timers.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔄</div>
+            <div class="rule-text"><strong>Combine with reconnect logic</strong> — a failed pong timeout should trigger
+              ws.close(), which then triggers your Lesson 5 reconnect logic automatically.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📏</div>
+            <div class="rule-text"><strong>Keep ping payloads tiny</strong> — just the string <code
+                class="mono">"ping"</code> is fine. This is control traffic, not data.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔕</div>
+            <div class="rule-text"><strong>Don't log ping/pong in production</strong> — they fire very frequently.
+              Filter them out of your log pipeline.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn8.html" class="nav-btn">← Lesson 8</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn10.html" class="nav-btn primary">Lesson 10: Binary Data →</a>
+  </div>
+
+  <script>
+    let hbInterval = null, pongWait = null;
+    let pings = 0, pongs = 0, misses = 0, missNext = false;
+    function now() { return new Date().toLocaleTimeString('en-US', { hour12: false }); }
+    function addLog(cls, msg) {
+      const el = document.getElementById('hbLog');
+      const d = document.createElement('div');
+      d.className = `lg ${cls}`;
+      d.innerHTML = `<span class="lg-t">${now()}</span><span class="lg-m">${msg}</span>`;
+      el.appendChild(d); el.scrollTop = el.scrollHeight;
+    }
+    function addBeat(type) {
+      const tl = document.getElementById('hbTimeline');
+      if (tl.querySelector('div[style]')) tl.innerHTML = '';
+      const d = document.createElement('div');
+      d.className = `hb-beat ${type}`;
+      d.title = type.toUpperCase();
+      d.textContent = type === 'ping' ? '→' : type === 'pong' ? '←' : '✗';
+      tl.appendChild(d); tl.scrollLeft = tl.scrollWidth;
+    }
+    function updateCounters() {
+      document.getElementById('pingCount').textContent = pings;
+      document.getElementById('pongCount').textContent = pongs;
+      document.getElementById('missCount').textContent = misses;
+    }
+    function setStatus(dotCls, txt) {
+      document.getElementById('pulseDot').className = `pulse-dot ${dotCls}`;
+      document.getElementById('hbStatus').textContent = txt;
+    }
+    function startHB() {
+      pings = pongs = misses = 0; missNext = false;
+      document.getElementById('btnStart').disabled = true;
+      document.getElementById('btnMiss').disabled = false;
+      document.getElementById('btnStop').disabled = false;
+      document.getElementById('hbTimeline').innerHTML = '';
+      setStatus('alive', 'Connected — heartbeat running');
+      addLog('sys', '✅ Connected — starting heartbeat every 3s (demo speed)');
+      hbInterval = setInterval(sendPing, 3000);
+      sendPing();
+    }
+    function sendPing() {
+      pings++;
+      addBeat('ping');
+      addLog('ping', `📤 PING #${pings} sent`);
+      updateCounters();
+      const shouldMiss = missNext;
+      if (shouldMiss) { missNext = false; document.getElementById('btnMiss').disabled = false; }
+      pongWait = setTimeout(() => {
+        if (shouldMiss) {
+          misses++;
+          addBeat('miss');
+          addLog('miss', `❌ PONG timeout! No reply in 2s — connection considered dead → reconnecting…`);
+          setStatus('dead', 'Dead! Reconnecting…');
+          updateCounters();
+          setTimeout(() => {
+            setStatus('alive', 'Reconnected — heartbeat restarted');
+            addLog('sys', '✅ Reconnected! Heartbeat restarted');
+          }, 1500);
+        } else {
+          pongs++;
+          addBeat('pong');
+          addLog('pong', `📥 PONG #${pongs} received ✓`);
+          updateCounters();
+        }
+      }, shouldMiss ? 2000 : 600);
+    }
+    function missNextPong() {
+      missNext = true;
+      document.getElementById('btnMiss').disabled = true;
+      addLog('sys', '⚠️ Next pong will be dropped — watch what happens!');
+    }
+    function stopHB() {
+      clearInterval(hbInterval); clearTimeout(pongWait);
+      hbInterval = null;
+      setStatus('', 'Stopped');
+      document.getElementById('btnStart').disabled = false;
+      document.getElementById('btnMiss').disabled = true;
+      document.getElementById('btnStop').disabled = true;
+      addLog('sys', '⏹ Heartbeat stopped');
+    }
+  </script>
+</body>
+
+</html>

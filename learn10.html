@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 10 — Binary Data</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(251, 146, 60, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(251, 146, 60, .1);
+      color: var(--orange);
+      border: 1px solid rgba(251, 146, 60, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-orange {
+      background: rgba(251, 146, 60, .15);
+      color: var(--orange);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-orange {
+      color: var(--orange);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-red {
+      color: var(--red);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .ev {
+      color: #fbbf24;
+    }
+
+    /* DEMO */
+    .demo-shell {
+      background: var(--card);
+      border: 1px solid rgba(251, 146, 60, .2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .demo-top {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-area {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s;
+      background: var(--card3);
+    }
+
+    .upload-zone:hover,
+    .upload-zone.drag {
+      border-color: var(--orange);
+    }
+
+    .upload-zone p {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .upload-zone .icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--card2);
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--yellow));
+      border-radius: 99px;
+      width: 0;
+      transition: width .3s;
+    }
+
+    .file-info {
+      background: var(--card3);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: .74rem;
+      color: var(--dim);
+      line-height: 1.8;
+    }
+
+    .byte-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .byte {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fira Code', monospace;
+      font-size: .6rem;
+      border-radius: 4px;
+      background: rgba(251, 146, 60, .1);
+      color: var(--orange);
+      border: 1px solid rgba(251, 146, 60, .2);
+    }
+
+    .demo-controls {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: #431407;
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .types-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media(max-width:640px) {
+      .types-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .type-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .type-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .type-name {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 4px;
+    }
+
+    .type-desc {
+      font-size: .76rem;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    .golden {
+      background: rgba(251, 146, 60, .05);
+      border: 1px solid rgba(251, 146, 60, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--orange);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--orange);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--orange);
+      color: #431407;
+      border-color: var(--orange);
+    }
+
+    .nav-btn.home {
+      background: var(--card2);
+    }
+
+    code.mono {
+      font-family: monospace;
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px;
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+
+    .hl.orange {
+      border-color: var(--orange);
+      background: rgba(251, 146, 60, .05);
+      color: var(--dim);
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 10</div>
+    <h1>Binary Data 📦</h1>
+    <p>WebSocket isn't just for text. Send images, audio, files, and raw bytes using <code
+        style="font-family:monospace">ArrayBuffer</code> and <code style="font-family:monospace">Blob</code> — at
+      near-native speed.</p>
+  </div>
+  <div class="page">
+
+    <!-- 1: Text vs Binary -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-orange">1</div>
+        <div>
+          <div class="sec-title">Text vs Binary — when to use each 📊</div>
+          <div class="sec-sub">Choosing the right data format for your use case</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-blue">📝 Text (JSON strings)</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// What you've used so far</span><br>
+              ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({<br>
+              &nbsp;&nbsp;type: <span class="str">'message'</span>,<br>
+              &nbsp;&nbsp;text: <span class="str">'Hello!'</span><br>
+              }));<br><br>
+              <span class="cm">// Good for:</span><br>
+              <span class="ev">✅</span> Chat messages<br>
+              <span class="ev">✅</span> Game state updates<br>
+              <span class="ev">✅</span> Notifications
+            </div>
+            <p class="note-sm">Human-readable, easy to debug, but 2–4× larger than binary for the same data.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-orange">📦 Binary (ArrayBuffer / Blob)</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Raw bytes — much more efficient</span><br>
+              ws.binaryType = <span class="str">'arraybuffer'</span>;<br>
+              ws.<span class="fn">send</span>(fileBytes); <span class="cm">// ← no JSON.stringify</span><br><br>
+              <span class="cm">// Good for:</span><br>
+              <span class="ev">✅</span> File uploads / downloads<br>
+              <span class="ev">✅</span> Image / audio streaming<br>
+              <span class="ev">✅</span> Game binary protocols
+            </div>
+            <p class="note-sm">Compact, fast, but not human-readable. Use a defined schema.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2: The Two Binary Types -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">2</div>
+        <div>
+          <div class="sec-title">ArrayBuffer vs Blob — what's the difference? 🔍</div>
+          <div class="sec-sub">Two ways the browser represents binary data</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-orange">ArrayBuffer — raw bytes in memory</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Set this BEFORE connecting</span><br>
+              ws.binaryType = <span class="str">'arraybuffer'</span>;<br><br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (e) => {<br>
+              &nbsp;&nbsp;<span class="cm">// e.data is an ArrayBuffer</span><br>
+              &nbsp;&nbsp;<span class="kw">const</span> view = <span class="kw">new</span> <span
+                class="fn">Uint8Array</span>(e.data);<br>
+              &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(view); <span class="cm">// [72,
+                101, 108, ...]</span><br>
+              });
+            </div>
+            <p class="note-sm">Use when: you need to process the bytes directly (e.g., decode a custom protocol).</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-green">Blob — binary large object</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Default binary type</span><br>
+              ws.binaryType = <span class="str">'blob'</span>;<br><br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (e) => {<br>
+              &nbsp;&nbsp;<span class="cm">// e.data is a Blob object</span><br>
+              &nbsp;&nbsp;<span class="kw">const</span> url = URL.<span class="fn">createObjectURL</span>(e.data);<br>
+              &nbsp;&nbsp;img.src = url; <span class="cm">// display received image!</span><br>
+              });
+            </div>
+            <p class="note-sm">Use when: you want to display an image or save a file directly without parsing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3: Sending Files -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">3</div>
+        <div>
+          <div class="sec-title">Sending Files — the code 💻</div>
+          <div class="sec-sub">Read a file as ArrayBuffer and send it over WebSocket</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">&lt;/&gt; Client — send a file via WebSocket</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// User picks a file</span><br>
+            input.<span class="fn">addEventListener</span>(<span class="str">'change'</span>, <span
+              class="kw">async</span> (e) => {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> file = e.target.files[<span class="ev">0</span>];<br><br>
+            &nbsp;&nbsp;<span class="cm">// STEP 1: Read file as ArrayBuffer</span><br>
+            &nbsp;&nbsp;<span class="kw">const</span> buffer = <span class="kw">await</span> file.<span
+              class="fn">arrayBuffer</span>();<br><br>
+            &nbsp;&nbsp;<span class="cm">// STEP 2: Send metadata first (as JSON)</span><br>
+            &nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;type: <span class="str">'file-meta'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;name: file.name,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;size: file.size,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;mime: file.type<br>
+            &nbsp;&nbsp;}));<br><br>
+            &nbsp;&nbsp;<span class="cm">// STEP 3: Send raw bytes</span><br>
+            &nbsp;&nbsp;ws.<span class="fn">send</span>(buffer); <span class="cm">// ← no JSON, raw binary!</span><br>
+            });
+          </div>
+          <div class="hl orange">
+            <strong style="color:var(--orange)">Pro pattern:</strong> always send a metadata JSON message
+            <em>before</em> the binary chunk so the server knows the filename, size, and MIME type before receiving the
+            bytes.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: Demo -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-orange">4</div>
+        <div>
+          <div class="sec-title">▶️ Binary File Demo</div>
+          <div class="sec-sub">Inspect any file as raw bytes — see what WebSocket would actually send</div>
+        </div>
+      </div>
+      <div class="demo-shell">
+        <div class="demo-top">📦 Binary Inspector</div>
+        <div class="demo-area">
+          <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <div class="icon">📁</div>
+            <div style="font-weight:600;font-size:.9rem">Drop a file here or click to select</div>
+            <p>Any file — image, text, PDF… You'll see the raw bytes</p>
+            <input type="file" id="fileInput" style="display:none" onchange="inspectFile(this)" />
+          </div>
+          <div class="file-info" id="fileInfo" style="display:none"></div>
+          <div id="byteSection" style="display:none">
+            <div style="font-size:.76rem;color:var(--muted);margin-bottom:8px">First 64 bytes (hex) — what WebSocket
+              actually transmits:</div>
+            <div class="byte-grid" id="byteGrid"></div>
+          </div>
+          <div class="progress-bar" id="progWrap" style="display:none">
+            <div class="progress-fill" id="progFill"></div>
+          </div>
+        </div>
+        <div class="demo-controls">
+          <button class="btn btn-orange" id="btnSendDemo" onclick="simulateSend()" disabled>📤 Simulate
+            ws.send(buffer)</button>
+          <button class="btn btn-ghost" onclick="resetDemo()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5: Use Cases -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">5</div>
+        <div>
+          <div class="sec-title">Real-World Use Cases 🌍</div>
+          <div class="sec-sub">When binary WebSocket data shines</div>
+        </div>
+      </div>
+      <div class="types-grid">
+        <div class="type-card">
+          <div class="type-icon">🖼️</div>
+          <div class="type-name">Live Camera</div>
+          <div class="type-desc">Stream JPEG frames from server camera to browser in real-time — no HTTP overhead per
+            frame.</div>
+        </div>
+        <div class="type-card">
+          <div class="type-icon">🎵</div>
+          <div class="type-name">Audio Chunks</div>
+          <div class="type-desc">Discord/Zoom-style: send raw PCM audio chunks to other clients for live voice chat.
+          </div>
+        </div>
+        <div class="type-card">
+          <div class="type-icon">📄</div>
+          <div class="type-name">File Transfer</div>
+          <div class="type-desc">Send large files in chunks, show real progress bar, resume on disconnect.</div>
+        </div>
+        <div class="type-card">
+          <div class="type-icon">🎮</div>
+          <div class="type-name">Game State</div>
+          <div class="type-desc">Binary game protocols pack 10× more data per frame than JSON — critical for 60fps
+            games.</div>
+        </div>
+        <div class="type-card">
+          <div class="type-icon">📊</div>
+          <div class="type-name">Sensor Data</div>
+          <div class="type-desc">IoT devices stream binary sensor readings — temperature, GPS, gyroscope at high
+            frequency.</div>
+        </div>
+        <div class="type-card">
+          <div class="type-icon">🔬</div>
+          <div class="type-name">Scientific Data</div>
+          <div class="type-desc">Stock tick data, scientific instrument readings — full Float64 precision, no JSON
+            parsing overhead.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6: Rules -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">6</div>
+        <div>
+          <div class="sec-title">⚡ Binary Data Rules</div>
+          <div class="sec-sub">Know before shipping</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Binary Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔧</div>
+            <div class="rule-text"><strong>Set binaryType before connecting</strong> — <code
+                class="mono">ws.binaryType = 'arraybuffer'</code> or <code class="mono">'blob'</code>. Default is
+              'blob'.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📋</div>
+            <div class="rule-text"><strong>Always send metadata first</strong> — send a JSON message with name, size,
+              and MIME type before the binary chunk. The server needs context.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">✂️</div>
+            <div class="rule-text"><strong>Chunk large files</strong> — don't send a 100MB file as one ws.send(). Split
+              into 64KB chunks and track progress. Most servers have a max message size.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🏷️</div>
+            <div class="rule-text"><strong>Validate server-side</strong> — always check file size and MIME type on the
+              server. Clients can lie about file type.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn9.html" class="nav-btn">← Lesson 9</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn11.html" class="nav-btn primary">Lesson 11: Scaling →</a>
+  </div>
+
+  <script>
+    let selectedFile = null;
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+    dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag'); const f = e.dataTransfer.files[0]; if (f) { document.getElementById('fileInput').files; showFile(f); } });
+
+    function inspectFile(input) { if (input.files[0]) showFile(input.files[0]); }
+
+    function showFile(file) {
+      selectedFile = file;
+      const info = document.getElementById('fileInfo');
+      info.style.display = 'block';
+      info.innerHTML = `📄 Name: ${file.name}\n📦 Size: ${formatBytes(file.size)}\n🏷️ MIME: ${file.type || 'unknown'}\n📡 ws.send() payload: ${formatBytes(file.size)} of raw binary`;
+      document.getElementById('btnSendDemo').disabled = false;
+
+      // Read first 64 bytes
+      const reader = new FileReader();
+      reader.onload = e => {
+        const bytes = new Uint8Array(e.target.result);
+        const grid = document.getElementById('byteGrid');
+        grid.innerHTML = '';
+        for (let i = 0; i < Math.min(bytes.length, 64); i++) {
+          const d = document.createElement('div');
+          d.className = 'byte';
+          d.textContent = bytes[i].toString(16).padStart(2, '0').toUpperCase();
+          d.title = `Byte ${i}: ${bytes[i]} decimal`;
+          grid.appendChild(d);
+        }
+        document.getElementById('byteSection').style.display = 'block';
+      };
+      reader.readAsArrayBuffer(file.slice(0, 64));
+    }
+
+    function simulateSend() {
+      if (!selectedFile) return;
+      const wrap = document.getElementById('progWrap');
+      const fill = document.getElementById('progFill');
+      wrap.style.display = 'block'; fill.style.width = '0%';
+      let p = 0;
+      const iv = setInterval(() => {
+        p += Math.random() * 15 + 5;
+        if (p >= 100) { p = 100; clearInterval(iv); setTimeout(() => { wrap.style.display = 'none'; fill.style.width = '0%'; }, 1000); }
+        fill.style.width = p + '%';
+      }, 80);
+    }
+
+    function resetDemo() {
+      selectedFile = null;
+      document.getElementById('fileInfo').style.display = 'none';
+      document.getElementById('byteSection').style.display = 'none';
+      document.getElementById('progWrap').style.display = 'none';
+      document.getElementById('btnSendDemo').disabled = true;
+      document.getElementById('fileInput').value = '';
+    }
+
+    function formatBytes(b) {
+      if (b < 1024) return b + ' B';
+      if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+      return (b / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+  </script>
+</body>
+
+</html>
