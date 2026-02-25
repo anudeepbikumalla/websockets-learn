@@ -777,6 +777,7 @@
       color: var(--muted)
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -839,7 +840,7 @@
         code: [
           { t: "<span class='cm'>// PATTERN 1: addEventListener / .on() style</span>" },
           { t: "" },
-          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>'ws://localhost:8080'</span>);", ev: "connecting", note: "Opens TCP connection →" },
+          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>getWsUrl(8080)</span>);", ev: "connecting", note: "Opens TCP connection →" },
           { t: "" },
           { t: "ws.<span class='fn'>addEventListener</span>(<span class='ev'>'open'</span>, () => {", ev: "open", note: "← fires on connect" },
           { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Connected!'</span>);", ev: "open" },
@@ -861,7 +862,7 @@
         steps: [
           {
             label: "① Open Connection", desc: "new WebSocket(url)", action: "connect",
-            explain: "<strong>new WebSocket('ws://localhost:8080')</strong> initiates the TCP handshake. The browser cycles through states: <code>CONNECTING (0)</code> → <code>OPEN (1)</code>. Once open, the <code>addEventListener('open')</code> callback fires automatically on the highlighted lines above."
+            explain: "<strong>new WebSocket(getWsUrl(8080))</strong> initiates the TCP handshake. The browser cycles through states: <code>CONNECTING (0)</code> → <code>OPEN (1)</code>. Once open, the <code>addEventListener('open')</code> callback fires automatically on the highlighted lines above."
           },
           {
             label: "② Send a Message", desc: "ws.send(data)", action: "send", default: "Hello via addEventListener!",
@@ -891,7 +892,7 @@
         code: [
           { t: "<span class='cm'>// PATTERN 2: Direct property assignment — no .on()</span>" },
           { t: "" },
-          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>'ws://localhost:8081'</span>);", ev: "connecting", note: "Opens TCP connection →" },
+          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>getWsUrl(8081)</span>);", ev: "connecting", note: "Opens TCP connection →" },
           { t: "" },
           { t: "ws.<span class='ev'>onopen</span> = () => {", ev: "open", note: "← fires on connect" },
           { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Connected!'</span>);", ev: "open" },

@@ -482,6 +482,7 @@
       color: var(--dim);
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -509,7 +510,7 @@
             <div class="code">
               <span class="cm">// Anyone can connect — no check!</span><br>
               <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<br>
-              &nbsp;&nbsp;<span class="str">'ws://localhost:8080'</span><br>
+              &nbsp;&nbsp;<span class="str">getWsUrl(8080)</span><br>
               );
             </div>
             <p class="note-sm" style="color:var(--red)">A random attacker can open the URL and start sending messages
@@ -523,7 +524,7 @@
               <span class="cm">// Pass your JWT in the query string</span><br>
               <span class="kw">const</span> token = <span class="str">'eyJhbG...'</span>;<br>
               <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<br>
-              &nbsp;&nbsp;<span class="str">`ws://localhost:8080?token=</span><span class="ev">${token}</span><span
+              &nbsp;&nbsp;<span class="str">getWsUrl(8080) + `?token=</span><span class="ev">${token}</span><span
                 class="str">`</span><br>
               );
             </div>

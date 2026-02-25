@@ -529,6 +529,7 @@
       margin-top: 10px;
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -599,7 +600,7 @@
             <span class="kw">let</span> ws, pingTimer, pongTimer;<br><br>
             <span class="kw">function</span> <span class="fn">connect</span>() {<br>
             &nbsp;&nbsp;ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
-              class="str">'ws://localhost:8080'</span>);<br><br>
+              class="str">getWsUrl(8080)</span>);<br><br>
             &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () => {<br>
             &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">startHeartbeat</span>(); <span class="cm">// begin
               pinging</span><br>

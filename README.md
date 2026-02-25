@@ -62,6 +62,30 @@ Congratulations on finishing all 28 lessons! Here is your roadmap forward:
 
 ---
 
+## 🌎 Live Deployment
+
+You can host this project online so anyone can learn WebSockets from their browser.
+
+### 1. Host the UI (GitHub Pages)
+1. Go to your repo **Settings** > **Pages**.
+2. Select **Branch: main** and click **Save**.
+3. Your site will be live at `https://<your-username>.github.io/websockets-learn/`.
+
+### 2. Host the Backend (Render.com)
+1. Sign up for a free account at [Render.com](https://render.com/).
+2. Create a new **Web Service** and connect this GitHub repo.
+3. Select **Runtime: Node**.
+4. Render will automatically detect `npm install` and `node server.js`.
+5. Once deployed, Render will give you a URL (e.g., `https://ws-backend.onrender.com`).
+
+### 3. Connect Everything
+1. Open your live GitHub Pages site.
+2. Click the **⚙️ Settings** icon in the bottom right.
+3. Paste your Render URL (change `https://` to `wss://`).
+4. **Done!** All 28 lessons will now use your live production backend.
+
+---
+
 ## 📁 Project Files
 
 ```

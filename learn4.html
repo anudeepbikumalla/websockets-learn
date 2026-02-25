@@ -631,6 +631,7 @@
       border-color: var(--green);
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -736,7 +737,7 @@
             <div class="code-snip">
               <span class="cm">// Lesson 1 — The lifecycle</span><br>
               <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
-                class="str">'ws://localhost:8080'</span>);<br>
+                class="str">getWsUrl(8080)</span>);<br>
               ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () => showMsg(<span
                 class="str">'Connected!'</span>));<br>
               ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, () => showMsg(<span
@@ -884,7 +885,7 @@
       appendBubble('⏳ Opening WebSocket connection...', 'sys');
 
       // ── Lesson 1: new WebSocket ──
-      ws = new WebSocket('ws://localhost:8080');
+      ws = new WebSocket(getWsUrl(8080));
 
       // ── Lesson 2: addEventListener (not onmessage) ──
       ws.addEventListener('open', () => {

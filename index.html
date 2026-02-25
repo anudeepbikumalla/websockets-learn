@@ -340,7 +340,115 @@
       color: var(--muted);
       margin-top: 6px;
     }
+
+    /* SETTINGS UI */
+    .settings-trigger {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .3);
+      z-index: 100;
+      transition: transform .2s;
+    }
+
+    .settings-trigger:hover {
+      transform: rotate(30deg);
+      border-color: var(--blue);
+    }
+
+    #settings-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .8);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      padding: 24px;
+    }
+
+    .modal-box h2 {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+      color: var(--blue);
+    }
+
+    .modal-box p {
+      font-size: .85rem;
+      color: var(--dim);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal-btns button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .save-btn {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .cancel-btn {
+      background: var(--card2);
+      color: var(--text);
+    }
   </style>
+  <script src="config.js"></script>
+
 </head>
 
 <body>
@@ -831,6 +939,58 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- SETTINGS TRIGGER -->
+  <div class="settings-trigger" onclick="toggleModal(true)" title="Server Settings">⚙️</div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settings-modal" onclick="if(event.target === this) toggleModal(false)">
+    <div class="modal-box">
+      <h2>Server Settings ⚙️</h2>
+      <p>By default, lessons connect to <strong>localhost:8080</strong>. Enter your production backend URL here to use
+        it across all lessons.</p>
+
+      <div class="input-group">
+        <label>WebSocket Server URL</label>
+        <input type="text" id="ws-input" placeholder="e.g. wss://my-app.render.com" />
+      </div>
+
+      <div class="modal-btns">
+        <button class="cancel-btn" onclick="toggleModal(false)">Cancel</button>
+        <button class="save-btn" onclick="saveSettings()">Save Configuration</button>
+      </div>
+      <button class="cancel-btn" style="margin-top:10px; width:100%; opacity:.6; font-size:.7rem"
+        onclick="clearSettings()">Reset to Localhost</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('settings-modal');
+    const input = document.getElementById('ws-input');
+
+    function toggleModal(show) {
+      modal.style.display = show ? 'flex' : 'none';
+      if (show) input.value = localStorage.getItem('ws_server_url') || '';
+    }
+
+    function saveSettings() {
+      const val = input.value.trim();
+      if (val) {
+        localStorage.setItem('ws_server_url', val);
+        alert('✅ Configuration saved! All lessons will now use this backend.');
+      } else {
+        localStorage.removeItem('ws_server_url');
+      }
+      toggleModal(false);
+    }
+
+    function clearSettings() {
+      localStorage.removeItem('ws_server_url');
+      alert('🔄 Reset to default (localhost:8080)');
+      toggleModal(false);
+    }
+  </script>
   </div>
 </body>
 

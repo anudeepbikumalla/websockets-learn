@@ -304,6 +304,7 @@
       }
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -422,7 +423,7 @@
           <div class="code">
             <span class="kw">function</span> <span class="fn">ChatRoom</span>() {<br>
             &nbsp;&nbsp;<span class="kw">const</span> { status, lastMessage, send } = <span
-              class="fn">useWebSocket</span>(<span class="str">'ws://localhost:8080'</span>);<br>
+              class="fn">useWebSocket</span>(<span class="str">getWsUrl(8080)</span>);<br>
             &nbsp;&nbsp;<span class="kw">const</span> [messages, setMessages] = <span
               class="fn">useState</span>([]);<br><br>
             &nbsp;&nbsp;<span class="cm">// React to new messages</span><br>

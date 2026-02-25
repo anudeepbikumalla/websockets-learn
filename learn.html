@@ -783,6 +783,7 @@
       overflow: hidden;
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -890,7 +891,7 @@
             <div class="code-snippet">
               <span class="cm">// This ONE line opens the connection</span><br>
               <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
-                class="str">'ws://localhost:8080'</span>);
+                class="str">getWsUrl(8080)</span>);
             </div>
           </div>
         </div>
@@ -1269,12 +1270,12 @@
 
       setStep(0);
       setStatus('connecting', 'Connecting...', 'Opening a WebSocket connection to ws://localhost:8080');
-      log('sys', 'STEP 1', '📞 new WebSocket("ws://localhost:8080") — dialing the server...');
+      log('sys', 'STEP 1', '📞 new WebSocket(getWsUrl(8080)) — dialing the server...');
       explain('<strong>Step 1 → Connecting:</strong> You just wrote <code style="font-family:monospace">new WebSocket(url)</code>. The browser is now trying to reach the server. This is like your phone ringing on the other end.');
 
       document.getElementById('btnConnect').disabled = true;
 
-      ws = new WebSocket('ws://localhost:8080');
+      ws = new WebSocket(getWsUrl(8080));
 
       // ── EVENT: open ──
       ws.addEventListener('open', () => {

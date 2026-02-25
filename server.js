@@ -141,67 +141,57 @@ wssWithOn.on("connection", (ws, req) => {
   });
 });
 
-// ═════════════════════════════════════════════════════════════════════════════
-// SERVER B — Port 8081
-// PATTERN 2: WITHOUT .on() — Direct property assignment
-//   ws.onmessage = (event) => { ... }  (same as browser WebSocket API)
-// ═════════════════════════════════════════════════════════════════════════════
-const wssWithoutOn = new WebSocket.Server({ port: 8081 });
+// ─── Start servers ────────────────────────────────────────────────────────────
+const PORT = process.env.PORT || 8080;
 
-wssWithoutOn.on("connection", (ws) => {
-  log.noon(`New client connected`);
-  log.teach("After getting socket, we use DIRECT PROPERTIES instead of .on()");
+// Update Server A to handle both if we're on a single port (like Render)
+httpServer.on("upgrade", (request, socket, head) => {
+  const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
 
-  ws.send(JSON.stringify({
-    type: "server-lesson",
-    pattern: "PATTERN 2 — WITHOUT .on()",
-    port: 8081,
-    message: "Connected to Port 8081! Server uses ws.onmessage = (event) => {}",
-    serverCode: "ws.onmessage = (event) => { ... }",
-  }));
-
-  // ✅ PATTERN 2 — Direct property assignment (no .on() call!)
-  ws.onmessage = (event) => {
-    const text = event.data.toString();
-    log.noon(`ws.onmessage property handler fired. Data: ${text}`);
-    log.teach("ws.onmessage = (event) => {} ← direct property, NOT .on()");
-
-    let msg;
-    try { msg = JSON.parse(text); } catch { msg = { data: text }; }
-
-    ws.send(JSON.stringify({
-      type: "echo",
-      pattern: "PATTERN 2 — WITHOUT .on()",
-      echo: `[Port 8081 ws.onmessage] You sent: "${msg.data || text}"`,
-      serverCode: "ws.onmessage = (event) => { ... }",
-      note: "onmessage only allows ONE handler. .on() allows multiple.",
-      timestamp: new Date().toISOString(),
-    }));
-  };
-
-  ws.onclose = (event) => {
-    log.noon(`ws.onclose property handler fired. Code: ${event.code}`);
-    log.teach("ws.onclose = (event) => {} ← direct property, NOT .on('close')");
-  };
-
-  ws.onerror = (event) => {
-    log.err(`ws.onerror property handler fired`);
-  };
+  if (pathname === "/p2") {
+    wssWithoutOn.handleUpgrade(request, socket, head, (ws) => {
+      wssWithoutOn.emit("connection", ws, request);
+    });
+  } else {
+    // Default to Pattern 1
+    wssWithOn.handleUpgrade(request, socket, head, (ws) => {
+      wssWithOn.emit("connection", ws, request);
+    });
+  }
 });
 
-// ─── Start servers ────────────────────────────────────────────────────────────
-const PORT = 8080;
+// Add health check for deployments
+httpServer.on("request", (req, res) => {
+  if (req.url === "/health") {
+    res.writeHead(200);
+    res.end("ok");
+    return;
+  }
+});
+
 httpServer.listen(PORT, () => {
   console.log(`
 ${C.bold}${C.blue}╔══════════════════════════════════════════════════════════════════╗
-║         WebSocket Teaching Server — RUNNING                      ║
+║         WebSocket Teaching Server — DEPLOYMENT READY             ║
 ╠══════════════════════════════════════════════════════════════════╣
-║  ${C.cyan}Port 8080${C.blue} — Pattern 1: WITH .on()                               ║
-║             Pattern 3: WITH Callbacks                            ║
-║             Pattern 4: WITHOUT Callbacks (async/await)           ║
-╠══════════════════════════════════════════════════════════════════╣
-║  ${C.yellow}Port 8081${C.blue} — Pattern 2: WITHOUT .on() (direct properties)        ║
+║  ${C.cyan}Main Port: ${PORT}${C.blue}                                             ║
+║  ${C.green}Health Check: /health${C.blue}                                           ║
+║                                                                  ║
+║  Default: Pattern 1 (With .on)                                   ║
+║  Path /p2: Pattern 2 (Without .on)                               ║
 ╚══════════════════════════════════════════════════════════════════╝${C.reset}
   `);
-  console.log(`  Open ${C.green}client.html${C.reset} in your browser to start learning!\n`);
 });
+
+// If local and not explicitly restricted, we can still open 8081 for backward compat
+if (!process.env.PORT) {
+  try {
+    const wss8081 = new WebSocket.Server({ port: 8081 });
+    wss8081.on("connection", (ws) => {
+      // Proxy to the same singleton logic if wanted, or just keep legacy
+      wssWithoutOn.emit("connection", ws); 
+    });
+    console.log(`${C.yellow}[LOCAL] Also listening on Port 8081 for legacy learn files${C.reset}`);
+  } catch (e) {}
+}
+

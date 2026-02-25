@@ -420,6 +420,7 @@
       margin-top: 10px
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -488,7 +489,7 @@
         <div class="box-body">
           <div class="code">
             <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
-              class="str">'ws://localhost:8080'</span>);<br><br>
+              class="str">getWsUrl(8080)</span>);<br><br>
             ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () =&gt; {<br>
             &nbsp;&nbsp;<span class="cm">// Announce yourself on connect</span><br>
             &nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({<br>
