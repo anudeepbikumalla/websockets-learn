@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 12 — WebSocket vs SSE vs Long Polling</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(56, 189, 248, .1);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-orange {
+      color: var(--orange);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media(max-width:720px) {
+      .three-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .ev {
+      color: #fbbf24;
+    }
+
+    /* COMPARISON TABLE */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem;
+    }
+
+    .compare-table th {
+      padding: 10px 14px;
+      background: var(--card2);
+      color: var(--dim);
+      font-weight: 600;
+      font-size: .73rem;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .compare-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--dim);
+      vertical-align: top;
+    }
+
+    .compare-table td:first-child {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .tag.yes {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .tag.no {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+    }
+
+    .tag.maybe {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    /* DECISION TREE */
+    .decision {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .d-node {
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .d-q {
+      font-size: .85rem;
+      flex: 1;
+    }
+
+    .d-ans {
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+    }
+
+    .d-ans.ws {
+      color: var(--blue);
+    }
+
+    .d-ans.sse {
+      color: var(--purple);
+    }
+
+    .d-ans.lp {
+      color: var(--orange);
+    }
+
+    /* ANIMATION DEMO */
+    .anim-demo {
+      background: var(--card3);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .anim-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 10px 0;
+      font-size: .78rem;
+    }
+
+    .anim-label {
+      width: 110px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .anim-track {
+      flex: 1;
+      height: 24px;
+      background: rgba(255, 255, 255, .04);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .anim-msg {
+      position: absolute;
+      height: 100%;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      font-size: .65rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: left 1.5s linear;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn:hover {
+      opacity: .85;
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .golden {
+      background: rgba(56, 189, 248, .05);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--blue);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--blue);
+      color: #082f49;
+      border-color: var(--blue);
+    }
+
+    .nav-btn.home {
+      background: var(--card2);
+    }
+
+    code.mono {
+      font-family: monospace;
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 12</div>
+    <h1>WebSocket vs SSE vs Long Polling 🏆</h1>
+    <p>Three ways to push data from server to client in real-time. When should you use each? This lesson gives you the
+      decision framework used by senior engineers.</p>
+  </div>
+  <div class="page">
+
+    <!-- 1: The Three Technologies -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">1</div>
+        <div>
+          <div class="sec-title">The 3 Technologies at a Glance 👁️</div>
+          <div class="sec-sub">Each solves the same problem differently</div>
+        </div>
+      </div>
+      <div class="three-col">
+        <div class="box">
+          <div class="box-head c-blue">📡 WebSocket</div>
+          <div class="box-body">
+            <p><strong style="color:var(--text)">Full-duplex connection</strong> — both sides send at any time.</p>
+            <div class="code" style="margin-top:10px">
+              <span class="cm">// One upgrade handshake</span><br>
+              <span class="cm">// then raw TCP frames</span><br>
+              Client <span class="ev">⇄</span> Server<br>
+              Protocol: <span class="str">ws://</span> or <span class="str">wss://</span>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--purple)">📻 SSE (Server-Sent Events)</div>
+          <div class="box-body">
+            <p><strong style="color:var(--text)">Server → Client only</strong> — uses a regular HTTP response that never
+              ends.</p>
+            <div class="code" style="margin-top:10px">
+              <span class="cm">// Standard HTTP GET that streams</span><br>
+              Client <span class="ev">→</span> Server: <span class="str">GET /stream</span><br>
+              Server <span class="ev">→</span> Client: endless stream<br>
+              Protocol: <span class="str">http://</span> / <span class="str">https://</span>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-orange">🔄 Long Polling</div>
+          <div class="box-body">
+            <p><strong style="color:var(--text)">Repeated HTTP requests</strong> — client asks, server waits until
+              there's data, then client asks again.</p>
+            <div class="code" style="margin-top:10px">
+              <span class="cm">// Client polls endlessly</span><br>
+              Client: <span class="str">GET /poll</span> (waits 30s)<br>
+              Server: replies when there's data<br>
+              Client: <span class="str">GET /poll</span> (immediately again)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2: Comparison Table -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">2</div>
+        <div>
+          <div class="sec-title">Full Comparison Table 📊</div>
+          <div class="sec-sub">Detailed breakdown of every key factor</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-body" style="padding:0">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>📡 WebSocket</th>
+                <th>📻 SSE</th>
+                <th>🔄 Long Polling</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Bidirectional</td>
+                <td><span class="tag yes">Yes — full duplex</span></td>
+                <td><span class="tag no">No — server only</span></td>
+                <td><span class="tag maybe">Sort of — alternating</span></td>
+              </tr>
+              <tr>
+                <td>Server Push</td>
+                <td><span class="tag yes">Yes</span></td>
+                <td><span class="tag yes">Yes</span></td>
+                <td><span class="tag yes">Yes</span></td>
+              </tr>
+              <tr>
+                <td>Protocol</td>
+                <td>ws:// (TCP upgrade)</td>
+                <td>http:// (standard)</td>
+                <td>http:// (standard)</td>
+              </tr>
+              <tr>
+                <td>Browser API</td>
+                <td><code class="mono">new WebSocket()</code></td>
+                <td><code class="mono">new EventSource()</code></td>
+                <td><code class="mono">fetch() in a loop</code></td>
+              </tr>
+              <tr>
+                <td>Connection overhead</td>
+                <td>Low (one handshake)</td>
+                <td>Low</td>
+                <td>High (reconnects constantly)</td>
+              </tr>
+              <tr>
+                <td>Latency</td>
+                <td><span class="tag yes">Lowest</span></td>
+                <td>Low</td>
+                <td><span class="tag no">Highest</span></td>
+              </tr>
+              <tr>
+                <td>Auto-reconnect</td>
+                <td><span class="tag no">Manual (Lesson 5)</span></td>
+                <td><span class="tag yes">Built-in!</span></td>
+                <td>Manual</td>
+              </tr>
+              <tr>
+                <td>Binary support</td>
+                <td><span class="tag yes">Yes (Lesson 10)</span></td>
+                <td><span class="tag no">Text only</span></td>
+                <td>Via base64</td>
+              </tr>
+              <tr>
+                <td>Proxy/firewall friendly</td>
+                <td>Sometimes blocked</td>
+                <td><span class="tag yes">Always works</span></td>
+                <td><span class="tag yes">Always works</span></td>
+              </tr>
+              <tr>
+                <td>Max connections</td>
+                <td>Limited by server FDs</td>
+                <td>Limited by server</td>
+                <td>Very limited</td>
+              </tr>
+              <tr>
+                <td>Complexity</td>
+                <td>Medium</td>
+                <td><span class="tag yes">Low</span></td>
+                <td>High</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3: SSE Code -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">3</div>
+        <div>
+          <div class="sec-title">SSE in Code — simpler than you think 💻</div>
+          <div class="sec-sub">Native browser API, no library needed</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">&lt;/&gt; SSE — client and server</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// ─── Client (browser) ───────────────────</span><br>
+            <span class="kw">const</span> source = <span class="kw">new</span> <span class="fn">EventSource</span>(<span
+              class="str">'/events'</span>);<br>
+            source.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, e => <span
+              class="fn">console</span>.<span class="fn">log</span>(e.data));<br>
+            source.<span class="fn">addEventListener</span>(<span class="str">'error'</span>, () => { <span
+              class="cm">/* auto-reconnects already! */</span> });<br><br>
+            <span class="cm">// ─── Server (Node.js) ────────────────────</span><br>
+            app.<span class="fn">get</span>(<span class="str">'/events'</span>, (req, res) => {<br>
+            &nbsp;&nbsp;res.<span class="fn">setHeader</span>(<span class="str">'Content-Type'</span>, <span
+              class="str">'text/event-stream'</span>);<br>
+            &nbsp;&nbsp;res.<span class="fn">setHeader</span>(<span class="str">'Cache-Control'</span>, <span
+              class="str">'no-cache'</span>);<br>
+            &nbsp;&nbsp;res.<span class="fn">setHeader</span>(<span class="str">'Connection'</span>, <span
+              class="str">'keep-alive'</span>);<br><br>
+            &nbsp;&nbsp;<span class="cm">// Send a message every second</span><br>
+            &nbsp;&nbsp;<span class="kw">const</span> iv = <span class="fn">setInterval</span>(() => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;res.<span class="fn">write</span>(<span class="str">`data: ${</span><span
+              class="fn">JSON.stringify</span>({time: <span class="kw">new</span> <span class="fn">Date</span>()})}<span
+              class="str">\n\n`</span>); <span class="cm">// \n\n = end of event</span><br>
+            &nbsp;&nbsp;}, <span class="ev">1000</span>);<br>
+            &nbsp;&nbsp;req.<span class="fn">on</span>(<span class="str">'close'</span>, () => <span
+              class="fn">clearInterval</span>(iv));<br>
+            });
+          </div>
+          <p class="note-sm" style="color:var(--green)">💡 SSE is perfect for ChatGPT-style streaming, live feeds, and
+            notifications — and works even behind corporate proxies.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: Decision Tree -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">4</div>
+        <div>
+          <div class="sec-title">Which one should YOU use? 🤔</div>
+          <div class="sec-sub">A simple decision tree</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-yellow">🌳 Decision Tree</div>
+        <div class="box-body">
+          <div class="decision">
+            <div class="d-node">
+              <div class="d-q">Does the <strong>client</strong> need to send data too? (chat, games, collaboration)
+              </div>
+              <div class="d-ans ws">→ WebSocket</div>
+            </div>
+            <div class="d-node">
+              <div class="d-q">Is it <strong>server → client only</strong>? (live feed, AI streaming, notifications)
+              </div>
+              <div class="d-ans sse">→ SSE (EventSource)</div>
+            </div>
+            <div class="d-node">
+              <div class="d-q">Do you need to work behind <strong>strict proxies/firewalls</strong>? (enterprise apps)
+              </div>
+              <div class="d-ans sse">→ SSE (uses plain HTTP)</div>
+            </div>
+            <div class="d-node">
+              <div class="d-q">Do you need <strong>binary data</strong>? (file transfer, video, game engine)</div>
+              <div class="d-ans ws">→ WebSocket</div>
+            </div>
+            <div class="d-node">
+              <div class="d-q">Supporting <strong>IE11 or very old browsers</strong>?</div>
+              <div class="d-ans lp">→ Long Polling (as last resort)</div>
+            </div>
+            <div class="d-node">
+              <div class="d-q">ChatGPT-style <strong>token streaming</strong>?</div>
+              <div class="d-ans sse">→ SSE (simplest option)</div>
+            </div>
+          </div>
+          <p class="note-sm" style="margin-top:14px">⚡ <strong style="color:var(--text)">Rule of thumb:</strong> Use
+            <strong style="color:var(--blue)">WebSocket</strong> if you need two-way communication. Use <strong
+              style="color:var(--purple)">SSE</strong> for server-to-client only. Use <strong
+              style="color:var(--orange)">Long Polling</strong> only as a last resort.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5: Real World -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">5</div>
+        <div>
+          <div class="sec-title">Who Uses What — Real Apps 🌍</div>
+          <div class="sec-sub">Production choice examples from major companies</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">🏢 Real-world technology choices</div>
+        <div class="box-body">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>App / Feature</th>
+                <th>Technology</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>💬 Slack (messages)</td>
+                <td><span class="tag yes">WebSocket</span></td>
+                <td>Two-way: typing indicators, reactions, messages</td>
+              </tr>
+              <tr>
+                <td>🤖 ChatGPT (tokens)</td>
+                <td><span class="tag" style="background:rgba(167,139,250,.15);color:var(--purple)">SSE</span></td>
+                <td>Server streams tokens to browser — no client messages needed</td>
+              </tr>
+              <tr>
+                <td>📈 Robinhood (prices)</td>
+                <td><span class="tag yes">WebSocket</span></td>
+                <td>Ultra-low latency stock tick data</td>
+              </tr>
+              <tr>
+                <td>🔔 Twitter notifs</td>
+                <td><span class="tag" style="background:rgba(167,139,250,.15);color:var(--purple)">SSE</span></td>
+                <td>Push-only, works behind all proxies</td>
+              </tr>
+              <tr>
+                <td>🎮 Agar.io (game)</td>
+                <td><span class="tag yes">WebSocket</span></td>
+                <td>Binary, bidirectional, 60fps game state</td>
+              </tr>
+              <tr>
+                <td>📺 YouTube live count</td>
+                <td><span class="tag may" style="background:rgba(251,146,60,.15);color:var(--orange)">Long
+                    Polling</span></td>
+                <td>Legacy compatibility, low frequency updates</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6: Final Rules -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">6</div>
+        <div>
+          <div class="sec-title">⚡ Final Decision Rules</div>
+          <div class="sec-sub">Your engineering checklist</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Technology Choice Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">📡</div>
+            <div class="rule-text"><strong>Default to WebSocket</strong> for real-time apps that need two-way
+              communication: chat, games, collaborative tools, dashboards where users interact.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📻</div>
+            <div class="rule-text"><strong>Use SSE</strong> for push-only feeds (AI streaming, live scores,
+              notifications). It's simpler, auto-reconnects, and works everywhere.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔄</div>
+            <div class="rule-text"><strong>Avoid Long Polling</strong> unless you must support very old browsers. It
+              wastes connections and has the worst latency.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔀</div>
+            <div class="rule-text"><strong>You can mix them</strong> — use SSE for server→client push and a regular POST
+              for client→server. Simpler than WebSocket for some use cases.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7: Completion -->
+    <section>
+      <div
+        style="background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(167,139,250,.1));border:1px solid rgba(56,189,248,.2);border-radius:16px;padding:28px;text-align:center">
+        <div style="font-size:3rem;margin-bottom:12px">🎓</div>
+        <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:10px">You've completed all 12 lessons!</h2>
+        <p style="color:var(--dim);max-width:500px;margin:0 auto 20px;font-size:.9rem">From zero to production-ready
+          WebSockets. You now know lifecycle, patterns, error handling, broadcasting, rooms, auth, heartbeats, binary
+          data, scaling, and when to use alternatives.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <a href="index.html"
+            style="padding:10px 22px;border-radius:8px;background:var(--blue);color:#082f49;font-weight:700;text-decoration:none;font-size:.88rem">🏠
+            Back to Hub</a>
+          <a href="client.html"
+            style="padding:10px 22px;border-radius:8px;background:var(--card2);color:var(--text);font-weight:700;text-decoration:none;border:1px solid var(--border);font-size:.88rem">🚀
+            Advanced Demo</a>
+          <a href="WEBSOCKET_STUDY_NOTES.md"
+            style="padding:10px 22px;border-radius:8px;background:var(--card2);color:var(--text);font-weight:700;text-decoration:none;border:1px solid var(--border);font-size:.88rem">📚
+            Study Notes</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn11.html" class="nav-btn">← Lesson 11</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="client.html" class="nav-btn primary">🚀 Advanced Demo →</a>
+  </div>
+</body>
+
+</html>
