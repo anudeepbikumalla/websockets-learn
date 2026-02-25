@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 11 — Scaling WebSockets</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167, 139, 250, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(167, 139, 250, .1);
+      color: var(--purple);
+      border: 1px solid rgba(167, 139, 250, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple);
+    }
+
+    .sec-num.c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-purple {
+      color: var(--purple);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    .box-head.c-red {
+      color: var(--red);
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .ev {
+      color: #fbbf24;
+    }
+
+    /* ARCHITECTURE DIAGRAMS */
+    .arch-box {
+      background: var(--card3);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      color: var(--dim);
+      line-height: 2.2;
+    }
+
+    .arch-server {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .arch-client {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .arch-redis {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .arch-lb {
+      color: var(--yellow);
+      font-weight: 700;
+    }
+
+    .arch-arrow {
+      color: var(--muted);
+    }
+
+    .scale-demo {
+      background: var(--card);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .scale-top {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .servers-row {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      flex-wrap: wrap;
+    }
+
+    .server-box {
+      flex: 1;
+      min-width: 130px;
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .server-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 8px;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .server-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .server-clients {
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      color: var(--dim);
+    }
+
+    .server-client {
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+    }
+
+    .server-client.highlight {
+      color: var(--yellow);
+    }
+
+    .pub-log {
+      height: 100px;
+      overflow-y: auto;
+      padding: 10px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .7rem;
+      background: var(--card3);
+      border-top: 1px solid var(--border);
+    }
+
+    .pub-line {
+      padding: 2px 0;
+    }
+
+    .pub-line.redis {
+      color: var(--red);
+    }
+
+    .pub-line.ws {
+      color: var(--blue);
+    }
+
+    .pub-line.sys {
+      color: var(--muted);
+    }
+
+    .scale-controls {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn:hover {
+      opacity: .85;
+    }
+
+    .btn-purple {
+      background: var(--purple);
+      color: #1a0a2e;
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .golden {
+      background: rgba(167, 139, 250, .05);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--purple);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+
+    .hl.red {
+      border-color: var(--red);
+      background: rgba(248, 113, 113, .05);
+      color: var(--dim);
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim);
+    }
+
+    .hl.purple {
+      border-color: var(--purple);
+      background: rgba(167, 139, 250, .05);
+      color: var(--dim);
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--purple);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--purple);
+      color: #1a0a2e;
+      border-color: var(--purple);
+    }
+
+    .nav-btn.home {
+      background: var(--card2);
+    }
+
+    code.mono {
+      font-family: monospace;
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 11</div>
+    <h1>Scaling WebSockets 🚀</h1>
+    <p>One server handles ~10,000 connections. But what about 1,000,000? Learn how Slack, Discord, and Twitch serve
+      millions of users with multiple WebSocket servers.</p>
+  </div>
+  <div class="page">
+
+    <!-- 1: The Problem -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">1</div>
+        <div>
+          <div class="sec-title">The Scaling Problem 💥</div>
+          <div class="sec-sub">One server is never enough</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-red">❌ Problem: clients on different servers</div>
+          <div class="box-body">
+            <div class="arch-box">
+              <span class="arch-lb">Load Balancer</span><br>
+              &nbsp;&nbsp;<span
+                class="arch-arrow">↙</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                class="arch-arrow">↘</span><br>
+              <span class="arch-server">Server A</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arch-server">Server
+                B</span><br>
+              Alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bob<br>
+            </div>
+            <p class="note-sm" style="color:var(--red)">Alice sends a message. Server A broadcasts — but Bob is on
+              Server B. Bob never receives it! 😱</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-green">✅ Solution: Redis Pub/Sub</div>
+          <div class="box-body">
+            <div class="arch-box">
+              <span class="arch-lb">Load Balancer</span><br>
+              &nbsp;&nbsp;<span
+                class="arch-arrow">↙</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                class="arch-arrow">↘</span><br>
+              <span class="arch-server">Server A</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arch-server">Server
+                B</span><br>
+              &nbsp;&nbsp;<span
+                class="arch-arrow">↘</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                class="arch-arrow">↙</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="arch-redis">Redis Pub/Sub</span><br>
+            </div>
+            <p class="note-sm" style="color:var(--green)">Server A publishes to Redis. Server B subscribes and forwards
+              to Bob. ✅</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2: How Redis Pub/Sub Works -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Redis Pub/Sub — the bridge between servers 🔴</div>
+          <div class="sec-sub">A message broker all your servers share</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">&lt;/&gt; server.js — with Redis Pub/Sub</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> Redis = <span class="fn">require</span>(<span
+              class="str">'ioredis'</span>);<br>
+            <span class="kw">const</span> pub = <span class="kw">new</span> <span class="fn">Redis</span>(); <span
+              class="cm">// for publishing</span><br>
+            <span class="kw">const</span> sub = <span class="kw">new</span> <span class="fn">Redis</span>(); <span
+              class="cm">// for subscribing (separate connection)</span><br><br>
+            <span class="cm">// Subscribe to the shared "messages" channel</span><br>
+            sub.<span class="fn">subscribe</span>(<span class="str">'messages'</span>);<br><br>
+            <span class="cm">// When Redis delivers a message → forward to ALL local WS clients</span><br>
+            sub.<span class="fn">on</span>(<span class="str">'message'</span>, (channel, data) => {<br>
+            &nbsp;&nbsp;wss.clients.<span class="fn">forEach</span>(client => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (client.readyState === WebSocket.<span
+              class="ev">OPEN</span>)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.<span class="fn">send</span>(data);<br>
+            &nbsp;&nbsp;});<br>
+            });<br><br>
+            <span class="cm">// When a WS client sends a message → publish to Redis</span><br>
+            ws.<span class="fn">on</span>(<span class="str">'message'</span>, (raw) => {<br>
+            &nbsp;&nbsp;pub.<span class="fn">publish</span>(<span class="str">'messages'</span>, raw.<span
+              class="fn">toString</span>());<br>
+            &nbsp;&nbsp;<span class="cm">// Redis delivers it to ALL servers → they forward to their clients</span><br>
+            });
+          </div>
+          <div class="hl green">
+            <strong style="color:var(--green)">The magic:</strong> Every server publishes to Redis and receives from
+            Redis. So a message from Alice (Server A) is delivered to all servers, and each server forwards it to its
+            own local WebSocket clients.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3: Demo -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">3</div>
+        <div>
+          <div class="sec-title">▶️ Multi-Server Demo (Simulated)</div>
+          <div class="sec-sub">Three servers, shared Redis — send from Server A, everyone receives</div>
+        </div>
+      </div>
+      <div class="scale-demo">
+        <div class="scale-top">🚀 Redis Pub/Sub Simulator — 3 servers, 6 clients</div>
+        <div class="servers-row" id="serversRow">
+          <div class="server-box" id="srv0">
+            <div class="server-header">
+              <div class="server-dot"></div>Server A :8080
+            </div>
+            <div class="server-clients" id="sc0">
+              <div class="server-client">● Alice</div>
+              <div class="server-client">● Bob</div>
+            </div>
+          </div>
+          <div class="server-box" id="srv1">
+            <div class="server-header">
+              <div class="server-dot"></div>Server B :8081
+            </div>
+            <div class="server-clients" id="sc1">
+              <div class="server-client">● Carol</div>
+              <div class="server-client">● Dave</div>
+            </div>
+          </div>
+          <div class="server-box" id="srv2">
+            <div class="server-header">
+              <div class="server-dot"></div>Server C :8082
+            </div>
+            <div class="server-clients" id="sc2">
+              <div class="server-client">● Eve</div>
+              <div class="server-client">● Frank</div>
+            </div>
+          </div>
+        </div>
+        <div class="pub-log" id="pubLog">
+          <div class="pub-line sys">Click "Broadcast From A" to see Redis Pub/Sub in action…</div>
+        </div>
+        <div class="scale-controls">
+          <button class="btn btn-blue" onclick="simBroadcast(0,'Server A', 'Alice')">📢 Broadcast from A</button>
+          <button class="btn btn-purple" onclick="simBroadcast(1,'Server B', 'Carol')">📢 Broadcast from B</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('pubLog').innerHTML=''">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: Sticky Sessions -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">4</div>
+        <div>
+          <div class="sec-title">Sticky Sessions — an alternative (and its problems) 🍬</div>
+          <div class="sec-sub">Route each client always to the SAME server</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-blue">🍬 Sticky Sessions</div>
+          <div class="box-body">
+            <p style="margin-bottom:10px">The load balancer uses the client IP or a cookie to always route the same user
+              to the same server.</p>
+            <div class="code">
+              <span class="cm"># nginx config</span><br>
+              upstream websocket {<br>
+              &nbsp;&nbsp;<span class="ev">ip_hash</span>; <span class="cm"># sticky by IP</span><br>
+              &nbsp;&nbsp;server localhost:<span class="ev">8080</span>;<br>
+              &nbsp;&nbsp;server localhost:<span class="ev">8081</span>;<br>
+              }
+            </div>
+            <p class="note-sm" style="color:var(--yellow)">⚠️ Problem: if Server A crashes, all its clients reconnect to
+              B or C and lose session state.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-green">✅ Redis Pub/Sub (recommended)</div>
+          <div class="box-body">
+            <p style="margin-bottom:10px">No sticky sessions needed. Clients can land on any server. Redis handles
+              message delivery between them.</p>
+            <div class="code">
+              <span class="cm">// Benefits:</span><br>
+              <span class="ev">✅</span> Any server can crash — clients reconnect to any other<br>
+              <span class="ev">✅</span> Add/remove servers without downtime<br>
+              <span class="ev">✅</span> Works with Kubernetes autoscaling
+            </div>
+            <p class="note-sm" style="color:var(--green)">Industry standard used by Slack, Discord, Twitch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5: Rules -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">5</div>
+        <div>
+          <div class="sec-title">⚡ Scaling Rules</div>
+          <div class="sec-sub">Before you deploy at scale</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Scaling Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔴</div>
+            <div class="rule-text"><strong>Use Redis Pub/Sub</strong> as the message bus between your WebSocket servers
+              — it's the industry standard (Socket.io does this automatically).</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📊</div>
+            <div class="rule-text"><strong>One Node.js process</strong> can hold ~10,000–50,000 WebSocket connections
+              before running out of file descriptors. Plan your fleet accordingly.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔀</div>
+            <div class="rule-text"><strong>Use a load balancer with WebSocket support</strong> — nginx, AWS ALB, or
+              Cloudflare all support WebSocket upgrade headers.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">💾</div>
+            <div class="rule-text"><strong>Never store state in memory</strong> — room membership, user data should go
+              in Redis, not a plain JS object, so all servers share it.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🚀</div>
+            <div class="rule-text"><strong>Try Socket.io for managed scaling</strong> — it handles pub/sub, reconnect,
+              and fallback automatically. Use raw <code class="mono">ws</code> only if you need max performance or
+              control.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn10.html" class="nav-btn">← Lesson 10</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn12.html" class="nav-btn primary">Lesson 12: WS vs SSE →</a>
+  </div>
+
+  <script>
+    function now() { return new Date().toLocaleTimeString('en-US', { hour12: false }); }
+    function pubLog(cls, msg) {
+      const el = document.getElementById('pubLog');
+      const d = document.createElement('div');
+      d.className = `pub-line ${cls}`; d.textContent = msg;
+      el.appendChild(d); el.scrollTop = el.scrollHeight;
+    }
+    function highlightServer(idx) {
+      document.querySelectorAll('.server-box').forEach((s, i) =>
+        s.style.borderColor = i === idx ? 'rgba(251,191,36,.5)' : '');
+      setTimeout(() => document.querySelectorAll('.server-box').forEach(s => s.style.borderColor = ''), 2000);
+    }
+    function simBroadcast(srcIdx, srvName, sender) {
+      pubLog('sys', `[${now()}] ${sender} sends message on ${srvName}`);
+      highlightServer(srcIdx);
+      setTimeout(() => {
+        pubLog('redis', `[${now()}] 📤 ${srvName} → PUBLISH to Redis channel "messages"`);
+      }, 300);
+      setTimeout(() => {
+        pubLog('redis', `[${now()}] 🔴 Redis delivers to ALL 3 subscribers`);
+      }, 700);
+      ['A', 'B', 'C'].forEach((s, i) => {
+        setTimeout(() => {
+          pubLog('ws', `[${now()}] Server ${s} → forwards to ${i === 0 ? 2 : 2} local clients ✓`);
+        }, 1000 + i * 200);
+      });
+      setTimeout(() => pubLog('sys', `[${now()}] ✅ All 6 clients received the message!`), 1700);
+    }
+  </script>
+</body>
+
+</html>
