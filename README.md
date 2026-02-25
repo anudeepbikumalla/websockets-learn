@@ -1,5 +1,7 @@
 # 📡 WebSocket Learning Hub
 
+### 🚀 [Launch Live Demo](https://htmlpreview.github.io/?https://github.com/anudeepbikumalla/websockets-learn/blob/main/index.html)
+
 An interactive, lesson-by-lesson WebSocket course built in plain HTML/JS.
 Open `index.html` to start — no build step needed, just open in a browser.
 
@@ -15,7 +17,22 @@ Open `index.html` to start — no build step needed, just open in a browser.
 
 ---
 
-## ✅ Completed Lessons (1–28)
+## 🌎 Live Demo
+
+Browse all lessons online — no setup required:
+
+| Page | Link |
+|---|---|
+| 🏠 **Hub** | [Open Hub](https://htmlpreview.github.io/?https://github.com/anudeepbikumalla/websockets-learn/blob/main/index.html) |
+| 📖 Lesson 1 | [WebSocket Basics](https://htmlpreview.github.io/?https://github.com/anudeepbikumalla/websockets-learn/blob/main/learn.html) |
+| 📖 Lesson 2 | [Listeners vs Properties](https://htmlpreview.github.io/?https://github.com/anudeepbikumalla/websockets-learn/blob/main/learn2.html) |
+| 📖 Lesson 3 | [Callbacks vs Async](https://htmlpreview.github.io/?https://github.com/anudeepbikumalla/websockets-learn/blob/main/learn3.html) |
+| 📖 Lesson 4 | [Live Chat Project](https://htmlpreview.github.io/?https://github.com/anudeepbikumalla/websockets-learn/blob/main/learn4.html) |
+| 📖 Lesson 5–28 | Replace `learn4.html` with `learn5.html` through `learn28.html` in the URL |
+
+---
+
+## ✅ All 28 Lessons
 
 ### Core Fundamentals
 | # | File | Topic |
@@ -59,7 +76,7 @@ Open `index.html` to start — no build step needed, just open in a browser.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Local Development
 
 ```bash
 # 1. Install dependencies
