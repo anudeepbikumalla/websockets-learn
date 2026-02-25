@@ -344,7 +344,7 @@
 </style>
   <script src="config.js"></script>
   <script src="progress.js"></script>
-  <script src="theme.js"></script>
+  
 </head>
 
 <body>
@@ -357,8 +357,8 @@
   
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
     <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(255,255,255,.03);color:var(--dim);border:1px solid #22c55e30">🟢 Beginner</span>
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid var(--border)">⏱️ ~6 min read</span>
-    <a href="learn.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid var(--border);text-decoration:none">🔗 Prereq: Lesson 1: Basics</a>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid rgba(255,255,255,0.06)">⏱️ ~6 min read</span>
+    <a href="learn.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid rgba(255,255,255,0.06);text-decoration:none">🔗 Prereq: Lesson 1: Basics</a>
   </div>
 </div>
 
@@ -617,21 +617,21 @@
   
   
 
-  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💻</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">VS Code Live Share</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Multiple handlers on one WebSocket: one for cursor positions, one for file edits, one for terminal sharing. If they used <code>onmessage =</code>, only the last handler would work.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📊</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Grafana Dashboards</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Each dashboard panel attaches its own listener to filter the messages it cares about, while ignoring others.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏦</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Bloomberg Terminal</div>
@@ -644,7 +644,7 @@
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 2 as Complete</span>
     </button>
@@ -678,44 +678,59 @@
   </script>
 
 
-  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
+  </div>
+
+  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
-        <span>🏗️ Scenario Implementation:</span>
-        <span style="color:var(--dim);font-weight:500">Decoupled Architecture (Multi-Widget Dashboard)</span>
-      </div>
-      <div style="padding:20px">
-        <div style="margin-bottom:18px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
-          <div style="font-size:.88rem;color:var(--text);line-height:1.7">In a complex web app, you might have a Chat Widget, a Notification Widget, and a Live Map all sharing a single WebSocket connection to save resources. By using <code>addEventListener</code> instead of the <code>onmessage</code> property, each UI component can independently listen to the network stream and filter out the data it cares about without overwriting the other widgets' listeners.</div>
-        </div>
-        <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
-        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code>const sharedWs = new WebSocket('ws://api.myapp.com');
-
-// --- Widget A: Notifications System ---
-sharedWs.addEventListener('message', (event) =&gt; {
-  const data = JSON.parse(event.data);
-  if (data.type === 'ALERT') {
-    showToast(data.text);
-  }
+    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Multi-Widget Dashboard</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const sharedWs = new WebSocket('ws://api.myapp.com');
+// Widget 1 listens for notifications
+sharedWs.addEventListener('message', (e) =&gt; {
+  const data = JSON.parse(e.data);
+  if (data.type === 'ALERT') showToast(data.text);
 });
+// Widget 2 listens for chat messages
+sharedWs.addEventListener('message', (e) =&gt; {
+  const data = JSON.parse(e.data);
+  if (data.type === 'CHAT') appendToChat(data.text);
+});</code></pre>
+      </div>
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Connection Status Light</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const ws = new WebSocket('ws://app.local');
+const statusLight = document.getElementById('status');
 
-// --- Widget B: Chat System ---
-sharedWs.addEventListener('message', (event) =&gt; {
-  const data = JSON.parse(event.data);
-  if (data.type === 'CHAT_MSG') {
-    chatUI.append(data.text);
+ws.addEventListener('open', () =&gt; {
+  statusLight.className = "indicator green";
+  statusLight.innerText = "Online";
+});
+ws.addEventListener('close', () =&gt; {
+  statusLight.className = "indicator red";
+  statusLight.innerText = "Offline";
+});</code></pre>
+      </div>
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Analytics Event Tracker</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const ws = new WebSocket('ws://analytics.server');
+// Track every time the user clicks on the page
+document.addEventListener('click', (e) =&gt; {
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ 
+      event: 'user_click', 
+      x: e.clientX, 
+      y: e.clientY 
+    }));
   }
 });</code></pre>
-        </div>
       </div>
     </div>
   </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/3 answered</span>
@@ -724,30 +739,30 @@ sharedWs.addEventListener('message', (event) =&gt; {
         <div id="quiz_9817_q0" style="margin-bottom:20px">
           <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What happens if you set <code>ws.onmessage</code> twice?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Both handlers run</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. The first one wins</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. The second one overwrites the first</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. An error is thrown</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Both handlers run</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. The first one wins</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. The second one overwrites the first</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. An error is thrown</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
           <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Which method allows multiple handlers for the same event?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. ws.onmessage = fn</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. ws.setHandler()</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. ws.addEventListener()</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. ws.attachEvent()</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. ws.onmessage = fn</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. ws.setHandler()</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. ws.addEventListener()</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. ws.attachEvent()</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q2" style="margin-bottom:20px">
           <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. How do you remove a specific event listener?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. ws.onmessage = null</button>
-            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. ws.removeEventListener('message', fn)</button>
-            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. ws.off('message')</button>
-            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. delete ws.onmessage</button>
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. ws.onmessage = null</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. ws.removeEventListener('message', fn)</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. ws.off('message')</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. delete ws.onmessage</button>
           </div>
           <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -804,11 +819,11 @@ sharedWs.addEventListener('message', (event) =&gt; {
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — Event Listeners vs Properties</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
             <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.onmessage = fn</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Sets ONE handler (overwrites previous!)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">❌ Fragile — only 1 allowed</td></tr>
             <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.addEventListener('message', fn)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Adds a handler (allows multiple!)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">✅ Safe — stack as many as you want</td></tr>
@@ -820,7 +835,7 @@ sharedWs.addEventListener('message', (event) =&gt; {
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
       <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
       <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><code>ws.onmessage = fn</code> is like writing on a <strong>whiteboard</strong> — the next person erases what you wrote.</span></div>
       <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><code>ws.addEventListener</code> is like a <strong>bulletin board</strong> — everyone can pin their note and nothing gets overwritten.</span></div>
@@ -830,9 +845,9 @@ sharedWs.addEventListener('message', (event) =&gt; {
     </div>
 
     <!-- 💻 Production Pattern -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Safe pattern — use addEventListener</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:var(--card3)"><code>const ws = new WebSocket('ws://localhost:8080');
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>const ws = new WebSocket('ws://localhost:8080');
 
 // ✅ GOOD — Multiple handlers, nothing gets overwritten
 ws.addEventListener('message', (event) => {
@@ -852,9 +867,9 @@ ws.addEventListener('message', (event) => {
   </div>
 
 <div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
-    <a href="index.html" style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:var(--card2);color:#94a3b8;text-decoration:none">&#127968; Home</a>
-    <a href="learn.html" style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:var(--card);color:#94a3b8;text-decoration:none">&#8592; Lesson 1</a>
-    <a href="WEBSOCKET_STUDY_NOTES.md" style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:var(--card);color:#94a3b8;text-decoration:none">&#128218; Notes</a>
+    <a href="index.html" style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:rgba(255,255,255,0.02);color:#94a3b8;text-decoration:none">&#127968; Home</a>
+    <a href="learn.html" style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:transparent;color:#94a3b8;text-decoration:none">&#8592; Lesson 1</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:transparent;color:#94a3b8;text-decoration:none">&#128218; Notes</a>
     <a href="learn3.html" style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#a78bfa;color:#1a0a2e;text-decoration:none;border:none">Lesson 3: Callbacks &#8594;</a>
   </div>
 </body>

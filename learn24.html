@@ -357,7 +357,7 @@
 </style>
   <script src="config.js"></script>
   <script src="progress.js"></script>
-  <script src="theme.js"></script>
+  
 </head>
 
 <body>
@@ -523,21 +523,21 @@
   
   
 
-  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📞</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">WhatsApp Calls</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">WebSocket signals the call setup. Once connected, voice/video data flows P2P using WebRTC — that's why call quality depends on YOUR internet, not WhatsApp's servers.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Discord Voice Channels</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">WebSocket handles joining/leaving voice channels. Audio streams use WebRTC for low-latency peer-to-peer communication.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🤝</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Omegle / Chatroulette</div>
@@ -550,7 +550,7 @@
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 24 as Complete</span>
     </button>
@@ -584,43 +584,77 @@
   </script>
 
 
-  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
+  </div>
+
+  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
-        <span>🏗️ Scenario Implementation:</span>
-        <span style="color:var(--dim);font-weight:500">Using WS as a WebRTC Signaling Server</span>
-      </div>
-      <div style="padding:20px">
-        <div style="margin-bottom:18px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
-          <div style="font-size:.88rem;color:var(--text);line-height:1.7">WebRTC enables raw Peer-to-Peer video streaming (like Zoom) saving you massive server bandwidth costs. However, Peer A needs to know Peer B's IP address and firewall configurations to connect. We use a lightweight WebSocket server temporarily, just to ferry the technical SDP parameters back and forth. Once connected, the WebSocket isn't used for the video.</div>
-        </div>
-        <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
-        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code>// Server acts only as an invisible router
+    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">WebSocket as WebRTC Signaling Router</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Node.js WS Server: Purely ferrying WebRTC config data between Peer A and Peer B
 wss.on('connection', (ws) =&gt; {
-  ws.on('message', (message) =&gt; {
-    const data = JSON.parse(message);
+  ws.on('message', (msg) =&gt; {
+    const data = JSON.parse(msg);
+    // data.type is either 'offer', 'answer', or 'ice-candidate'
     
-    // Route WebRTC offers/answers directly to the target peer
-    const targetSocket = clientsMap.get(data.targetUserId);
+    // Find Peer B's socket and forward Peer A's payload unmodified!
+    const targetSocket = activeUsers.get(data.targetUserId);
     if (targetSocket) {
-      targetSocket.send(JSON.stringify({
-        type: data.type, // 'offer', 'answer', or 'ice-candidate'
-        payload: data.payload,
-        senderId: ws.userId
+      targetSocket.send(JSON.stringify({ 
+        type: data.type, payload: data.payload, senderId: ws.userId 
       }));
     }
   });
 });</code></pre>
-        </div>
+      </div>
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Client Generated SDP Offer</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Client A: Wants to start a video call
+const peerConnection = new RTCPeerConnection(stunServers);
+
+// Hook up webcam
+const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+stream.getTracks().forEach(track =&gt; peerConnection.addTrack(track, stream));
+
+// 1. Generate local WebRTC connection criteria (Offer)
+const offer = await peerConnection.createOffer();
+await peerConnection.setLocalDescription(offer);
+
+// 2. Send criteria THROUGH WebSocket to the target peer
+ws.send(JSON.stringify({
+  type: 'offer',
+  targetUserId: 'user-b',
+  payload: offer // Contains IP addresses, video codecs supported, etc.
+}));</code></pre>
+      </div>
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Client Handling ICE Candidates</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// WebRTC requires exchanging tiny 'ICE' packets continuously to bypass NAT/Firewalls
+peerConnection.onicecandidate = (event) =&gt; {
+  if (event.candidate) {
+    // Send the tiny path data through the WS Signaler
+    ws.send(JSON.stringify({
+      type: 'ice-candidate',
+      targetUserId: 'user-b',
+      payload: event.candidate
+    }));
+  }
+};
+
+// Receiving the peer's ICE candidate from the WS Signaler
+ws.onmessage = (msg) =&gt; {
+  const data = JSON.parse(msg.data);
+  if (data.type === 'ice-candidate') {
+    peerConnection.addIceCandidate(new RTCIceCandidate(data.payload));
+  }
+};</code></pre>
       </div>
     </div>
   </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/2 answered</span>
@@ -629,20 +663,20 @@ wss.on('connection', (ws) =&gt; {
         <div id="quiz_9817_q0" style="margin-bottom:20px">
           <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What is WebSocket's role in WebRTC?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Streaming video</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Signaling — exchanging connection info before P2P starts</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Encoding audio</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Replacing WebRTC</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Streaming video</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Signaling — exchanging connection info before P2P starts</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Encoding audio</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Replacing WebRTC</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
           <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. After WebRTC P2P is established, is the WebSocket still needed?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Yes, always</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. No — the signaling server can be disconnected</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Only for video</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only for audio</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Yes, always</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. No — the signaling server can be disconnected</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Only for video</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only for audio</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -699,11 +733,11 @@ wss.on('connection', (ws) =&gt; {
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — WebRTC Signaling</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
             <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>RTCPeerConnection()</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Create a direct peer connection</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Browser-to-browser</td></tr>
             <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>WebSocket for signaling</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Exchange connection info via WS</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Before P2P starts</td></tr>
@@ -715,7 +749,7 @@ wss.on('connection', (ws) =&gt; {
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
       <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
       <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>WebRTC = <strong>direct peer-to-peer</strong> connections (no server in between). Perfect for video/voice calls.</span></div>
       <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>But peers need to <strong>find each other first</strong> — that's what WebSocket signaling does (exchange connection details).</span></div>

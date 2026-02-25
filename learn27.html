@@ -345,7 +345,7 @@
 </style>
   <script src="config.js"></script>
   <script src="progress.js"></script>
-  <script src="theme.js"></script>
+  
 </head>
 
 <body>
@@ -523,14 +523,14 @@
   
   
 
-  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📺</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Netflix</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Netflix's Chaos Engineering team intentionally kills WebSocket servers in production to verify that clients reconnect gracefully. They call it "Chaos Monkey."</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
           <div>
             <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Slack</div>
@@ -543,7 +543,7 @@
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 27 as Complete</span>
     </button>
@@ -577,44 +577,74 @@
   </script>
 
 
-  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
-        <span>🏗️ Scenario Implementation:</span>
-        <span style="color:var(--dim);font-weight:500">Automated Load Testing with Artillery</span>
-      </div>
-      <div style="padding:20px">
-        <div style="margin-bottom:18px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
-          <div style="font-size:.88rem;color:var(--text);line-height:1.7">Never guess your server's limits. Before launching, engineers use tools like Artillery or K6 to barrage the WebSocket server with simulated traffic. This proves your CPU won't spike to 100% when a marketing campaign sends 5,000 simultaneous users to your site.</div>
-        </div>
-        <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
-        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code># load-test.yml
-# Run this in terminal: npx artillery run load-test.yml
+  </div>
 
+  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Artillery YAML Load Test</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code># load-test.yml
+# Simulates a marketing spike: Ramps up to 500 concurrent connections
 config:
   target: "ws://my-production-server.com"
   phases:
     - duration: 60       # Run for 60 seconds
-      arrivalRate: 50    # Add 50 new WebSocket clients per second
-      rampTo: 200        # Slowly ramp up to 200 concurrent new users/sec
+      arrivalRate: 50    # 50 new clients per second
+      rampTo: 500        # Ramp up to 500 concurrent
 
 scenarios:
   - engine: "ws"
     flow:
-      - send: "{\"type\":\"CONNECT_PING\"}"
-      - think: 2         # Pretend to be a human pausing for 2 seconds
-      - send: "{\"type\":\"HEAVY_DATABASE_QUERY\"}"
-      # By the end of 60 seconds, thousands of sockets will be competing!</code></pre>
-        </div>
+      - send: "{\"type\":\"CONNECT\"}"
+      - think: 2         # Pauses execution for 2s (simulates humans)
+      - send: "{\"type\":\"HEAVY_DB_QUERY\"}"
+      # Creates massive read/write contention on the backend!</code></pre>
+      </div>
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">K6 Load Test Script (JS)</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>import ws from 'k6/ws';
+import { check } from 'k6';
+
+export default function () {
+  const url = 'ws://api.myapp.com/chat';
+  const response = ws.connect(url, null, function (socket) {
+    socket.on('open', () =&gt; console.log('connected'));
+    
+    socket.on('message', (msg) =&gt; {
+      // Assert that server replies quickly
+      check(msg, { 'received expected payload': (m) =&gt; m.includes('ACK') });
+      socket.close();
+    });
+    
+    // Simulate user behavior
+    socket.send('Hello from k6 bot!');
+  });
+  
+  check(response, { 'status is 101 Switching Protocols': (r) =&gt; r && r.status === 101 });
+}</code></pre>
+      </div>
+      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Load Testing Cluster Memory</div>
+        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Node.js process profiling during load tests
+const v8 = require('v8');
+
+setInterval(() =&gt; {
+  const stats = v8.getHeapStatistics();
+  const mbUsed = Math.round(stats.used_heap_size / 1024 / 1024);
+  
+  // If a single process exceeds 1.5GB, PM2 will likely kill it
+  if (mbUsed &gt; 1000) {
+    console.warn(`DANGER! Memory leak detected during load test: ${mbUsed}MB`);
+  }
+}, 5000);</code></pre>
       </div>
     </div>
   </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/2 answered</span>
@@ -623,20 +653,20 @@ scenarios:
         <div id="quiz_9817_q0" style="margin-bottom:20px">
           <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What does load testing tell you?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Code quality</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. How many concurrent users your server can handle before breaking</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Security vulnerabilities</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Code formatting issues</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Code quality</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. How many concurrent users your server can handle before breaking</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Security vulnerabilities</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Code formatting issues</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
           <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Why ramp up load gradually instead of all at once?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. It's more realistic</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. To find exactly where performance degrades</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. All-at-once doesn't work</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Gradual is faster</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. It's more realistic</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. To find exactly where performance degrades</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. All-at-once doesn't work</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Gradual is faster</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -693,11 +723,11 @@ scenarios:
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — Load Testing</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
             <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>artillery quick --count 100</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Simulate 100 concurrent clients</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Quick load test</td></tr>
             <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>artillery run config.yml</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Detailed load test from config</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Production testing</td></tr>
@@ -708,7 +738,7 @@ scenarios:
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
       <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
       <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Load testing tells you: <strong>How many users can my server handle before it crashes?</strong></span></div>
       <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Use <strong>Artillery</strong> — it supports WebSocket out of the box and can simulate thousands of concurrent connections.</span></div>
