@@ -104,6 +104,17 @@ project-backend/
 
 ---
 
+## 🗺️ What to Learn Next
+
+Congratulations on finishing all 28 lessons! Here is your roadmap forward:
+
+1. **Master the Backend:** Dive deeper into **Express.js** or **NestJS** to build robust APIs around your real-time services.
+2. **Data Persistence:** Learn **PostgreSQL** (relational) and **Redis** (caching/PubSub) to handle large-scale message storage.
+3. **Frontend Mastery:** Learn **React** or **Next.js** to build professional UIs for your WebSocket apps.
+4. **System Design:** Study the **CAP Theorem** and **Message Queues** (Kafka/RabbitMQ) for building massive-scale distributed systems.
+
+---
+
 ## 🔗 Repository
 
 [github.com/anudeepbikumalla/websockets-learn](https://github.com/anudeepbikumalla/websockets-learn)
