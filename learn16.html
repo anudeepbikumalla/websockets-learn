@@ -549,7 +549,7 @@
             oninput="handleTyping('Alice','alice')" onkeydown="sendMsg(event,'Alice','alice')" />
           <button class="btn btn-purple" onclick="sendMsg({key:'Enter'},'Alice','alice')">Send</button>
         </div>
-        <div class="chat-input-row" style="background:rgba(56,189,248,.05);border-top:none">
+        <div class="chat-input-row" style="background:rgba(255,255,255,.03);border-top:none">
           <input class="chat-input" id="bobInput" placeholder="Bob types here…" oninput="handleTyping('Bob','bob')"
             onkeydown="sendMsg(event,'Bob','bob')" style="border-color:rgba(56,189,248,.2)" />
           <button class="btn btn-blue" onclick="sendMsg({key:'Enter'},'Bob','bob')">Send</button>
@@ -593,36 +593,24 @@
   
   
 
-  <!-- 🌍 REAL-WORLD SCENARIOS -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:#111827;border:1px solid rgba(251,191,36,.2);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#fbbf24">🌍 Typing Indicators — Who Uses This Pattern?</div>
-      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">iMessage / WhatsApp</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">The "..." bubble appears when someone is typing. WhatsApp debounces to send one typing event per 3 seconds, not per keystroke.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🤖</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">ChatGPT</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">ChatGPT</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">The "thinking" animation and token-by-token text appearance is a form of typing indicator — showing the AI is actively generating a response.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📱</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Instagram DMs</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Instagram DMs</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">"Seen" receipts and typing indicators use WebSocket. Instagram sends typing events to the chat partner's device only, not to all users.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏢</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Intercom / Zendesk</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Intercom / Zendesk</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Customer support agents see "Customer is typing..." which helps them wait before sending their next response, creating a more natural conversation flow.</div>
           </div>
         </div>
@@ -632,7 +620,7 @@
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 16 as Complete</span>
     </button>
@@ -665,31 +653,69 @@
     });
   </script>
 
+
+  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
+        <span>🏗️ Scenario Implementation:</span>
+        <span style="color:var(--dim);font-weight:500">Debounced Typing Indicators</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:18px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
+          <div style="font-size:.88rem;color:var(--text);line-height:1.7">If you fire a WebSocket message for every single keystroke the user types, you'll DDOS your own backend. The client must 'debounce' the event: meaning it only sends the 'isTyping' packet once, waits until the user STOPS typing for a few seconds, and then sends the 'stoppedTyping' packet.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
+        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code>let typingTimeout = null;
+let isTyping = false;
+const inputEl = document.getElementById('chatInput');
+
+inputEl.addEventListener('input', () =&gt; {
+  if (!isTyping) {
+    isTyping = true;
+    ws.send(JSON.stringify({ type: 'TYPING_START' }));
+  }
+
+  // Clear previous timer if they keep typing
+  clearTimeout(typingTimeout);
+
+  // If 2 seconds pass with no keystrokes, they stopped
+  typingTimeout = setTimeout(() =&gt; {
+    isTyping = false;
+    ws.send(JSON.stringify({ type: 'TYPING_STOP' }));
+  }, 2000);
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/2 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. Why do we debounce typing events?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. Why do we debounce typing events?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. To encrypt them</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. To avoid sending a 'typing' event for every single keystroke</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. To make them faster</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. To style them better</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. To encrypt them</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. To avoid sending a 'typing' event for every single keystroke</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. To make them faster</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. To style them better</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. How long should the typing indicator stay visible before auto-clearing?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. How long should the typing indicator stay visible before auto-clearing?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. 100ms</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. 1 second</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. About 3 seconds</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Forever until user sends</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. 100ms</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. 1 second</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. About 3 seconds</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Forever until user sends</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -746,34 +772,34 @@
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Typing Indicators</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — Typing Indicators</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.send({type: 'typing', user})</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Notify server that user is typing</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">On keydown/input</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>debounce(sendTyping, 300)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Don't spam typing events</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Wait 300ms between sends</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>setTimeout(clearTyping, 3000)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Auto-clear "typing" after 3 seconds</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If user stops typing</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.send({type: 'typing', user})</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Notify server that user is typing</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">On keydown/input</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>debounce(sendTyping, 300)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Don't spam typing events</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Wait 300ms between sends</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>setTimeout(clearTyping, 3000)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Auto-clear "typing" after 3 seconds</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If user stops typing</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Typing indicators show <strong>"Alice is typing..."</strong> in real-time. This makes conversations feel alive.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span><strong>Debouncing</strong> is critical — don't send a typing event for every keystroke. Wait until the user pauses for 300ms.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Auto-clear the indicator after <strong>3 seconds of silence</strong>. Otherwise it stays forever if the user stops and doesn't send.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Only broadcast typing to the <strong>relevant room/conversation</strong> — not to all users globally.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>This is a simple but powerful UX pattern — it tells the other person to <strong>wait before leaving the chat</strong>.</span></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Typing indicators show <strong>"Alice is typing..."</strong> in real-time. This makes conversations feel alive.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><strong>Debouncing</strong> is critical — don't send a typing event for every keystroke. Wait until the user pauses for 300ms.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Auto-clear the indicator after <strong>3 seconds of silence</strong>. Otherwise it stays forever if the user stops and doesn't send.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Only broadcast typing to the <strong>relevant room/conversation</strong> — not to all users globally.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>This is a simple but powerful UX pattern — it tells the other person to <strong>wait before leaving the chat</strong>.</span></div>
     </div>
 
     <!-- 💻 Production Pattern -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Typing indicator with debounce</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>// CLIENT — Send typing events (debounced)
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Typing indicator with debounce</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:var(--card3)"><code>// CLIENT — Send typing events (debounced)
 let typingTimer;
 input.addEventListener('input', () => {
   clearTimeout(typingTimer);

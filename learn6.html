@@ -542,9 +542,9 @@
       every live feed, chat room, and real-time dashboard.</p>
   
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid #fbbf2430">🟡 Intermediate</span>
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.2)">⏱️ ~7 min read</span>
-    <a href="learn5.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);text-decoration:none">🔗 Prereq: Lesson 5: Reconnect</a>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(255,255,255,.03);color:var(--text);border:1px solid #fbbf2430">🟡 Intermediate</span>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid var(--border)">⏱️ ~7 min read</span>
+    <a href="learn5.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid var(--border);text-decoration:none">🔗 Prereq: Lesson 5: Reconnect</a>
   </div>
 </div>
 
@@ -781,16 +781,16 @@
   
   <!-- ✏️ LIVE CODE PLAYGROUND -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:#111827;border:1px solid rgba(56,189,248,.25);border-radius:14px;overflow:hidden">
-      <div style="padding:12px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#38bdf8;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:12px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>✏️ Try It — Simulate Broadcasting</span>
         <div style="display:flex;gap:8px">
-          <button onclick="pg_57537_reset()" style="padding:5px 12px;border-radius:6px;border:1px solid #1f2d45;background:#1a2235;color:#94a3b8;font-size:.75rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">↺ Reset</button>
+          <button onclick="pg_57537_reset()" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:#94a3b8;font-size:.75rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">↺ Reset</button>
           <button onclick="pg_57537_run()" style="padding:5px 16px;border-radius:6px;border:none;background:#22c55e;color:#052e16;font-size:.75rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">▶ Run</button>
         </div>
       </div>
-      <textarea id="pg_57537_code" spellcheck="false" style="width:100%;min-height:200px;padding:14px 18px;font-family:'Fira Code',monospace;font-size:.78rem;background:#0d1117;color:#e2e8f0;border:none;outline:none;resize:vertical;line-height:1.7;tab-size:2;box-sizing:border-box"></textarea>
-      <div style="padding:8px 18px;border-top:1px solid #1f2d45;background:#0d1117;font-size:.72rem;color:#64748b;display:flex;justify-content:space-between">
+      <textarea id="pg_57537_code" spellcheck="false" style="width:100%;min-height:200px;padding:14px 18px;font-family:'Fira Code',monospace;font-size:.78rem;background:var(--card3);color:var(--text);border:none;outline:none;resize:vertical;line-height:1.7;tab-size:2;box-sizing:border-box"></textarea>
+      <div style="padding:8px 18px;border-top:1px solid #1f2d45;background:var(--card3);font-size:.72rem;color:#64748b;display:flex;justify-content:space-between">
         <span>Console Output ↓</span>
         <button onclick="document.getElementById('pg_57537_output').innerHTML=''" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:.72rem;font-family:Inter,sans-serif">Clear</button>
       </div>
@@ -865,43 +865,31 @@ setTimeout(() => {
 
   
 
-  <!-- 🌍 REAL-WORLD SCENARIOS -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:#111827;border:1px solid rgba(251,191,36,.2);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#fbbf24">🌍 Broadcasting — Who Uses This Pattern?</div>
-      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">⚽</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">ESPN / Sky Sports</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Live score updates broadcast to millions of connected viewers simultaneously. One goal event → every connected fan sees it instantly.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📊</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Figma</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Figma</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">When one designer moves a shape, Figma broadcasts the change to everyone viewing that file. This is real-time collaborative design.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🚨</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Emergency Alert Systems</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Emergency Alert Systems</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Government agencies broadcast severe weather warnings to all connected devices in an affected area — critical real-time broadcasting.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💹</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Trading Floors</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Trading Floors</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">When a stock price changes, the exchange broadcasts to every broker's terminal. Bloomberg sends 50+ billion messages per day.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Among Us / Fall Guys</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Among Us / Fall Guys</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Game state (player positions, eliminations) broadcasts to all players in the lobby simultaneously.</div>
           </div>
         </div>
@@ -911,7 +899,7 @@ setTimeout(() => {
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 6 as Complete</span>
     </button>
@@ -944,41 +932,75 @@ setTimeout(() => {
     });
   </script>
 
+
+  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
+        <span>🏗️ Scenario Implementation:</span>
+        <span style="color:var(--dim);font-weight:500">Live Sports Scoreboard</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:18px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
+          <div style="font-size:.88rem;color:var(--text);line-height:1.7">During the Super Bowl, millions of fans stare at a scoreboard. When a team scores, the backend doesn't wait for fans to refresh their browsers. Instead, the Node.js server maintains an active <code>Set</code> of all currently connected WebSocket clients. It iterates through that Set and pushes the JSON score update to everyone instantly.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
+        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code>const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
+
+// Triggered when the backend receives a score update from an API
+function broadcastGoal(team, newScore) {
+  const payload = JSON.stringify({ type: 'SCORE', team, newScore });
+
+  // Loop through all active connections and push the data
+  wss.clients.forEach((client) =&gt; {
+    // Crucial: Only send if the TCP connection is fully open!
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(payload);
+    }
+  });
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/3 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. What is <code>wss.clients</code>?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What is <code>wss.clients</code>?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. An array of client names</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. A Set of all connected WebSocket objects</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. A single client reference</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. A Map of userIds</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. An array of client names</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. A Set of all connected WebSocket objects</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. A single client reference</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. A Map of userIds</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. How do you broadcast to everyone EXCEPT the sender?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. How do you broadcast to everyone EXCEPT the sender?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Use a filter()</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Check client !== ws in the forEach loop</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Use a separate broadcast server</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Send to wss.others</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Use a filter()</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Check client !== ws in the forEach loop</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Use a separate broadcast server</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Send to wss.others</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q2" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">3. Why check <code>readyState === OPEN</code> before sending?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. Why check <code>readyState === OPEN</code> before sending?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. For better performance</button>
-            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Because some clients may have disconnected</button>
-            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It's optional</button>
-            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. To avoid duplicate messages</button>
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. For better performance</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Because some clients may have disconnected</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It's optional</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. To avoid duplicate messages</button>
           </div>
           <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -1035,35 +1057,35 @@ setTimeout(() => {
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Broadcasting</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — Broadcasting</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>wss.clients</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Set of ALL connected WebSocket clients</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server-side (ws library)</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>wss.clients.forEach(client =&gt; ...)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Loop through every connected user</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">To broadcast</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>client.readyState === WebSocket.OPEN</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Check if client is still connected</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Always check before sending</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>client.send(data)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Send data to one specific client</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Inside the forEach loop</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>wss.clients</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Set of ALL connected WebSocket clients</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server-side (ws library)</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>wss.clients.forEach(client =&gt; ...)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Loop through every connected user</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">To broadcast</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>client.readyState === WebSocket.OPEN</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Check if client is still connected</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Always check before sending</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>client.send(data)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Send data to one specific client</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Inside the forEach loop</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Broadcasting = sending a message to <strong>ALL connected clients</strong>. Like a group announcement on a PA system.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>The server keeps a <code>Set</code> of all connected clients in <code>wss.clients</code> — loop through it to broadcast.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span><strong>Always check</strong> <code>readyState === WebSocket.OPEN</code> before sending — some clients may have disconnected.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>You can broadcast to <strong>everyone except the sender</strong> by checking <code>if (client !== ws)</code>.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>This is the foundation for features like live chat rooms, live sports scores, and multiplayer game state sync.</span></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Broadcasting = sending a message to <strong>ALL connected clients</strong>. Like a group announcement on a PA system.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>The server keeps a <code>Set</code> of all connected clients in <code>wss.clients</code> — loop through it to broadcast.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><strong>Always check</strong> <code>readyState === WebSocket.OPEN</code> before sending — some clients may have disconnected.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>You can broadcast to <strong>everyone except the sender</strong> by checking <code>if (client !== ws)</code>.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>This is the foundation for features like live chat rooms, live sports scores, and multiplayer game state sync.</span></div>
     </div>
 
     <!-- 💻 Production Pattern -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Server-side broadcasting</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>const WebSocket = require('ws');
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Server-side broadcasting</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:var(--card3)"><code>const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 8080 });
 
 wss.on('connection', (ws) => {

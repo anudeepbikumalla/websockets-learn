@@ -769,7 +769,7 @@
               </tr>
               <tr>
                 <td>🤖 ChatGPT (tokens)</td>
-                <td><span class="tag" style="background:rgba(167,139,250,.15);color:var(--purple)">SSE</span></td>
+                <td><span class="tag" style="background:rgba(255,255,255,.03);color:var(--purple)">SSE</span></td>
                 <td>Server streams tokens to browser — no client messages needed</td>
               </tr>
               <tr>
@@ -779,7 +779,7 @@
               </tr>
               <tr>
                 <td>🔔 Twitter notifs</td>
-                <td><span class="tag" style="background:rgba(167,139,250,.15);color:var(--purple)">SSE</span></td>
+                <td><span class="tag" style="background:rgba(255,255,255,.03);color:var(--purple)">SSE</span></td>
                 <td>Push-only, works behind all proxies</td>
               </tr>
               <tr>
@@ -838,7 +838,7 @@
     <!-- 7: Completion -->
     <section>
       <div
-        style="background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(167,139,250,.1));border:1px solid rgba(56,189,248,.2);border-radius:16px;padding:28px;text-align:center">
+        style="background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(167,139,250,.1));border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center">
         <div style="font-size:3rem;margin-bottom:12px">🎓</div>
         <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:10px">Foundation Complete! (12/28 Lessons)</h2>
         <p style="color:var(--dim);max-width:500px;margin:0 auto 20px;font-size:.9rem">You now know lifecycle, patterns,
@@ -866,43 +866,31 @@
   
   
 
-  <!-- 🌍 REAL-WORLD SCENARIOS -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:#111827;border:1px solid rgba(251,191,36,.2);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#fbbf24">🌍 WS vs SSE vs Polling — Who Uses What?</div>
-      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📨</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Gmail (SSE)</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Gmail's notification system uses Server-Sent Events — the server pushes "You have new mail" without the client asking. SSE auto-reconnects if the connection drops.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🐦</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Twitter/X Feed (Long Polling → WS)</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Twitter/X Feed (Long Polling → WS)</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Twitter originally used Long Polling for the timeline. They switched to WebSocket because polling wasted bandwidth with millions of users.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📊</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">GitHub Actions (SSE)</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">GitHub Actions (SSE)</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Build logs stream via SSE — the server pushes each log line as it happens. No need for the client to send anything back.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Online Games (WebSocket)</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Online Games (WebSocket)</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Games need full-duplex (player sends inputs, server sends world state). SSE can't do this — WebSocket is the only option.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Facebook Messenger (WebSocket)</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Facebook Messenger (WebSocket)</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Messenger needs two-way real-time communication. They use WebSocket with a custom MQTT protocol for efficiency.</div>
           </div>
         </div>
@@ -912,7 +900,7 @@
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 12 as Complete</span>
     </button>
@@ -945,41 +933,77 @@
     });
   </script>
 
+
+  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
+        <span>🏗️ Scenario Implementation:</span>
+        <span style="color:var(--dim);font-weight:500">Server-Sent Events for Live Feeds</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:18px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
+          <div style="font-size:.88rem;color:var(--text);line-height:1.7">If you are building a live Twitter feed or a stock ticker where the client *only needs to listen to data* and rarely sends data back rapidly, WebSockets are overkill. Server-Sent Events (SSE) operate over standard HTTP, work with regular caching architectures, and have built-in auto-reconnection logic in the browser for free.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
+        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code>// Server (Express.js) - Setting HTTP headers for a persistent stream
+app.get('/live-feed', (req, res) =&gt; {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive'
+  });
+
+  // Push new data whenever you want
+  setInterval(() =&gt; {
+    res.write(`data: ${JSON.stringify({ price: 420.69 })}\n\n`);
+  }, 1000);
+});
+
+// Client - Automatically reconnects if dropped!
+const source = new EventSource('/live-feed');
+source.onmessage = (event) =&gt; console.log('New data:', event.data);</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/3 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. Which technology is full-duplex (both sides can talk freely)?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. Which technology is full-duplex (both sides can talk freely)?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. SSE</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Long Polling</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. WebSocket</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. HTTP</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. SSE</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Long Polling</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. WebSocket</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. HTTP</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. When should you use SSE instead of WebSocket?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. When should you use SSE instead of WebSocket?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. For chat apps</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. When only the server needs to push updates to the client</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. For file uploads</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Never — WebSocket is always better</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. For chat apps</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. When only the server needs to push updates to the client</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. For file uploads</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Never — WebSocket is always better</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q2" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">3. What is the main disadvantage of Long Polling?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. What is the main disadvantage of Long Polling?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. No browser support</button>
-            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. High latency and wasted resources from constant reconnecting</button>
-            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It requires WebSocket</button>
-            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. It only works with JSON</button>
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. No browser support</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. High latency and wasted resources from constant reconnecting</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It requires WebSocket</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. It only works with JSON</button>
           </div>
           <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -1036,36 +1060,36 @@
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — WS vs SSE vs Long Polling</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — WS vs SSE vs Long Polling</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>WebSocket</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Full duplex — both sides talk freely</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Chat, games, collaboration</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>SSE (Server-Sent Events)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Server → Client only (one-way)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Notifications, live feeds</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>Long Polling</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Client keeps asking, server holds response</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Fallback for old browsers</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>new EventSource(url)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Client opens an SSE connection</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Auto-reconnects built in</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>res.write('data: hi\n\n')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Server sends an SSE event</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Keep connection open</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>WebSocket</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Full duplex — both sides talk freely</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Chat, games, collaboration</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>SSE (Server-Sent Events)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Server → Client only (one-way)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Notifications, live feeds</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>Long Polling</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Client keeps asking, server holds response</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Fallback for old browsers</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>new EventSource(url)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Client opens an SSE connection</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Auto-reconnects built in</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>res.write('data: hi\n\n')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Server sends an SSE event</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Keep connection open</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span><strong>WebSocket</strong> = phone call (both sides talk). <strong>SSE</strong> = radio broadcast (server talks, you listen). <strong>Long Polling</strong> = texting "any news?" every few seconds.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Use <strong>WebSocket</strong> when BOTH client and server need to send messages (chat, games, live editing).</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Use <strong>SSE</strong> when only the server needs to push updates (stock prices, notifications, live feeds). Simpler than WebSocket!</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Use <strong>Long Polling</strong> only as a fallback — it wastes resources because the client keeps reconnecting.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>SSE has <strong>built-in auto-reconnect</strong> — WebSocket does not (you have to code it yourself, like in Lesson 5).</span></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><strong>WebSocket</strong> = phone call (both sides talk). <strong>SSE</strong> = radio broadcast (server talks, you listen). <strong>Long Polling</strong> = texting "any news?" every few seconds.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Use <strong>WebSocket</strong> when BOTH client and server need to send messages (chat, games, live editing).</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Use <strong>SSE</strong> when only the server needs to push updates (stock prices, notifications, live feeds). Simpler than WebSocket!</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Use <strong>Long Polling</strong> only as a fallback — it wastes resources because the client keeps reconnecting.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>SSE has <strong>built-in auto-reconnect</strong> — WebSocket does not (you have to code it yourself, like in Lesson 5).</span></div>
     </div>
 
     <!-- 💻 Production Pattern -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Comparison — same feature, three ways</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>// === WebSocket (two-way) ===
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Comparison — same feature, three ways</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:var(--card3)"><code>// === WebSocket (two-way) ===
 const ws = new WebSocket('ws://server/chat');
 ws.send('Hello!');                            // Client → Server ✅
 ws.addEventListener('message', (e) => {});    // Server → Client ✅

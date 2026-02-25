@@ -594,36 +594,24 @@
   
   
 
-  <!-- 🌍 REAL-WORLD SCENARIOS -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:#111827;border:1px solid rgba(251,191,36,.2);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#fbbf24">🌍 Socket.io — Who Uses This?</div>
-      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏢</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Trello</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Trello uses Socket.io for real-time board updates. When someone moves a card, all viewers see it move instantly. Socket.io handles reconnection automatically.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📊</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">CodePen</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">CodePen</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">The live preview feature uses Socket.io to stream code changes from the editor to the preview iframe in real-time.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Agar.io / Slither.io</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Agar.io / Slither.io</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">These browser games use Socket.io for all game state communication. The built-in rooms feature manages separate game lobbies.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Microsoft Teams (Web)</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Microsoft Teams (Web)</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Teams' web client uses Socket.io for real-time messaging, presence, and call signaling with automatic fallback to Long Polling on restrictive networks.</div>
           </div>
         </div>
@@ -633,7 +621,7 @@
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 20 as Complete</span>
     </button>
@@ -666,31 +654,69 @@
     });
   </script>
 
+
+  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
+        <span>🏗️ Scenario Implementation:</span>
+        <span style="color:var(--dim);font-weight:500">Socket.io for Fallbacks & Namespaces</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:18px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
+          <div style="font-size:.88rem;color:var(--text);line-height:1.7">Some corporate firewalls and deep packet inspectors aggressively block standard WebSocket upgrading. Raw WebSockets will fail silently. Socket.io solves this by starting with a traditional HTTP Long-Polled request to test the waters, and then seamlessly 'upgrades' to WebSocket over time if the network permits.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
+        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code>// Server-side Socket.io setup
+const io = require('socket.io')(3000, {
+  cors: { origin: "*" }
+});
+
+// Create an isolated namespace (like an API endpoint version)
+const adminNamespace = io.of('/admin');
+
+adminNamespace.on('connection', (socket) =&gt; {
+  console.log('Admin connected!');
+  
+  // Easily broadcast to specific rooms without writing custom Maps
+  socket.join('dashboard-room');
+  adminNamespace.to('dashboard-room').emit('alert', 'Server load high');
+});
+
+// Client-side connects elegantly
+import { io } from 'socket.io-client';
+const adminSocket = io('http://localhost:3000/admin');</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/2 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. Can a raw WebSocket client connect to a Socket.io server?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. Can a raw WebSocket client connect to a Socket.io server?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Yes, they're compatible</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. No, Socket.io uses its own protocol</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Only with a plugin</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only in Node.js</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Yes, they're compatible</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. No, Socket.io uses its own protocol</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Only with a plugin</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only in Node.js</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. What does Socket.io give you that raw WebSocket doesn't?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. What does Socket.io give you that raw WebSocket doesn't?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Faster connections</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Auto-reconnect, rooms, namespaces, and fallback transports</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Better security</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. TypeScript support</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Faster connections</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Auto-reconnect, rooms, namespaces, and fallback transports</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Better security</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. TypeScript support</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -747,29 +773,29 @@
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Socket.io Comparison</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — Socket.io Comparison</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>io(url)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Connect with Socket.io (auto-reconnect!)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Built-in reconnection</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>socket.emit('event', data)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Send named events</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Like ws.send but with names</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>socket.on('event', fn)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Listen to named events</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Automatic JSON parsing</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>socket.join('room')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Join a room (built-in!)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">No manual Map needed</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>io(url)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Connect with Socket.io (auto-reconnect!)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Built-in reconnection</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>socket.emit('event', data)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Send named events</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Like ws.send but with names</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>socket.on('event', fn)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Listen to named events</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Automatic JSON parsing</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>socket.join('room')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Join a room (built-in!)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">No manual Map needed</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Socket.io is a <strong>library on top of WebSocket</strong>. It adds auto-reconnect, rooms, namespaces, and fallback transport.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Raw WebSocket = more control, less features. Socket.io = more features, less control. <strong>Both are valid choices.</strong></span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Socket.io <strong>is NOT a WebSocket</strong> — it uses its own protocol. A raw WS client can't talk to a Socket.io server.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Use raw WebSocket when you need maximum performance or minimal bundle size.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Use Socket.io when you want batteries-included features and don't mind the extra ~40KB.</span></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Socket.io is a <strong>library on top of WebSocket</strong>. It adds auto-reconnect, rooms, namespaces, and fallback transport.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Raw WebSocket = more control, less features. Socket.io = more features, less control. <strong>Both are valid choices.</strong></span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Socket.io <strong>is NOT a WebSocket</strong> — it uses its own protocol. A raw WS client can't talk to a Socket.io server.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Use raw WebSocket when you need maximum performance or minimal bundle size.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Use Socket.io when you want batteries-included features and don't mind the extra ~40KB.</span></div>
     </div>
 
   </div>

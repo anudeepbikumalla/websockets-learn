@@ -639,9 +639,9 @@
       other is clean and modern.</p>
   
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(34,197,94,.12);color:#22c55e;border:1px solid #22c55e30">🟢 Beginner</span>
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.2)">⏱️ ~10 min read</span>
-    <a href="learn2.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);text-decoration:none">🔗 Prereq: Lesson 2: Listeners</a>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(255,255,255,.03);color:var(--dim);border:1px solid #22c55e30">🟢 Beginner</span>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid var(--border)">⏱️ ~10 min read</span>
+    <a href="learn2.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid var(--border);text-decoration:none">🔗 Prereq: Lesson 2: Listeners</a>
   </div>
 </div>
 
@@ -1071,36 +1071,24 @@
   
   
 
-  <!-- 🌍 REAL-WORLD SCENARIOS -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:#111827;border:1px solid rgba(251,191,36,.2);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#fbbf24">🌍 Callbacks vs Async — Who Uses This Pattern?</div>
-      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🤖</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">ChatGPT / Claude</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">AI responses stream token-by-token over a connection. The client uses <code>async/await</code> to process each chunk as it arrives, not a nested callback chain.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📦</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">npm / Yarn</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">npm / Yarn</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Package managers use async patterns to download multiple dependencies concurrently. Callbacks would create deeply nested "dependency hell."</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">☁️</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">AWS SDK (v3)</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">AWS SDK (v3)</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Amazon rewrote their entire JavaScript SDK from callbacks to async/await because developers found callbacks too error-prone for complex cloud operations.</div>
           </div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:#1a2235;border-radius:10px;border:1px solid #1f2d45">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
           <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🔄</span>
           <div>
-            <div style="font-weight:700;font-size:.85rem;color:#e2e8f0;margin-bottom:3px">Next.js Server Components</div>
+            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Next.js Server Components</div>
             <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">React Server Components use <code>async/await</code> to fetch data on the server. No useEffect callbacks — just clean, linear code.</div>
           </div>
         </div>
@@ -1110,7 +1098,7 @@
 
 <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 3 as Complete</span>
     </button>
@@ -1143,51 +1131,92 @@
     });
   </script>
 
+
+  <!-- 🏗️ SCENARIO DESIGN & IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px">
+        <span>🏗️ Scenario Implementation:</span>
+        <span style="color:var(--dim);font-weight:500">AI Chatbot Response Streaming</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:18px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">The Design Approach</div>
+          <div style="font-size:.88rem;color:var(--text);line-height:1.7">When streaming responses from an AI (like ChatGPT), chunks of text arrive asynchronously over WebSockets. Instead of using deeply nested event callbacks which make control flow difficult, modern applications wrap the WebSocket lifecycle in Promises to use clean <code>async/await</code> syntax, waiting for the 'END_STREAM' signal before resolving.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--dim);margin-bottom:6px">Implementation Code</div>
+        <pre style="margin:0;padding:16px;background:var(--card3);border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8"><code>async function getAIResponse(prompt) {
+  return new Promise((resolve, reject) =&gt; {
+    const ws = new WebSocket('wss://ai.api.com/stream');
+    let fullResponse = "";
+
+    ws.onopen = () =&gt; ws.send(JSON.stringify({ prompt }));
+    
+    ws.onmessage = (event) =&gt; {
+      const data = JSON.parse(event.data);
+      if (data.type === 'chunk') fullResponse += data.text;
+      if (data.type === 'done') {
+        ws.close();
+        resolve(fullResponse); // Return the complete text
+      }
+    };
+    
+    ws.onerror = (err) =&gt; reject(err);
+  });
+}
+
+// Complete request in one line!
+const answer = await getAIResponse("Explain WebSockets");</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
-    <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/4 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">1. What is 'callback hell'?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What is 'callback hell'?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. A JavaScript framework</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Deeply nested callbacks that become unreadable</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. An error type in Node.js</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. A debugging tool</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. A JavaScript framework</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Deeply nested callbacks that become unreadable</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. An error type in Node.js</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. A debugging tool</button>
           </div>
           <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">2. What does the <code>await</code> keyword do?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. What does the <code>await</code> keyword do?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Creates a new thread</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Pauses execution until the Promise resolves</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Sends data to the server</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Catches errors</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Creates a new thread</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Pauses execution until the Promise resolves</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Sends data to the server</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Catches errors</button>
           </div>
           <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q2" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">3. Where can you use <code>await</code>?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. Where can you use <code>await</code>?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Anywhere in JavaScript</button>
-            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Only inside async functions</button>
-            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Only in Node.js</button>
-            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only in try/catch blocks</button>
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Anywhere in JavaScript</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Only inside async functions</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Only in Node.js</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only in try/catch blocks</button>
           </div>
           <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
         <div id="quiz_9817_q3" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:#e2e8f0;margin-bottom:10px">4. How do you handle errors with async/await?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">4. How do you handle errors with async/await?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q3_o0" onclick="quiz_9817_check(3,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. if/else statements</button>
-            <button id="quiz_9817_q3_o1" onclick="quiz_9817_check(3,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Error-first callbacks</button>
-            <button id="quiz_9817_q3_o2" onclick="quiz_9817_check(3,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. try/catch blocks</button>
-            <button id="quiz_9817_q3_o3" onclick="quiz_9817_check(3,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #1f2d45;background:#1a2235;color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. .then().catch()</button>
+            <button id="quiz_9817_q3_o0" onclick="quiz_9817_check(3,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. if/else statements</button>
+            <button id="quiz_9817_q3_o1" onclick="quiz_9817_check(3,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Error-first callbacks</button>
+            <button id="quiz_9817_q3_o2" onclick="quiz_9817_check(3,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. try/catch blocks</button>
+            <button id="quiz_9817_q3_o3" onclick="quiz_9817_check(3,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. .then().catch()</button>
           </div>
           <div id="quiz_9817_q3_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
         </div>
@@ -1244,36 +1273,36 @@
 <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Callbacks vs Async/Await</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — Callbacks vs Async/Await</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead><tr><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:var(--card2);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>callback(err, result)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Old pattern — pass a function to call later</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Node.js classic style</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>async function fn()</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Declares a function that can use await</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Modern JavaScript</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>await somePromise</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Pauses until the Promise resolves</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Only inside async functions</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>try { } catch (e) { }</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Catches errors from await</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Replaces error-first callbacks</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>.then().catch()</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Promise chain — older async style</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Still works, but await is cleaner</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>callback(err, result)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Old pattern — pass a function to call later</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Node.js classic style</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>async function fn()</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Declares a function that can use await</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Modern JavaScript</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>await somePromise</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Pauses until the Promise resolves</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Only inside async functions</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>try { } catch (e) { }</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Catches errors from await</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Replaces error-first callbacks</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>.then().catch()</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Promise chain — older async style</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Still works, but await is cleaner</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Callbacks = giving someone your <strong>phone number</strong> and saying "call me when it's ready." Works, but chains get messy.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Async/Await = <strong>waiting in line</strong> at a counter. You pause, get your result, and continue. Clean and linear.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>"Callback Hell" happens when you nest callbacks inside callbacks — code moves <strong>further and further right</strong> ➡️➡️➡️.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>With <code>await</code>, error handling is just <code>try/catch</code> — the same pattern you use for everything else.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span><strong>Rule of thumb:</strong> Always use <code>async/await</code> in new code. Only use callbacks when a library forces you to.</span></div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Callbacks = giving someone your <strong>phone number</strong> and saying "call me when it's ready." Works, but chains get messy.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Async/Await = <strong>waiting in line</strong> at a counter. You pause, get your result, and continue. Clean and linear.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>"Callback Hell" happens when you nest callbacks inside callbacks — code moves <strong>further and further right</strong> ➡️➡️➡️.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>With <code>await</code>, error handling is just <code>try/catch</code> — the same pattern you use for everything else.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><strong>Rule of thumb:</strong> Always use <code>async/await</code> in new code. Only use callbacks when a library forces you to.</span></div>
     </div>
 
     <!-- 💻 Production Pattern -->
-    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Async/await — the modern way</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>// ❌ OLD WAY — Callback (nested and messy)
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Async/await — the modern way</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:var(--card3)"><code>// ❌ OLD WAY — Callback (nested and messy)
 getData(userId, (err, user) => {
   if (err) { console.error(err); return; }
   getOrders(user.id, (err, orders) => {
@@ -1298,13 +1327,13 @@ async function loadUserData(userId) {
 
 <div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
     <a href="index.html"
-      style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#1a2235;color:#94a3b8;text-decoration:none">&#127968;
+      style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:var(--card2);color:#94a3b8;text-decoration:none">&#127968;
       Home</a>
     <a href="learn2.html"
-      style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#8592;
+      style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:var(--card);color:#94a3b8;text-decoration:none">&#8592;
       Lesson 2</a>
     <a href="WEBSOCKET_STUDY_NOTES.md"
-      style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#128218;
+      style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:var(--card);color:#94a3b8;text-decoration:none">&#128218;
       Notes</a>
     <a href="learn4.html"
       style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#fbbf24;color:#0a0d16;text-decoration:none;border:none">Lesson
