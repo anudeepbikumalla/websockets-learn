@@ -470,8 +470,28 @@
       color: var(--dim);
       margin-top: 10px;
     }
-  </style>
+  
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.6rem !important; }
+      .hero p { font-size: .88rem !important; }
+      .page { padding: 24px 16px !important; }
+      .two-col { grid-template-columns: 1fr !important; }
+      .stats { flex-wrap: wrap; gap: 12px; }
+      .code, pre { font-size: .7rem !important; }
+      .nav-bar, [style*="justify-content:center"][style*="padding:24px"] { 
+        flex-direction: column; align-items: center; 
+      }
+    }
+    @media (max-width: 480px) {
+      .hero { padding: 40px 16px 32px !important; }
+      .hero h1 { font-size: 1.3rem !important; }
+      section { margin-bottom: 24px !important; }
+    }
+</style>
   <script src="config.js"></script>
+  <script src="progress.js"></script>
+  <script src="theme.js"></script>
 </head>
 
 <body>
@@ -843,7 +863,43 @@
 
   
 
-  <!-- 🧠 TEST YOURSELF QUIZ -->
+  
+  <!-- ✅ MARK COMPLETE -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:2px solid #22c55e;background:rgba(34,197,94,.08);color:#22c55e;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+      <span id="markCompleteIcon">☐</span>
+      <span id="markCompleteText">Mark Lesson 12 as Complete</span>
+    </button>
+  </div>
+  <script>
+    function toggleLessonComplete() {
+      const result = WSProgress.toggleComplete(12);
+      updateCompleteButton(result.isComplete);
+    }
+    function updateCompleteButton(isComplete) {
+      const btn = document.getElementById('markCompleteBtn');
+      const icon = document.getElementById('markCompleteIcon');
+      const text = document.getElementById('markCompleteText');
+      if (isComplete) {
+        btn.style.background = 'rgba(34,197,94,.18)';
+        btn.style.borderColor = '#22c55e';
+        icon.textContent = '✅';
+        text.textContent = 'Lesson 12 Complete!';
+      } else {
+        btn.style.background = 'rgba(34,197,94,.08)';
+        btn.style.borderColor = '#22c55e';
+        icon.textContent = '☐';
+        text.textContent = 'Mark Lesson 12 as Complete';
+      }
+    }
+    // Check on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const completed = WSProgress.getCompleted();
+      updateCompleteButton(completed.has(12));
+    });
+  </script>
+
+<!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:#111827;border:1px solid rgba(167,139,250,.25);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#a78bfa;display:flex;align-items:center;justify-content:space-between">

@@ -448,9 +448,29 @@
       background: var(--card2);
       color: var(--text);
     }
-  </style>
+  
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.6rem !important; }
+      .hero p { font-size: .88rem !important; }
+      .page { padding: 24px 16px !important; }
+      .two-col { grid-template-columns: 1fr !important; }
+      .stats { flex-wrap: wrap; gap: 12px; }
+      .code, pre { font-size: .7rem !important; }
+      .nav-bar, [style*="justify-content:center"][style*="padding:24px"] { 
+        flex-direction: column; align-items: center; 
+      }
+    }
+    @media (max-width: 480px) {
+      .hero { padding: 40px 16px 32px !important; }
+      .hero h1 { font-size: 1.3rem !important; }
+      section { margin-bottom: 24px !important; }
+    }
+</style>
   <script src="config.js"></script>
 
+  <script src="progress.js"></script>
+  <script src="theme.js"></script>
 </head>
 
 <body>
@@ -479,7 +499,17 @@
         <div class="stat-num">∞</div>
         <div class="stat-label">Live Demos</div>
       </div>
+    
+    <div id="progressSection" style="max-width:500px;margin:20px auto 0;padding:0 20px">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:6px">
+        <span style="color:#94a3b8" id="progressLabel">0 / 28 lessons complete</span>
+        <span style="color:#22c55e;font-weight:700" id="progressPercent">0%</span>
+      </div>
+      <div style="height:8px;border-radius:99px;background:#1a2235;overflow:hidden;border:1px solid #1f2d45">
+        <div id="progressFill" style="height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#22c55e,#38bdf8);transition:width .6s ease"></div>
+      </div>
     </div>
+</div>
   </div>
 
   <div class="page">
@@ -1001,6 +1031,36 @@
     }
   </script>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Update progress bar
+      const stats = WSProgress.getStats(28);
+      document.getElementById('progressLabel').textContent = stats.completed + ' / 28 lessons complete';
+      document.getElementById('progressPercent').textContent = stats.percent + '%';
+      document.getElementById('progressFill').style.width = stats.percent + '%';
+
+      // Add checkmarks to lesson cards
+      const completed = WSProgress.getCompleted();
+      document.querySelectorAll('a[class*="card"]').forEach(card => {
+        const href = card.getAttribute('href');
+        if (!href) return;
+        // Extract lesson number from href
+        const match = href.match(/learn(\d*)\.html/);
+        if (match) {
+          const num = match[1] === '' ? 1 : parseInt(match[1]);
+          if (completed.has(num)) {
+            // Add checkmark badge
+            const badge = document.createElement('div');
+            badge.style.cssText = 'position:absolute;top:8px;right:8px;background:#22c55e;color:#052e16;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;z-index:2';
+            badge.textContent = '✓';
+            card.style.position = 'relative';
+            card.appendChild(badge);
+          }
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
