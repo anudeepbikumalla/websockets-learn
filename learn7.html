@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 7 — Rooms &amp; Channels</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167, 139, 250, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(167, 139, 250, .1);
+      color: var(--purple);
+      border: 1px solid rgba(167, 139, 250, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-purple {
+      color: var(--purple);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .ev {
+      color: #fbbf24;
+    }
+
+    .room-demo {
+      background: var(--card);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .room-header {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .room-panel {
+      padding: 14px;
+      border-right: 1px solid var(--border);
+    }
+
+    .room-panel:last-child {
+      border-right: none;
+    }
+
+    .room-name {
+      font-size: .82rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .room-badge {
+      font-size: .68rem;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+
+    .rb-general {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .rb-sports {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .room-msgs {
+      height: 100px;
+      overflow-y: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: .7rem;
+      color: var(--dim);
+    }
+
+    .room-msg.mine {
+      color: var(--purple);
+    }
+
+    .room-msg.theirs {
+      color: var(--blue);
+    }
+
+    .room-msg.sys {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .room-controls {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .room-input {
+      flex: 1;
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: .8rem;
+      color: var(--text);
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .room-input:disabled {
+      opacity: .4;
+    }
+
+    .demo-controls {
+      padding: 14px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .btn-purple {
+      background: var(--purple);
+      color: #1a0a2e;
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .btn-sm {
+      padding: 6px 11px;
+      font-size: .78rem;
+    }
+
+    .golden {
+      background: rgba(167, 139, 250, .05);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--purple);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--purple);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--purple);
+      color: #1a0a2e;
+      border-color: var(--purple);
+    }
+
+    .nav-btn.home {
+      background: var(--card2);
+    }
+
+    code.mono {
+      font-family: monospace;
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 7</div>
+    <h1>Rooms &amp; Channels 🏠</h1>
+    <p>Route messages only to clients in the same "room." The foundation of Slack channels, Discord servers, and every
+      real chat app.</p>
+  </div>
+  <div class="page">
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">1</div>
+        <div>
+          <div class="sec-title">Rooms are just a Map of Sets 🗺️</div>
+          <div class="sec-sub">No magic — plain JavaScript data structures on the server</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-yellow">📦 What a room actually is</div>
+          <div class="box-body">
+            <p style="margin-bottom:10px">A room is a <strong style="color:var(--text)">key in a Map</strong> pointing
+              to a <strong style="color:var(--text)">Set of sockets</strong>:</p>
+            <div class="code">
+              Map {<br>
+              &nbsp;&nbsp;<span class="str">"general"</span> → Set { wsA, wsB, wsC },<br>
+              &nbsp;&nbsp;<span class="str">"sports"</span> → Set { wsB, wsD },<br>
+              &nbsp;&nbsp;<span class="str">"music"</span> → Set { wsA, wsE }<br>
+              }
+            </div>
+            <p class="note-sm">wsB is in both — one client can join multiple rooms!</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-purple">🔀 Rooms vs Global Broadcast</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// A sends to #general</span><br>
+              <span class="ev">✅</span> Client B (in #general) receives<br>
+              <span class="ev">✅</span> Client C (in #general) receives<br>
+              <span class="cm">❌</span> Client D (in #sports only) misses
+            </div>
+            <p class="note-sm">Like posting in Slack — only that channel's members see it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Server Code — Rooms Pattern 💻</div>
+          <div class="sec-sub">Full implementation using Map + Set</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">&lt;/&gt; server.js — rooms</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> rooms = <span class="kw">new</span> <span class="fn">Map</span>();<br><br>
+            <span class="kw">function</span> <span class="fn">joinRoom</span>(ws, name) {<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (!rooms.<span class="fn">has</span>(name)) rooms.<span
+              class="fn">set</span>(name, <span class="kw">new</span> <span class="fn">Set</span>());<br>
+            &nbsp;&nbsp;rooms.<span class="fn">get</span>(name).<span class="fn">add</span>(ws);<br>
+            &nbsp;&nbsp;ws.room = name;<br>
+            }<br><br>
+            <span class="kw">function</span> <span class="fn">broadcastRoom</span>(name, msg, exclude) {<br>
+            &nbsp;&nbsp;rooms.<span class="fn">get</span>(name)?.<span class="fn">forEach</span>(client => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (client !== exclude && client.readyState ===
+            WebSocket.<span class="ev">OPEN</span>)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.<span class="fn">send</span>(<span
+              class="fn">JSON.stringify</span>(msg));<br>
+            &nbsp;&nbsp;});<br>
+            }<br><br>
+            ws.<span class="fn">on</span>(<span class="str">'message'</span>, raw => {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> { type, room, text } = <span
+              class="fn">JSON.parse</span>(raw);<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (type === <span class="str">'join'</span>) <span
+              class="fn">joinRoom</span>(ws, room);<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (type === <span class="str">'message'</span>) <span
+              class="fn">broadcastRoom</span>(room, { room, text }, ws);<br>
+            });<br><br>
+            ws.<span class="fn">on</span>(<span class="str">'close'</span>, () => rooms.<span
+              class="fn">forEach</span>(r => r.<span class="fn">delete</span>(ws))); <span class="cm">// cleanup!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">3</div>
+        <div>
+          <div class="sec-title">▶️ Live Room Demo</div>
+          <div class="sec-sub">Two rooms side by side — messages stay in their own room</div>
+        </div>
+      </div>
+      <div class="room-demo">
+        <div class="room-header">🏠 Room Demo — #general and #sports</div>
+        <div class="rooms-grid">
+          <div class="room-panel">
+            <div class="room-name"><span class="room-badge rb-general">#general</span> <span
+                style="font-size:.7rem;color:var(--muted)" id="gCount">0 members</span></div>
+            <div class="room-msgs" id="gMsgs">
+              <div class="room-msg sys">Join to see messages…</div>
+            </div>
+            <div class="room-controls">
+              <input class="room-input" id="gInput" placeholder="Message #general…" disabled />
+              <button class="btn btn-blue btn-sm" id="gSend" onclick="sendRoom('general')" disabled>Send</button>
+            </div>
+          </div>
+          <div class="room-panel">
+            <div class="room-name"><span class="room-badge rb-sports">#sports</span> <span
+                style="font-size:.7rem;color:var(--muted)" id="sCount">0 members</span></div>
+            <div class="room-msgs" id="sMsgs">
+              <div class="room-msg sys">Join to see messages…</div>
+            </div>
+            <div class="room-controls">
+              <input class="room-input" id="sInput" placeholder="Message #sports…" disabled />
+              <button class="btn btn-green btn-sm" id="sSend" onclick="sendRoom('sports')" disabled>Send</button>
+            </div>
+          </div>
+        </div>
+        <div class="demo-controls">
+          <button class="btn btn-blue" onclick="join('general')">Join #general</button>
+          <button class="btn btn-green" onclick="join('sports')">Join #sports</button>
+          <button class="btn btn-ghost" onclick="leaveAll()">Leave All</button>
+          <span style="font-size:.78rem;color:var(--muted);margin-left:auto" id="roomStatus">Not in any room</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">4</div>
+        <div>
+          <div class="sec-title">⚡ Room Rules</div>
+          <div class="sec-sub">Important for any real rooms implementation</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Rooms Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🧹</div>
+            <div class="rule-text"><strong>Clean up on disconnect</strong> — always remove the socket from all rooms in
+              the close handler, or you'll accumulate dead sockets.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔑</div>
+            <div class="rule-text"><strong>Validate room names server-side</strong> — never let a client join rooms
+              they're not allowed in.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">👥</div>
+            <div class="rule-text"><strong>One client can join many rooms</strong> — store <code
+                class="mono">ws.rooms = new Set()</code> to track multiple memberships.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📊</div>
+            <div class="rule-text"><strong>Broadcast member count changes</strong> — tell clients when someone
+              joins/leaves so UIs stay accurate.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn6.html" class="nav-btn">← Lesson 6</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn8.html" class="nav-btn primary">Lesson 8: Auth →</a>
+  </div>
+
+  <script>
+    const myRooms = new Set(), memberCounts = { general: 2, sports: 3 };
+    function addMsg(id, text, cls) {
+      const el = document.getElementById(id);
+      const d = document.createElement('div');
+      d.className = `room-msg ${cls}`; d.textContent = text;
+      el.appendChild(d); el.scrollTop = el.scrollHeight;
+    }
+    function updateUI() {
+      document.getElementById('gCount').textContent = (myRooms.has('general') ? memberCounts.general : 0) + ' member(s)';
+      document.getElementById('sCount').textContent = (myRooms.has('sports') ? memberCounts.sports : 0) + ' member(s)';
+      document.getElementById('roomStatus').textContent = myRooms.size ? 'In: ' + [...myRooms].join(', ') : 'Not in any room';
+    }
+    function join(room) {
+      if (myRooms.has(room)) return;
+      myRooms.add(room);
+      const pre = room === 'general' ? 'g' : 's';
+      addMsg(pre + 'Msgs', `✅ You joined #${room}`, 'sys');
+      if (room === 'general') addMsg('gMsgs', '👋 [Bot] Welcome to #general!', 'theirs');
+      if (room === 'sports') addMsg('sMsgs', '⚽ [Bot] Latest: City 2–1 United', 'theirs');
+      document.getElementById(pre + 'Input').disabled = false;
+      document.getElementById(pre + 'Send').disabled = false;
+      updateUI();
+    }
+    function sendRoom(room) {
+      const pre = room === 'general' ? 'g' : 's';
+      const input = document.getElementById(pre + 'Input');
+      const text = input.value.trim(); if (!text) return;
+      addMsg(pre + 'Msgs', `📤 You: ${text}`, 'mine');
+      setTimeout(() => addMsg(pre + 'Msgs', `📨 [Other]: "${text}" received!`, 'theirs'), 600);
+      input.value = ''; input.focus();
+    }
+    function leaveAll() {
+      myRooms.forEach(room => {
+        const pre = room === 'general' ? 'g' : 's';
+        addMsg(pre + 'Msgs', `👋 You left #${room}`, 'sys');
+        document.getElementById(pre + 'Input').disabled = true;
+        document.getElementById(pre + 'Send').disabled = true;
+      });
+      myRooms.clear(); updateUI();
+    }
+    ['general', 'sports'].forEach(room => {
+      const pre = room === 'general' ? 'g' : 's';
+      document.addEventListener('DOMContentLoaded', () =>
+        document.getElementById(pre + 'Input').addEventListener('keydown', e => { if (e.key === 'Enter') sendRoom(room); }));
+    });
+  </script>
+</body>
+
+</html>

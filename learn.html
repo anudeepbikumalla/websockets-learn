@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn WebSockets — Beginner Friendly</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, .08), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(56, 189, 248, .1);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--dim);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .section-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    /* ── ANALOGY CARDS (phone call comparison) ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width: 640px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .compare-card.bad {
+      border-color: rgba(251, 146, 60, .3);
+    }
+
+    .compare-card.good {
+      border-color: rgba(34, 197, 94, .3);
+    }
+
+    .compare-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .compare-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .compare-card.bad h3 {
+      color: var(--orange);
+    }
+
+    .compare-card.good h3 {
+      color: var(--green);
+    }
+
+    .compare-card p {
+      font-size: .88rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .compare-steps {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .compare-step {
+      font-size: .8rem;
+      color: var(--dim);
+      background: var(--card2);
+      border-radius: 8px;
+      padding: 7px 11px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compare-step .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── LIFECYCLE STEPS ── */
+    .lifecycle {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .lc-step {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+
+    .lc-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 48px;
+      width: 2px;
+      height: calc(100% - 20px);
+      background: var(--border);
+    }
+
+    .lc-icon-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .lc-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      border: 2px solid;
+    }
+
+    .lc-body {
+      padding-bottom: 32px;
+      flex: 1;
+    }
+
+    .lc-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .lc-desc {
+      font-size: .88rem;
+      color: var(--dim);
+      margin-bottom: 10px;
+    }
+
+    .code-snippet {
+      font-family: 'Fira Code', monospace;
+      font-size: .8rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+    }
+
+    .code-snippet .kw {
+      color: #7dd3fc;
+    }
+
+    .code-snippet .fn {
+      color: #86efac;
+    }
+
+    .code-snippet .str {
+      color: #fca5a5;
+    }
+
+    .code-snippet .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .code-snippet .ev {
+      color: #fde68a;
+    }
+
+    /* ── LIVE DEMO ── */
+    .demo-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .demo-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .demo-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .demo-header p {
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .demo-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Connection status bar */
+    .status-bar {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: all .4s;
+      flex-shrink: 0;
+    }
+
+    .status-dot.connecting {
+      background: var(--yellow);
+      animation: pulse-yellow 1s infinite;
+    }
+
+    .status-dot.open {
+      background: var(--green);
+      animation: pulse-green 2s infinite;
+    }
+
+    .status-dot.closed {
+      background: var(--red);
+    }
+
+    @keyframes pulse-yellow {
+
+      0%,
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(251, 191, 36, .5);
+      }
+
+      50% {
+        opacity: .7;
+        box-shadow: 0 0 0 5px rgba(251, 191, 36, 0);
+      }
+    }
+
+    @keyframes pulse-green {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, .5);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+      }
+    }
+
+    .status-text {
+      font-weight: 600;
+      font-size: .9rem;
+      flex: 1;
+    }
+
+    .status-sub {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+
+    /* Step indicator inside demo */
+    .step-flow {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .step-box {
+      flex: 1;
+      background: var(--card2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      transition: all .3s;
+      opacity: .4;
+    }
+
+    .step-box.active {
+      opacity: 1;
+      border-color: var(--blue);
+      background: rgba(56, 189, 248, .07);
+    }
+
+    .step-box.done {
+      opacity: 1;
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .07);
+    }
+
+    .step-box .step-icon {
+      font-size: 1.3rem;
+    }
+
+    .step-box .step-name {
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--dim);
+      margin-top: 3px;
+    }
+
+    .step-arrow {
+      color: var(--muted);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .btn-connect {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-disconnect {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid rgba(248, 113, 113, .4);
+    }
+
+    .btn-send {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .btn-clear {
+      background: var(--card2);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    /* Message input */
+    .msg-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .msg-input {
+      flex: 1;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      padding: 10px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: .85rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .msg-input:focus {
+      border-color: var(--blue);
+    }
+
+    .msg-input:disabled {
+      opacity: .4;
+    }
+
+    .msg-input::placeholder {
+      color: var(--muted);
+    }
+
+    /* Event log */
+    .log-area {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .log-head {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .log-list {
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+    }
+
+    .log-entry {
+      display: flex;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 7px;
+      animation: slidein .2s ease;
+    }
+
+    @keyframes slidein {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .log-time {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .log-badge {
+      font-size: .68rem;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 1px;
+    }
+
+    .log-text {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .log-entry.sys {
+      background: rgba(100, 116, 139, .07);
+    }
+
+    .log-entry.sys .log-badge {
+      background: rgba(100, 116, 139, .2);
+      color: #94a3b8;
+    }
+
+    .log-entry.sys .log-text {
+      color: #94a3b8;
+    }
+
+    .log-entry.sent {
+      background: rgba(56, 189, 248, .06);
+    }
+
+    .log-entry.sent .log-badge {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .log-entry.sent .log-text {
+      color: #bae6fd;
+    }
+
+    .log-entry.recv {
+      background: rgba(34, 197, 94, .06);
+    }
+
+    .log-entry.recv .log-badge {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .log-entry.recv .log-text {
+      color: #bbf7d0;
+    }
+
+    .log-entry.err {
+      background: rgba(248, 113, 113, .06);
+    }
+
+    .log-entry.err .log-badge {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+    }
+
+    .log-entry.err .log-text {
+      color: #fecaca;
+    }
+
+    .log-empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      font-size: .85rem;
+    }
+
+    /* ── "WHAT JUST HAPPENED" explanation box ── */
+    .explain-area {
+      background: rgba(56, 189, 248, .05);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: .88rem;
+      color: var(--dim);
+      line-height: 1.7;
+      display: none;
+    }
+
+    .explain-area.show {
+      display: block;
+    }
+
+    .explain-area strong {
+      color: var(--blue);
+    }
+
+    /* ── KEY CONCEPTS ── */
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media(max-width: 600px) {
+      .concepts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .concept-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .concept-icon {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .concept-title {
+      font-size: .92rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .concept-desc {
+      font-size: .82rem;
+      color: var(--dim);
+      line-height: 1.65;
+    }
+
+    /* ── REAL WORLD USES ── */
+    .uses-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media(max-width: 600px) {
+      .uses-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .use-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .use-card .use-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .use-card .use-label {
+      font-size: .82rem;
+      font-weight: 600;
+    }
+
+    .use-card .use-desc {
+      font-size: .74rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── CHEATSHEET ── */
+    .cheat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .84rem;
+    }
+
+    .cheat-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--card2);
+      color: var(--dim);
+      font-weight: 600;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cheat-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--dim);
+      vertical-align: top;
+    }
+
+    .cheat-table td:first-child {
+      font-family: 'Fira Code', monospace;
+      color: var(--blue);
+      font-size: .8rem;
+      white-space: nowrap;
+    }
+
+    .cheat-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .cheat-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">🎓 Beginner Guide</div>
+    <h1>WebSockets — From Zero</h1>
+    <p>No jargon. No confusion. Just simple explanations with a live demo you can click and see.</p>
+  </div>
+
+  <div class="page">
+
+    <!-- ══════════════════════════════════════════════════
+         SECTION 1 — THE ANALOGY (What is a WebSocket?)
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(56,189,248,.15);color:var(--blue)">1</div>
+        <div>
+          <div class="section-title">What is a WebSocket? 🤔</div>
+          <div style="font-size:.85rem;color:var(--muted)">Start with an analogy you already know</div>
+        </div>
+      </div>
+
+      <div class="compare-grid">
+        <!-- HTTP (old way) -->
+        <div class="compare-card bad">
+          <div class="compare-icon">📬</div>
+          <h3>Normal HTTP (like sending a letter)</h3>
+          <p>Every time you need something from the server, you send a new request and wait for a reply. Then the
+            conversation is over.</p>
+          <div class="compare-steps">
+            <div class="compare-step">
+              <div class="dot" style="background:var(--orange)"></div>
+              You: "Hey server, give me data"
+            </div>
+            <div class="compare-step">
+              <div class="dot" style="background:var(--orange)"></div>
+              Server: "Here it is. Goodbye."
+            </div>
+            <div class="compare-step">
+              <div class="dot" style="background:var(--orange)"></div>
+              Connection closes every time ❌
+            </div>
+            <div class="compare-step">
+              <div class="dot" style="background:var(--orange)"></div>
+              Server can NEVER message you first ❌
+            </div>
+          </div>
+        </div>
+
+        <!-- WebSocket (new way) -->
+        <div class="compare-card good">
+          <div class="compare-icon">📞</div>
+          <h3>WebSocket (like a phone call)</h3>
+          <p>You call once, stay connected, and both sides can talk whenever they want. The line stays open!</p>
+          <div class="compare-steps">
+            <div class="compare-step">
+              <div class="dot" style="background:var(--green)"></div>
+              You dial once → connection opens ✅
+            </div>
+            <div class="compare-step">
+              <div class="dot" style="background:var(--green)"></div>
+              You can send a message anytime ✅
+            </div>
+            <div class="compare-step">
+              <div class="dot" style="background:var(--green)"></div>
+              Server can message YOU anytime ✅
+            </div>
+            <div class="compare-step">
+              <div class="dot" style="background:var(--green)"></div>
+              You hang up when you're done ✅
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         SECTION 2 — THE 4 STEPS (Lifecycle)
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(167,139,250,.15);color:var(--purple)">2</div>
+        <div>
+          <div class="section-title">Every WebSocket has 4 moments 📖</div>
+          <div style="font-size:.85rem;color:var(--muted)">These 4 things always happen, in this order</div>
+        </div>
+      </div>
+
+      <div class="lifecycle">
+
+        <!-- Step 1: Connect -->
+        <div class="lc-step">
+          <div class="lc-icon-col">
+            <div class="lc-icon"
+              style="background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.4);color:var(--blue)">📞</div>
+          </div>
+          <div class="lc-body">
+            <div class="lc-title" style="color:var(--blue)">Step 1 — You make the call (Connect)</div>
+            <div class="lc-desc">You write one line of code and the browser dials the server. This is like pressing the
+              call button on your phone.</div>
+            <div class="code-snippet">
+              <span class="cm">// This ONE line opens the connection</span><br>
+              <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
+                class="str">'ws://localhost:8080'</span>);
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Open -->
+        <div class="lc-step">
+          <div class="lc-icon-col">
+            <div class="lc-icon"
+              style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);color:var(--green)">✅</div>
+          </div>
+          <div class="lc-body">
+            <div class="lc-title" style="color:var(--green)">Step 2 — The server picks up (Open)</div>
+            <div class="lc-desc">When the server accepts the connection, the <strong>open</strong> event fires
+              automatically. You can now start talking!</div>
+            <div class="code-snippet">
+              <span class="cm">// This runs automatically when connected</span><br>
+              ws.<span class="fn">addEventListener</span>(<span class="ev">'open'</span>, () => {<br>
+              &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Connected!
+                🎉'</span>);<br>
+              });
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Send & Receive -->
+        <div class="lc-step">
+          <div class="lc-icon-col">
+            <div class="lc-icon"
+              style="background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.4);color:var(--yellow)">💬</div>
+          </div>
+          <div class="lc-body">
+            <div class="lc-title" style="color:var(--yellow)">Step 3 — You talk back and forth (Send & Receive)</div>
+            <div class="lc-desc">You can send messages with <code
+                style="font-family:monospace;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px">ws.send()</code>
+              and receive them with the <strong>message</strong> event. Both sides can go first!</div>
+            <div class="code-snippet">
+              <span class="cm">// YOU send a message to the server</span><br>
+              ws.<span class="fn">send</span>(<span class="str">'Hello server!'</span>);<br><br>
+              <span class="cm">// Server sends YOU a message → this runs</span><br>
+              ws.<span class="fn">addEventListener</span>(<span class="ev">'message'</span>, (event) => {<br>
+              &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Server
+                said:'</span>, event.data);<br>
+              });
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Close -->
+        <div class="lc-step">
+          <div class="lc-icon-col">
+            <div class="lc-icon"
+              style="background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.4);color:var(--red)">📵</div>
+          </div>
+          <div class="lc-body">
+            <div class="lc-title" style="color:var(--red)">Step 4 — You hang up (Close)</div>
+            <div class="lc-desc">Call <code
+                style="font-family:monospace;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px">ws.close()</code>
+              and the connection ends. The <strong>close</strong> event fires so you know it's done.</div>
+            <div class="code-snippet">
+              <span class="cm">// YOU hang up</span><br>
+              ws.<span class="fn">close</span>();<br><br>
+              <span class="cm">// This runs automatically after closing</span><br>
+              ws.<span class="fn">addEventListener</span>(<span class="ev">'close'</span>, () => {<br>
+              &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Disconnected
+                👋'</span>);<br>
+              });
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         SECTION 3 — LIVE DEMO
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(34,197,94,.15);color:var(--green)">3</div>
+        <div>
+          <div class="section-title">Try it Live! ▶️</div>
+          <div style="font-size:.85rem;color:var(--muted)">Click the buttons and watch every WebSocket event happen in
+            real-time</div>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-header">
+          <div style="font-size:1.5rem">🔬</div>
+          <div>
+            <div class="demo-header" style="border:none;padding:0;">
+              <div>
+                <h2>Live WebSocket Demo</h2>
+                <p>Your server must be running: <code style="font-family:monospace">node server.js</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-body">
+
+          <!-- Step flow visualizer -->
+          <div class="step-flow">
+            <div class="step-box active" id="sBox0">
+              <div class="step-icon">📞</div>
+              <div class="step-name">1. Connect</div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-box" id="sBox1">
+              <div class="step-icon">✅</div>
+              <div class="step-name">2. Open</div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-box" id="sBox2">
+              <div class="step-icon">💬</div>
+              <div class="step-name">3. Send / Receive</div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-box" id="sBox3">
+              <div class="step-icon">📵</div>
+              <div class="step-name">4. Close</div>
+            </div>
+          </div>
+
+          <!-- Status bar -->
+          <div class="status-bar" id="statusBar">
+            <div class="status-dot" id="statusDot"></div>
+            <div style="flex:1">
+              <div class="status-text" id="statusText">Not Connected</div>
+              <div class="status-sub" id="statusSub">Click "Connect" to start a WebSocket connection</div>
+            </div>
+          </div>
+
+          <!-- Control buttons -->
+          <div class="btn-row">
+            <button class="btn btn-connect" id="btnConnect" onclick="doConnect()">📞 Connect</button>
+            <button class="btn btn-disconnect" id="btnDisconnect" onclick="doDisconnect()" disabled>📵
+              Disconnect</button>
+            <button class="btn btn-clear" onclick="clearLog()">🗑 Clear Log</button>
+          </div>
+
+          <!-- Send message -->
+          <div class="msg-row">
+            <input type="text" class="msg-input" id="msgInput" value="Hello WebSocket!" placeholder="Type a message..."
+              disabled />
+            <button class="btn btn-send" id="btnSend" onclick="doSend()" disabled>📤 Send</button>
+          </div>
+
+          <!-- What just happened explanation -->
+          <div class="explain-area" id="explainBox"></div>
+
+          <!-- Event log -->
+          <div class="log-area">
+            <div class="log-head">
+              <span>📡 Event Log — See every WebSocket event as it fires</span>
+            </div>
+            <div class="log-list" id="logList">
+              <div class="log-empty" id="logEmpty">Events will appear here when you connect...</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         SECTION 4 — KEY CONCEPTS
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(251,191,36,.15);color:var(--yellow)">4</div>
+        <div>
+          <div class="section-title">Key Concepts to Remember 🧠</div>
+          <div style="font-size:.85rem;color:var(--muted)">Four simple things that explain everything</div>
+        </div>
+      </div>
+
+      <div class="concepts-grid">
+        <div class="concept-card">
+          <div class="concept-icon">🔁</div>
+          <div class="concept-title">Two-Way Traffic</div>
+          <div class="concept-desc">Unlike a web page that only loads once, a WebSocket lets <strong>both sides talk
+              anytime</strong>. The server can send you a message even when you didn't ask for one.</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">🔗</div>
+          <div class="concept-title">One Connection, Many Messages</div>
+          <div class="concept-desc">You connect once. Then you can send a <strong>thousand messages</strong> back and
+            forth without reconnecting. Very efficient!</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">⚡</div>
+          <div class="concept-title">Instant (Real-Time)</div>
+          <div class="concept-desc">There's no waiting for a request-response cycle. Messages arrive
+            <strong>instantly</strong> — that's why chat apps and games use WebSockets.</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">🎯</div>
+          <div class="concept-title">Events Drive Everything</div>
+          <div class="concept-desc">You don't check "is there a message?" repeatedly. You just say "call me when
+            something happens" — that's what <code style="font-family:monospace;font-size:.8rem">addEventListener</code>
+            does.</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         SECTION 5 — WHERE IS IT USED?
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(248,113,113,.15);color:var(--red)">5</div>
+        <div>
+          <div class="section-title">Where is WebSocket used in real life? 🌍</div>
+          <div style="font-size:.85rem;color:var(--muted)">Apps you use every day are powered by this!</div>
+        </div>
+      </div>
+
+      <div class="uses-grid">
+        <div class="use-card">
+          <div class="use-icon">💬</div>
+          <div class="use-label">WhatsApp / Slack</div>
+          <div class="use-desc">Messages arrive instantly without refreshing</div>
+        </div>
+        <div class="use-card">
+          <div class="use-icon">🎮</div>
+          <div class="use-label">Online Games</div>
+          <div class="use-desc">Player positions update in real-time</div>
+        </div>
+        <div class="use-card">
+          <div class="use-icon">📈</div>
+          <div class="use-label">Stock Prices</div>
+          <div class="use-desc">Prices update live on your screen</div>
+        </div>
+        <div class="use-card">
+          <div class="use-icon">🤝</div>
+          <div class="use-label">Google Docs</div>
+          <div class="use-desc">See others typing in real-time</div>
+        </div>
+        <div class="use-card">
+          <div class="use-icon">🔔</div>
+          <div class="use-label">Notifications</div>
+          <div class="use-desc">Push alerts without you asking</div>
+        </div>
+        <div class="use-card">
+          <div class="use-icon">🤖</div>
+          <div class="use-label">ChatGPT / AI</div>
+          <div class="use-desc">Streams tokens word by word to you</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         SECTION 6 — QUICK CHEATSHEET
+    ══════════════════════════════════════════════════ -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(167,139,250,.15);color:var(--purple)">6</div>
+        <div>
+          <div class="section-title">Quick Cheatsheet 📋</div>
+          <div style="font-size:.85rem;color:var(--muted)">Everything you need — one glance</div>
+        </div>
+      </div>
+
+      <div class="cheat-wrap">
+        <table class="cheat-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>What it does</th>
+              <th>When it runs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>new WebSocket(url)</td>
+              <td>Opens a connection to the server</td>
+              <td>When YOU call it</td>
+            </tr>
+            <tr>
+              <td>ws.addEventListener('open', fn)</td>
+              <td>Runs your function when connected</td>
+              <td>Automatically when server accepts</td>
+            </tr>
+            <tr>
+              <td>ws.send('hello')</td>
+              <td>Sends a message to the server</td>
+              <td>When YOU call it</td>
+            </tr>
+            <tr>
+              <td>ws.addEventListener('message', fn)</td>
+              <td>Runs your function when server replies</td>
+              <td>Automatically every time server speaks</td>
+            </tr>
+            <tr>
+              <td>ws.close()</td>
+              <td>Ends the connection</td>
+              <td>When YOU call it</td>
+            </tr>
+            <tr>
+              <td>ws.addEventListener('close', fn)</td>
+              <td>Runs your function when disconnected</td>
+              <td>Automatically after closing</td>
+            </tr>
+            <tr>
+              <td>ws.addEventListener('error', fn)</td>
+              <td>Runs your function if something fails</td>
+              <td>Automatically if connection fails</td>
+            </tr>
+            <tr>
+              <td>ws.readyState</td>
+              <td>0=Connecting, 1=Open, 2=Closing, 3=Closed</td>
+              <td>Check anytime</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div><!-- /page -->
+
+  <script>
+    let ws = null;
+
+    // ── Helper: time ──
+    function now() {
+      return new Date().toLocaleTimeString('en-US', { hour12: false });
+    }
+
+    // ── Helper: log an event entry ──
+    function log(type, badge, text) {
+      const list = document.getElementById('logList');
+      document.getElementById('logEmpty').style.display = 'none';
+
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.innerHTML = `
+        <span class="log-time">${now()}</span>
+        <span class="log-badge">${badge}</span>
+        <span class="log-text">${text}</span>
+      `;
+      list.appendChild(entry);
+      list.scrollTop = list.scrollHeight;
+    }
+
+    // ── Helper: update status bar ──
+    function setStatus(dotClass, text, sub) {
+      const dot = document.getElementById('statusDot');
+      dot.className = `status-dot ${dotClass}`;
+      document.getElementById('statusText').textContent = text;
+      document.getElementById('statusSub').textContent = sub;
+    }
+
+    // ── Helper: highlight step ──
+    function setStep(active) {
+      for (let i = 0; i < 4; i++) {
+        const box = document.getElementById(`sBox${i}`);
+        box.className = 'step-box' +
+          (i === active ? ' active' : i < active ? ' done' : '');
+      }
+    }
+
+    // ── Helper: show explanation ──
+    function explain(text) {
+      const box = document.getElementById('explainBox');
+      box.innerHTML = text;
+      box.className = 'explain-area show';
+    }
+
+    // ── CONNECT ──
+    function doConnect() {
+      if (ws && ws.readyState < 2) ws.close();
+
+      setStep(0);
+      setStatus('connecting', 'Connecting...', 'Opening a WebSocket connection to ws://localhost:8080');
+      log('sys', 'STEP 1', '📞 new WebSocket("ws://localhost:8080") — dialing the server...');
+      explain('<strong>Step 1 → Connecting:</strong> You just wrote <code style="font-family:monospace">new WebSocket(url)</code>. The browser is now trying to reach the server. This is like your phone ringing on the other end.');
+
+      document.getElementById('btnConnect').disabled = true;
+
+      ws = new WebSocket('ws://localhost:8080');
+
+      // ── EVENT: open ──
+      ws.addEventListener('open', () => {
+        setStep(1);
+        setStatus('open', '🟢 Connected!', 'WebSocket is OPEN — server accepted your connection');
+        log('sys', 'STEP 2', '✅ "open" event fired — the server picked up! You can now send messages.');
+        explain('<strong>Step 2 → Open:</strong> The <code style="font-family:monospace">open</code> event just fired! The server accepted your connection. The "phone line" is now live. Notice the green dot — you are now connected. Try sending a message!');
+        document.getElementById('btnDisconnect').disabled = false;
+        document.getElementById('btnSend').disabled = false;
+        document.getElementById('msgInput').disabled = false;
+        setStep(2);
+      });
+
+      // ── EVENT: message ──
+      ws.addEventListener('message', (event) => {
+        let data;
+        try { data = JSON.parse(event.data); } catch { data = event.data; }
+        const text = typeof data === 'object'
+          ? (data.echo || data.message || JSON.stringify(data))
+          : data;
+        log('recv', 'RECEIVE', `📨 Server replied: "${text}"`);
+        explain(`<strong>Step 3 → Message received!</strong> The <code style="font-family:monospace">message</code> event just fired. The server echoed your message back. In a real app, the server could send you anything — chat messages, live scores, stock prices.`);
+      });
+
+      // ── EVENT: close ──
+      ws.addEventListener('close', (e) => {
+        setStep(3);
+        setStatus('closed', '🔴 Disconnected', `Connection closed (code: ${e.code})`);
+        log('sys', 'STEP 4', `📵 "close" event fired — connection ended. Code: ${e.code}`);
+        explain('<strong>Step 4 → Closed:</strong> The <code style="font-family:monospace">close</code> event fired. The WebSocket connection is now fully closed. You would need to call <code style="font-family:monospace">new WebSocket()</code> again to reconnect.');
+        document.getElementById('btnConnect').disabled = false;
+        document.getElementById('btnDisconnect').disabled = true;
+        document.getElementById('btnSend').disabled = true;
+        document.getElementById('msgInput').disabled = true;
+        ws = null;
+        setTimeout(() => setStep(0), 1500);
+      });
+
+      // ── EVENT: error ──
+      ws.addEventListener('error', () => {
+        setStatus('closed', '❌ Connection Failed', 'Make sure "node server.js" is running in your terminal');
+        log('err', 'ERROR', '❌ "error" event fired — could not reach the server. Is node server.js running?');
+        explain('<strong>Error:</strong> The <code style="font-family:monospace">error</code> event fired. The browser could not connect to the server. Make sure you have run <code style="font-family:monospace">node server.js</code> in your terminal first!');
+        document.getElementById('btnConnect').disabled = false;
+      });
+    }
+
+    // ── SEND ──
+    function doSend() {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim() || input.placeholder;
+      const payload = JSON.stringify({ type: 'echo', data: text });
+      ws.send(payload);
+      log('sent', 'SEND', `📤 ws.send() called — you sent: "${text}"`);
+      explain(`<strong>Step 3 → Sending:</strong> You just called <code style="font-family:monospace">ws.send()</code>. Your message "${text}" is now flying through the WebSocket tunnel to the server. Watch the log — the server will reply in milliseconds!`);
+    }
+
+    // ── DISCONNECT ──
+    function doDisconnect() {
+      if (ws) {
+        log('sys', 'STEP 4', '📵 ws.close() called — hanging up...');
+        explain('<strong>Step 4 → Closing:</strong> You called <code style="font-family:monospace">ws.close()</code>. The browser is now sending a "goodbye" signal to the server. The <code style="font-family:monospace">close</code> event will fire in a moment...');
+        ws.close();
+      }
+    }
+
+    // ── CLEAR ──
+    function clearLog() {
+      const list = document.getElementById('logList');
+      list.innerHTML = '<div class="log-empty" id="logEmpty">Events will appear here when you connect...</div>';
+      document.getElementById('explainBox').className = 'explain-area';
+    }
+
+    // Allow Enter key to send
+    document.getElementById('msgInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSend();
+    });
+  </script>
+
+
+  <div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
+    <a href="index.html" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#1a2235;color:#94a3b8;text-decoration:none">&#127968; Home</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#128218; Notes</a>
+    <a href="learn2.html" style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#38bdf8;color:#082f49;text-decoration:none;border:none">Lesson 2: addEventListener &#8594;</a>
+  </div>
+</body>
+
+</html>

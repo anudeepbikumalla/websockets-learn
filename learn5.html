@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 5 — Error Handling & Auto-Reconnect</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(248, 113, 113, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(248, 113, 113, .1);
+      color: var(--red);
+      border: 1px solid rgba(248, 113, 113, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    /* SECTION HEADER */
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* colour text helpers */
+    .c-red {
+      color: var(--red);
+    }
+
+    .c-green {
+      color: var(--green);
+    }
+
+    .c-yellow {
+      color: var(--yellow);
+    }
+
+    strong.c-red {
+      color: var(--red);
+    }
+
+    strong.c-green {
+      color: var(--green);
+    }
+
+    strong.c-yellow {
+      color: var(--yellow);
+    }
+
+    /* code helper */
+    code.mono {
+      font-family: monospace;
+    }
+
+    /* spacing helpers */
+    .mt-12 {
+      margin-top: 12px;
+    }
+
+    .mt-10 {
+      margin-top: 10px;
+    }
+
+    .mt-14 {
+      margin-top: 14px;
+    }
+
+    .mb-12 {
+      margin-bottom: 12px;
+    }
+
+    .mb-14 {
+      margin-bottom: 14px;
+    }
+
+    /* small note text */
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+    }
+
+    .note-muted {
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    /* box with top margin */
+    .box.mt {
+      margin-top: 16px;
+    }
+
+    /* box-head blue */
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    /* BOX */
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-red {
+      color: var(--red);
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-orange {
+      color: var(--orange);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* CLOSE CODE TABLE */
+    .close-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem;
+    }
+
+    .close-table th {
+      padding: 9px 14px;
+      background: var(--card2);
+      color: var(--dim);
+      font-weight: 600;
+      font-size: .73rem;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .close-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--dim);
+      vertical-align: top;
+    }
+
+    .close-table td:first-child {
+      font-family: 'Fira Code', monospace;
+      color: var(--yellow);
+      font-size: .78rem;
+    }
+
+    .close-table td:nth-child(2) {
+      color: var(--text);
+      font-weight: 600;
+      font-size: .78rem;
+    }
+
+    .close-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* CODE */
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .num {
+      color: #fca5a5;
+    }
+
+    /* BACKOFF VISUALIZER */
+    .backoff-vis {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 20px;
+      background: var(--card3);
+      border-radius: 10px;
+      height: 130px;
+    }
+
+    .backoff-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+    }
+
+    .backoff-bar {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      transition: height .5s cubic-bezier(.4, 0, .2, 1), background .5s;
+    }
+
+    .backoff-label {
+      font-size: .66rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .backoff-sec {
+      font-size: .7rem;
+      color: var(--dim);
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* LIVE DEMO */
+    .demo-shell {
+      background: var(--card);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .demo-topbar {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--muted);
+      transition: background .3s;
+    }
+
+    .dot.open {
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .dot.connecting {
+      background: var(--yellow);
+      animation: pulse .8s infinite;
+    }
+
+    .dot.error {
+      background: var(--red);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 currentColor;
+      }
+
+      50% {
+        box-shadow: 0 0 0 4px transparent;
+      }
+    }
+
+    .status-text {
+      font-size: .82rem;
+      color: var(--dim);
+      flex: 1;
+    }
+
+    .retry-badge {
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+      display: none;
+    }
+
+    .retry-badge.show {
+      display: block;
+    }
+
+    .demo-log {
+      height: 180px;
+      overflow-y: auto;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: .73rem;
+      background: var(--card3);
+    }
+
+    .lg {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lg-t {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .lg.sys .lg-m {
+      color: var(--dim);
+    }
+
+    .lg.ok .lg-m {
+      color: var(--green);
+    }
+
+    .lg.err .lg-m {
+      color: var(--red);
+    }
+
+    .lg.warn .lg-m {
+      color: var(--yellow);
+    }
+
+    .lg.recv .lg-m {
+      color: var(--blue);
+    }
+
+    .demo-controls {
+      padding: 14px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #1a0000;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .countdown-wrap {
+      margin-left: auto;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .countdown-num {
+      color: var(--yellow);
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* HIGHLIGHT BOX */
+    .hl-box {
+      border-radius: 10px;
+      padding: 14px 16px;
+      border-left: 3px solid;
+      font-size: .85rem;
+      color: var(--dim);
+      line-height: 1.7;
+      margin-top: 14px;
+    }
+
+    .hl-box.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+    }
+
+    .hl-box.red {
+      border-color: var(--red);
+      background: rgba(248, 113, 113, .05);
+    }
+
+    .hl-box.yellow {
+      border-color: var(--yellow);
+      background: rgba(251, 191, 36, .05);
+    }
+
+    /* GOLDEN RULE */
+    .golden {
+      background: rgba(251, 191, 36, .05);
+      border: 1px solid rgba(251, 191, 36, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--yellow);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    /* NAV */
+    .nav-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--red);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 5</div>
+    <h1>Error Handling &amp; Auto-Reconnect 🔄</h1>
+    <p>Real apps never assume the connection stays up forever. Learn to detect failures and bounce back automatically.
+    </p>
+  </div>
+
+  <div class="page">
+
+    <!-- ① WHY CONNECTIONS FAIL -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">1</div>
+        <div>
+          <div class="sec-title">Why connections fail 💥</div>
+          <div class="sec-sub">This happens all the time — you need to handle it</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-red">❌ Common failure reasons</div>
+          <div class="box-body">
+            <div class="hl-box red">
+              <strong class="c-red">Server crashes</strong> — Node.js process dies, server restarts.<br><br>
+              <strong class="c-red">Network drops</strong> — WiFi disconnects, phone switches from 4G to
+              WiFi.<br><br>
+              <strong class="c-red">Idle timeout</strong> — Load balancers kill connections silent after ~60s
+              of no traffic.<br><br>
+              <strong class="c-red">Browser goes to sleep</strong> — Tab backgrounded, phone locked.
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-yellow">🔔 The two events to watch</div>
+          <div class="box-body">
+            <p class="mb-12">WebSocket gives you exactly 2 events for failure:</p>
+            <div class="hl-box yellow">
+              <strong class="c-yellow">onerror / 'error'</strong><br>
+              Fires when the connection <em>fails to open</em>, or something goes wrong mid-connection. Always followed
+              by a close event.
+            </div>
+            <div class="hl-box red mt-10">
+              <strong class="c-red">onclose / 'close'</strong><br>
+              Fires whenever the connection ends — whether intentional (you called <code>ws.close()</code>) or because
+              of an error. Check <code>event.wasClean</code> to tell them apart.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ② CLOSE CODES -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">2</div>
+        <div>
+          <div class="sec-title">Close Codes — reading the cause 📋</div>
+          <div class="sec-sub">The close event tells you exactly WHY it closed</div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-head c-yellow">📖 event.code — the most important property</div>
+        <div class="box-body">
+          <p class="mb-14">When <code class="mono">close</code> fires you get an event
+            object with 3 useful properties:</p>
+          <div class="code mb-14">
+            ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, (event) => {<br>
+            &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(event.<span class="kw">code</span>);
+            <span class="cm">// number: 1000, 1001, 1006 …</span><br>
+            &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(event.<span
+              class="kw">reason</span>); <span class="cm">// string: human reason (often empty)</span><br>
+            &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(event.<span
+              class="kw">wasClean</span>); <span class="cm">// true = intentional, false = crash/network drop</span><br>
+            });
+          </div>
+          <table class="close-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>What it means</th>
+                <th>Reconnect?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1000</td>
+                <td>Normal Closure</td>
+                <td>Intentional close — both sides agreed</td>
+                <td>❌ No</td>
+              </tr>
+              <tr>
+                <td>1001</td>
+                <td>Going Away</td>
+                <td>Page navigated / server shutting down</td>
+                <td>⚠️ Maybe</td>
+              </tr>
+              <tr>
+                <td>1006</td>
+                <td>Abnormal Closure</td>
+                <td>Connection dropped — no close frame sent</td>
+                <td>✅ Yes</td>
+              </tr>
+              <tr>
+                <td>1011</td>
+                <td>Internal Error</td>
+                <td>Server had an unexpected error</td>
+                <td>✅ Yes</td>
+              </tr>
+              <tr>
+                <td>1012</td>
+                <td>Service Restart</td>
+                <td>Server is restarting (planned)</td>
+                <td>✅ Yes</td>
+              </tr>
+              <tr>
+                <td>4000–4999</td>
+                <td>Custom codes</td>
+                <td>App-defined (e.g. 4001 = Auth failed)</td>
+                <td>Depends</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ③ EXPONENTIAL BACKOFF -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">3</div>
+        <div>
+          <div class="sec-title">Exponential Backoff — the smart way to retry ⏱️</div>
+          <div class="sec-sub">Never hammer a crashed server. Wait longer each time.</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="box">
+            <div class="box-head c-red">❌ Bad: Retry immediately forever</div>
+            <div class="box-body">
+              <div class="code">
+                ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, () => {<br>
+                &nbsp;&nbsp;<span class="cm">// BAD — hammers server 100x/sec!</span><br>
+                &nbsp;&nbsp;<span class="fn">connect</span>();<br>
+                });
+              </div>
+              <p class="note-sm mt-12">If 1000 users all reconnect instantly when a server restarts,
+                the server gets <strong class="c-red">1000 connections in 1ms</strong> — it crashes again
+                immediately 😱</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="box">
+            <div class="box-head c-green">✅ Good: Exponential Backoff</div>
+            <div class="box-body">
+              <div class="code">
+                <span class="cm">// Wait longer with each retry</span><br>
+                <span class="cm">// Retry 1: 1s, Retry 2: 2s, Retry 3: 4s …</span><br>
+                <span class="kw">const</span> delay = <span class="fn">Math.min</span>(<br>
+                &nbsp;&nbsp;<span class="num">1000</span> * <span class="num">2</span> ** retries,<br>
+                &nbsp;&nbsp;<span class="num">30000</span> <span class="cm">// cap at 30s max</span><br>
+                );
+              </div>
+              <p class="note-sm mt-12">Users are spread out over time. By <strong class="c-green">retry 5</strong>
+                you're only reconnecting every <strong>32
+                  seconds</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backoff Visualiser -->
+      <div class="box mt">
+        <div class="box-head c-green">📊 Backoff delay per retry — visualised</div>
+        <div class="box-body">
+          <div class="backoff-vis" id="backoffVis"></div>
+          <p class="note-muted mt-12">Formula: <code
+              class="mono">delay = Math.min(1000 × 2<sup>retries</sup>, 30000)</code> — capped at 30s
+            so it never waits forever.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ THE FULL PATTERN -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">4</div>
+        <div>
+          <div class="sec-title">The Full Pattern — production-ready code 💻</div>
+          <div class="sec-sub">Copy this into any real WebSocket app</div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-head c-blue">&lt;/&gt; Auto-reconnect with exponential backoff</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">let</span> ws, retries = <span class="num">0</span>, maxRetries = <span
+              class="num">8</span>;<br>
+            <span class="kw">let</span> retryTimer = <span class="kw">null</span>;<br><br>
+
+            <span class="kw">function</span> <span class="fn">connect</span>() {<br>
+            &nbsp;&nbsp;ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
+              class="str">'ws://localhost:8080'</span>);<br><br>
+
+            &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'✅
+              Connected!'</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;retries = <span class="num">0</span>; <span class="cm">// reset on
+              success!</span><br>
+            &nbsp;&nbsp;});<br><br>
+
+            &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, (event) => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// 1000 = intentional close, don't reconnect</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (event.code === <span class="num">1000</span>) <span
+              class="kw">return</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (retries >= maxRetries) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span
+              class="str">'❌ Gave up after 8 retries'</span>); <span class="kw">return</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> delay = <span class="fn">Math.min</span>(<span
+              class="num">1000</span> * <span class="num">2</span> ** retries, <span class="num">30000</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`🔄
+              Retry ${retries+1} in ${delay/1000}s…`</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;retries++;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;retryTimer = <span class="fn">setTimeout</span>(<span class="fn">connect</span>,
+            delay);<br>
+            &nbsp;&nbsp;});<br><br>
+
+            &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'error'</span>, (e) => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">error</span>(<span class="str">'⚠️
+              WebSocket error'</span>, e);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// error is always followed by close — reconnect there</span><br>
+            &nbsp;&nbsp;});<br>
+            }<br><br>
+
+            <span class="fn">connect</span>(); <span class="cm">// kick it off</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑤ LIVE DEMO -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">5</div>
+        <div>
+          <div class="sec-title">▶️ Try it — Simulate a crash &amp; watch it reconnect</div>
+          <div class="sec-sub">Use the buttons to kill the connection and watch auto-reconnect work</div>
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-topbar">
+          <div class="dot" id="demoDot"></div>
+          <div class="status-text" id="demoStatus">Not connected</div>
+          <div class="retry-badge" id="retryBadge">Retrying...</div>
+          <div class="countdown-wrap" id="countdownWrap" style="display:none">
+            Next retry in <span class="countdown-num" id="countdown">—</span>s
+          </div>
+        </div>
+
+        <div class="demo-log" id="demoLog">
+          <div class="lg sys"><span class="lg-t">—</span><span class="lg-m">👋 Press "Connect" to start. Then try
+              "Simulate Crash" to see auto-reconnect!</span></div>
+        </div>
+
+        <div class="demo-controls">
+          <button class="btn btn-green" id="dBtnConn" onclick="demoConnect()">Connect</button>
+          <button class="btn btn-red" id="dBtnCrash" onclick="demoCrash()" disabled>Simulate Crash</button>
+          <button class="btn btn-ghost" id="dBtnClose" onclick="demoClose()" disabled>Clean Close</button>
+          <button class="btn btn-ghost" onclick="demoLog.innerHTML=''">Clear</button>
+          <button class="btn btn-ghost" id="dBtnStop" onclick="demoStop()" disabled>Stop Retrying</button>
+          <div class="countdown-wrap" id="countdownInline" style="display:none">
+            Next retry in <span class="countdown-num" id="countdown2">—</span>s
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOLDEN RULES -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">6</div>
+        <div>
+          <div class="sec-title">⚡ Golden Rules of Error Handling</div>
+          <div class="sec-sub">Memorise these — they apply to every WebSocket app</div>
+        </div>
+      </div>
+
+      <div class="golden">
+        <h3>✅ Production Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔄</div>
+            <div class="rule-text"><strong>Always use exponential backoff</strong> — never reconnect immediately. Start
+              at 1s, double each time, cap at 30s.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔢</div>
+            <div class="rule-text"><strong>Set a max retry limit</strong> (e.g. 8 retries). After that, show the user a
+              message: "Connection lost. Refresh the page."</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">✅</div>
+            <div class="rule-text"><strong>Reset the retry counter on success</strong> — if a reconnect succeeds, set
+              <code style="font-family:monospace">retries = 0</code> so the next failure starts fresh.
+            </div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🚫</div>
+            <div class="rule-text"><strong>Don't reconnect on code 1000</strong> — that's an intentional close (e.g.
+              user logged out). Only auto-reconnect on unexpected closes.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">💬</div>
+            <div class="rule-text"><strong>Show the user what's happening</strong> — display a "Reconnecting..." badge
+              so they know the app is working, not broken.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🧹</div>
+            <div class="rule-text"><strong>Clear the retry timer on clean close</strong> — always call <code
+                style="font-family:monospace">clearTimeout(retryTimer)</code> when the user intentionally disconnects.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-bar">
+  <a href="index.html" class="nav-btn home">&#127968; Home</a>
+  <a href="learn4.html" class="nav-btn">&#8592; Lesson 4</a>
+  <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">&#128218; Notes</a>
+  <a href="learn6.html" class="nav-btn primary">Lesson 6: Broadcasting &#8594;</a>
+</div>
+
+  <script>
+    // ── Backoff visualiser ──
+    const bars = [
+      { retries: 0, delay: 1 },
+      { retries: 1, delay: 2 },
+      { retries: 2, delay: 4 },
+      { retries: 3, delay: 8 },
+      { retries: 4, delay: 16 },
+      { retries: 5, delay: 30 },
+      { retries: 6, delay: 30 },
+    ];
+    const maxDelay = 30;
+    const colours = ['#f87171', '#fb923c', '#fbbf24', '#a3e635', '#34d399', '#38bdf8', '#a78bfa'];
+    const vis = document.getElementById('backoffVis');
+    bars.forEach((b, i) => {
+      const pct = (b.delay / maxDelay) * 90;
+      vis.innerHTML += `
+      <div class="backoff-bar-wrap">
+        <div class="backoff-sec">${b.delay}s</div>
+        <div class="backoff-bar" style="height:${pct}%;background:${colours[i]};opacity:.85"></div>
+        <div class="backoff-label">#${b.retries + 1}</div>
+      </div>`;
+    });
+
+    // ── Live Demo ──
+    let ws = null, retries = 0, maxRetries = 6, retryTimer = null, countInterval = null;
+    const log = document.getElementById('demoLog');
+
+    function now() { return new Date().toLocaleTimeString('en-US', { hour12: false }); }
+
+    function addLog(type, msg) {
+      const d = document.createElement('div');
+      d.className = `lg ${type}`;
+      d.innerHTML = `<span class="lg-t">${now()}</span><span class="lg-m">${msg}</span>`;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function setDot(cls, status) {
+      document.getElementById('demoDot').className = `dot ${cls}`;
+      document.getElementById('demoStatus').textContent = status;
+    }
+
+    function showRetry(seconds) {
+      document.getElementById('retryBadge').className = 'retry-badge show';
+      document.getElementById('countdownInline').style.display = 'block';
+      clearInterval(countInterval);
+      let remaining = seconds;
+      document.getElementById('countdown2').textContent = remaining;
+      countInterval = setInterval(() => {
+        remaining--;
+        document.getElementById('countdown2').textContent = remaining;
+        if (remaining <= 0) clearInterval(countInterval);
+      }, 1000);
+    }
+
+    function hideRetry() {
+      document.getElementById('retryBadge').className = 'retry-badge';
+      document.getElementById('countdownInline').style.display = 'none';
+      clearInterval(countInterval);
+    }
+
+    function setBtns(connected) {
+      document.getElementById('dBtnConn').disabled = connected;
+      document.getElementById('dBtnCrash').disabled = !connected;
+      document.getElementById('dBtnClose').disabled = !connected;
+    }
+
+    function scheduleReconnect() {
+      if (retries >= maxRetries) {
+        addLog('err', `❌ Gave up after ${maxRetries} retries. Click Connect to try again.`);
+        setDot('error', 'Failed — gave up');
+        document.getElementById('dBtnConn').disabled = false;
+        document.getElementById('dBtnStop').disabled = true;
+        hideRetry();
+        return;
+      }
+      const delay = Math.min(1000 * Math.pow(2, retries), 30000);
+      const secs = delay / 1000;
+      addLog('warn', `🔄 Retry #${retries + 1} in ${secs}s… (backoff: 1s × 2^${retries} = ${secs}s)`);
+      setDot('connecting', `Reconnecting in ${secs}s…`);
+      showRetry(secs);
+      retries++;
+      document.getElementById('dBtnStop').disabled = false;
+      retryTimer = setTimeout(demoConnectInternal, delay);
+    }
+
+    function demoConnectInternal() {
+      hideRetry();
+      if (ws && ws.readyState < 2) return;
+      setDot('connecting', 'Connecting…');
+      addLog('sys', `⏳ Attempting connection to ws://localhost:8080…`);
+      ws = new WebSocket('ws://localhost:8080');
+
+      ws.addEventListener('open', () => {
+        setDot('open', 'Connected ✅');
+        addLog('ok', `✅ [open] Connected! retries reset to 0.`);
+        retries = 0;
+        setBtns(true);
+        document.getElementById('dBtnStop').disabled = true;
+        hideRetry();
+      });
+
+      ws.addEventListener('message', (e) => {
+        let d; try { d = JSON.parse(e.data); } catch { d = e.data; }
+        const txt = typeof d === 'object' ? (d.echo || d.message || JSON.stringify(d)) : d;
+        addLog('recv', `📨 [message] ${txt}`);
+      });
+
+      ws.addEventListener('close', (event) => {
+        ws = null;
+        setBtns(false);
+        if (event.code === 1000) {
+          setDot('', 'Closed cleanly (code 1000)');
+          addLog('sys', `🔌 [close] Clean disconnect. code=1000, wasClean=${event.wasClean}. No reconnect.`);
+          document.getElementById('dBtnStop').disabled = true;
+          return;
+        }
+        addLog('err', `⚡ [close] Unexpected! code=${event.code}, wasClean=${event.wasClean} — scheduling reconnect…`);
+        scheduleReconnect();
+      });
+
+      ws.addEventListener('error', () => {
+        addLog('err', `⚠️ [error] Connection error. A close event will follow.`);
+        setDot('error', 'Error');
+      });
+    }
+
+    function demoConnect() {
+      retries = 0;
+      demoConnectInternal();
+    }
+
+    function demoCrash() {
+      if (!ws) return;
+      addLog('warn', `💥 Simulating crash — forcibly closing with code 1006 (abnormal)…`);
+      // Terminate abruptly (no clean close frame = like a network drop)
+      ws.close(1006, 'Simulated crash');
+      setBtns(false);
+    }
+
+    function demoClose() {
+      if (!ws) return;
+      addLog('sys', `👋 Clean close — code 1000. Will NOT trigger auto-reconnect.`);
+      ws.close(1000, 'User closed');
+    }
+
+    function demoStop() {
+      clearTimeout(retryTimer);
+      clearInterval(countInterval);
+      hideRetry();
+      addLog('sys', `🛑 Auto-reconnect stopped manually.`);
+      setDot('error', 'Stopped');
+      document.getElementById('dBtnStop').disabled = true;
+      document.getElementById('dBtnConn').disabled = false;
+    }
+  </script>
+
+</body>
+
+</html>

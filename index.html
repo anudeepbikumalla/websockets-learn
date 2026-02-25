@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebSocket Learning Hub</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(56, 189, 248, .1), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, .1);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      font-weight: 800;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #e2e8f0 40%, #64748b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--dim);
+      max-width: 540px;
+      margin: 0 auto 28px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--blue);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .stat-label {
+      font-size: .72rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 44px 24px 60px;
+    }
+
+    .section-head {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* LESSON GRID */
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .lesson-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color .25s, transform .2s, box-shadow .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lesson-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .lesson-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .4);
+      border-color: var(--card-color, var(--blue));
+    }
+
+    .lesson-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lesson-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .82rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      background: var(--num-bg);
+      color: var(--num-color);
+    }
+
+    .lesson-badge {
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: var(--badge-bg);
+      color: var(--badge-color);
+    }
+
+    .lesson-title {
+      font-size: .95rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .lesson-desc {
+      font-size: .79rem;
+      color: var(--dim);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .lesson-path {
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      color: var(--muted);
+      background: var(--card3);
+      border-radius: 5px;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      word-break: break-all;
+      margin-top: 2px;
+    }
+
+    .lesson-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .open-btn {
+      margin-left: auto;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--card-color, var(--blue));
+      opacity: .7;
+      transition: opacity .2s;
+    }
+
+    .lesson-card:hover .open-btn {
+      opacity: 1;
+    }
+
+    /* ADVANCED SECTION */
+    .advanced-card {
+      background: var(--card);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: border-color .25s, transform .2s;
+    }
+
+    .advanced-card:hover {
+      border-color: var(--purple);
+      transform: translateY(-2px);
+    }
+
+    .adv-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .adv-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
+      color: var(--purple);
+    }
+
+    .adv-desc {
+      font-size: .82rem;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    .adv-path {
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      color: var(--muted);
+      margin-top: 6px;
+      background: var(--card3);
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .adv-arrow {
+      margin-left: auto;
+      font-size: 1.4rem;
+      color: var(--purple);
+      flex-shrink: 0;
+    }
+
+    /* QUICK REFERENCE */
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .ref-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .2s;
+    }
+
+    .ref-card:hover {
+      border-color: var(--blue);
+    }
+
+    .ref-icon {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .ref-title {
+      font-size: .83rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .ref-sub {
+      font-size: .74rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .ref-path {
+      font-family: 'Fira Code', monospace;
+      font-size: .63rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-badge">📡 WebSocket Learning Hub</div>
+    <h1>Master WebSockets<br>Step by Step</h1>
+    <p>8 interactive lessons — from zero to production-ready. Each lesson builds on the last.</p>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Lessons</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Patterns</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Live Demos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <div class="section-head">📚 All Lessons — Open in Order</div>
+
+    <div class="lessons-grid">
+
+      <a href="learn.html" class="lesson-card"
+        style="--card-color:#38bdf8;--num-bg:rgba(56,189,248,.15);--num-color:#38bdf8;--badge-bg:rgba(56,189,248,.1);--badge-color:#38bdf8">
+        <div class="card-top">
+          <div class="lesson-num">1</div>
+          <div class="lesson-badge">Fundamentals</div>
+        </div>
+        <div class="lesson-title">WebSocket Basics & Lifecycle</div>
+        <div class="lesson-desc">What WebSockets are, how they compare to HTTP, and the 4 lifecycle events: connect →
+          open → send/receive → close.</div>
+        <div class="lesson-path">learn.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">📞 Phone call analogy</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+      <a href="learn2.html" class="lesson-card"
+        style="--card-color:#a78bfa;--num-bg:rgba(167,139,250,.15);--num-color:#a78bfa;--badge-bg:rgba(167,139,250,.1);--badge-color:#a78bfa">
+        <div class="card-top">
+          <div class="lesson-num">2</div>
+          <div class="lesson-badge">Event Listeners</div>
+        </div>
+        <div class="lesson-title">addEventListener vs onmessage</div>
+        <div class="lesson-desc">Why <code style="font-family:monospace">addEventListener</code> allows multiple
+          handlers while <code style="font-family:monospace">onmessage =</code> silently overwrites the previous one.
+        </div>
+        <div class="lesson-path">learn2.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">🎧 Radio analogy</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+      <a href="learn3.html" class="lesson-card"
+        style="--card-color:#fbbf24;--num-bg:rgba(251,191,36,.15);--num-color:#fbbf24;--badge-bg:rgba(251,191,36,.1);--badge-color:#fbbf24">
+        <div class="card-top">
+          <div class="lesson-num">3</div>
+          <div class="lesson-badge">Async Patterns</div>
+        </div>
+        <div class="lesson-title">Callbacks vs Async/Await</div>
+        <div class="lesson-desc">Understand callback hell and why async/await makes asynchronous code clean, readable,
+          and easy to debug.</div>
+        <div class="lesson-path">learn3.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">📞 Drive-thru analogy</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+      <a href="learn4.html" class="lesson-card"
+        style="--card-color:#22c55e;--num-bg:rgba(34,197,94,.15);--num-color:#22c55e;--badge-bg:rgba(34,197,94,.1);--badge-color:#22c55e">
+        <div class="card-top">
+          <div class="lesson-num">4</div>
+          <div class="lesson-badge">Mini Project</div>
+        </div>
+        <div class="lesson-title">Live Chat App</div>
+        <div class="lesson-desc">Capstone — build a real chat app using everything from Lessons 1–3: lifecycle,
+          addEventListener, and async/await together.</div>
+        <div class="lesson-path">learn4.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">💬 Real chat UI</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+      <a href="learn5.html" class="lesson-card"
+        style="--card-color:#f87171;--num-bg:rgba(248,113,113,.15);--num-color:#f87171;--badge-bg:rgba(248,113,113,.1);--badge-color:#f87171">
+        <div class="card-top">
+          <div class="lesson-num">5</div>
+          <div class="lesson-badge">Error Handling</div>
+        </div>
+        <div class="lesson-title">Error Handling & Auto-Reconnect</div>
+        <div class="lesson-desc">Close codes, exponential backoff reconnect strategy, and the golden rules every
+          production WebSocket app must follow.</div>
+        <div class="lesson-path">learn5.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">🔄 Backoff visualiser</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+      <a href="learn6.html" class="lesson-card"
+        style="--card-color:#38bdf8;--num-bg:rgba(56,189,248,.15);--num-color:#38bdf8;--badge-bg:rgba(56,189,248,.1);--badge-color:#38bdf8">
+        <div class="card-top">
+          <div class="lesson-num">6</div>
+          <div class="lesson-badge">Broadcasting</div>
+        </div>
+        <div class="lesson-title">Broadcasting to All Clients</div>
+        <div class="lesson-desc">How the server forwards one message to every connected client using <code
+            style="font-family:monospace">wss.clients.forEach()</code> — the engine of live feeds.</div>
+        <div class="lesson-path">learn6.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">📢 3-client demo</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+      <a href="learn7.html" class="lesson-card"
+        style="--card-color:#a78bfa;--num-bg:rgba(167,139,250,.15);--num-color:#a78bfa;--badge-bg:rgba(167,139,250,.1);--badge-color:#a78bfa">
+        <div class="card-top">
+          <div class="lesson-num">7</div>
+          <div class="lesson-badge">Rooms</div>
+        </div>
+        <div class="lesson-title">Rooms & Channels</div>
+        <div class="lesson-desc">Route messages only to clients in the same room using a Map of Sets — the foundation of
+          Slack channels and Discord servers.</div>
+        <div class="lesson-path">learn7.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">🏠 #general / #sports</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+      <a href="learn8.html" class="lesson-card"
+        style="--card-color:#fbbf24;--num-bg:rgba(251,191,36,.15);--num-color:#fbbf24;--badge-bg:rgba(251,191,36,.1);--badge-color:#fbbf24">
+        <div class="card-top">
+          <div class="lesson-num">8</div>
+          <div class="lesson-badge">Security</div>
+        </div>
+        <div class="lesson-title">Authentication with WebSockets</div>
+        <div class="lesson-desc">Verify who's connecting using token query strings, JWT flow, and custom close codes
+          (4001 Unauthorized).</div>
+        <div class="lesson-path">learn8.html</div>
+        <div class="lesson-footer"><span style="font-size:.72rem;color:var(--muted)">🔐 Token simulator</span><span
+            class="open-btn">Open →</span></div>
+      </a>
+
+    </div>
+
+    <div class="section-head" style="margin-top:8px">🚀 Advanced Demo</div>
+
+    <a href="client.html" class="advanced-card" style="margin-bottom:36px">
+      <div class="adv-icon">🎓</div>
+      <div>
+        <div class="adv-title">WebSocket Teaching Mode</div>
+        <div class="adv-desc">Interactive demo of all 4 patterns (addEventListener, onmessage, callbacks, async/await)
+          with live code highlighting and step-by-step walkthroughs. Requires <code
+            style="font-family:monospace">node server.js</code> running.</div>
+        <div class="adv-path">client.html</div>
+      </div>
+      <div class="adv-arrow">→</div>
+    </a>
+
+    <div class="section-head">📎 Quick Reference</div>
+
+    <div class="ref-grid">
+      <a href="WEBSOCKET_STUDY_NOTES.md" class="ref-card">
+        <div class="ref-icon">📚</div>
+        <div class="ref-title">Study Notes</div>
+        <div class="ref-sub">All concepts, cheatsheets, and code patterns in one file</div>
+        <div class="ref-path">WEBSOCKET_STUDY_NOTES.md</div>
+      </a>
+      <a href="server.js" class="ref-card">
+        <div class="ref-icon">⚙️</div>
+        <div class="ref-title">Server Code</div>
+        <div class="ref-sub">Node.js WebSocket server — run with <code
+            style="font-family:monospace">node server.js</code></div>
+        <div class="ref-path">server.js</div>
+      </a>
+    </div>
+
+    <div style="margin-top:36px;padding:18px;background:var(--card);border:1px solid var(--border);border-radius:12px;">
+      <div
+        style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">
+        📁 Local File Paths</div>
+      <div style="font-family:'Fira Code',monospace;font-size:.72rem;color:var(--dim);line-height:2">
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--green)">index.html</span> &nbsp;← This
+        page<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn.html &nbsp;&nbsp;</span> ← Lesson
+        1<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn2.html</span> ← Lesson 2<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn3.html</span> ← Lesson 3<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn4.html</span> ← Lesson 4<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn5.html</span> ← Lesson 5<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn6.html</span> ← Lesson 6<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn7.html</span> ← Lesson 7<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--blue)">learn8.html</span> ← Lesson 8<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--purple)">client.html</span> ← Advanced
+        Demo<br>
+        C:\Users\Anudeep\Desktop\project-backend\<span style="color:var(--yellow)">server.js &nbsp;&nbsp;</span> ←
+        WebSocket Server
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

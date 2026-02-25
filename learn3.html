@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 3 — Callbacks vs Async/Await</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 24px 44px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(251, 191, 36, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(251, 191, 36, .1);
+      color: var(--yellow);
+      border: 1px solid rgba(251, 191, 36, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 52px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ANALOGY split */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media(max-width:700px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .box-body {
+      padding: 18px;
+    }
+
+    .box-body p {
+      font-size: .88rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .highlight {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .highlight.hl-red {
+      border-color: var(--red);
+      background: rgba(248, 113, 113, .05);
+    }
+
+    .highlight.hl-green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+    }
+
+    .highlight.hl-orange {
+      border-color: var(--orange);
+      background: rgba(251, 146, 60, .05);
+    }
+
+    /* section number colours */
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-num.c-orange {
+      background: rgba(251, 146, 60, .15);
+      color: var(--orange);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-num.c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple);
+    }
+
+    /* box-head colour helpers */
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-orange {
+      color: var(--orange);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-purple {
+      color: var(--purple);
+    }
+
+    .box-head.c-red {
+      color: var(--red);
+    }
+
+    /* demo card border colours */
+    .demo-card.bc-orange {
+      border-color: rgba(251, 146, 60, .25);
+    }
+
+    .demo-card.bc-green {
+      border-color: rgba(34, 197, 94, .25);
+    }
+
+    /* small label helpers */
+    .label-orange {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--orange);
+    }
+
+    .label-green {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .label-red {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .label-green2 {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .note-mt {
+      margin-top: 14px;
+    }
+
+    .note-mb {
+      margin-bottom: 14px;
+    }
+
+    .note-sm {
+      font-size: .84rem;
+      color: var(--dim);
+    }
+
+    strong.c-red {
+      color: var(--red);
+    }
+
+    strong.c-green {
+      color: var(--green);
+    }
+
+    /* CODE BLOCKS */
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      margin-top: 14px;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .bad {
+      color: #f87171;
+    }
+
+    .good {
+      color: #86efac;
+    }
+
+    /* PYRAMID (callback hell visualization) */
+    .pyramid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .py-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+      color: var(--dim);
+      transition: background .3s;
+    }
+
+    .py-row .indent {
+      color: var(--border);
+      flex-shrink: 0;
+    }
+
+    .py-row .arrow {
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .py-row.highlight-row {
+      background: rgba(248, 113, 113, .08);
+      border-color: rgba(248, 113, 113, .3);
+    }
+
+    /* INTERACTIVE DEMO */
+    .demo-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: .88rem;
+    }
+
+    .task-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .task-status {
+      flex: 1;
+    }
+
+    .task-label {
+      font-weight: 600;
+    }
+
+    .task-note {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .task-badge {
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+
+    .badge-wait {
+      background: rgba(100, 116, 139, .15);
+      color: var(--muted);
+    }
+
+    .badge-running {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .badge-done {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: #451a03;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-ghost {
+      background: var(--card2);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .explain {
+      background: rgba(56, 189, 248, .05);
+      border: 1px solid rgba(56, 189, 248, .18);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: .86rem;
+      color: var(--dim);
+      line-height: 1.7;
+      display: none;
+    }
+
+    .explain.show {
+      display: block;
+    }
+
+    .explain strong {
+      color: var(--blue);
+    }
+
+    /* SUMMARY */
+    .summary {
+      background: rgba(167, 139, 250, .05);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .summary h3 {
+      font-size: 1rem;
+      color: var(--purple);
+      margin-bottom: 12px;
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    @media(max-width:600px) {
+      .compare-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cmp-item {
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .cmp-title {
+      font-size: .8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .cmp-body {
+      font-size: .8rem;
+      color: var(--dim);
+      line-height: 1.65;
+    }
+
+    /* CHEATSHEET */
+    .cheat-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .83rem;
+    }
+
+    th {
+      padding: 10px 14px;
+      background: var(--card2);
+      color: var(--dim);
+      font-weight: 600;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--dim);
+      vertical-align: top;
+    }
+
+    td:first-child {
+      font-family: 'Fira Code', monospace;
+      color: var(--blue);
+      font-size: .78rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    .nav-btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--purple);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--purple);
+      color: #1a0a2e;
+      border-color: var(--purple);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 3</div>
+    <h1>Callbacks vs Async/Await</h1>
+    <p>Both do the same job — wait for something to finish, then do something else. But one leads to chaos, and the
+      other is clean and modern.</p>
+  </div>
+
+  <div class="page">
+
+    <!-- ① THE CORE PROBLEM -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">1</div>
+        <div>
+          <div class="sec-title">The Problem: Waiting ⏳</div>
+          <div class="sec-sub">Code runs top-to-bottom instantly — but some things take time</div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-head c-yellow">⚠️ The issue every developer faces</div>
+        <div class="box-body">
+          <p>Imagine you go to a restaurant. You order food. The chef doesn't cook it instantly — it takes 5 minutes.
+            You have two choices:</p>
+          <div class="highlight hl-red">
+            <strong class="c-red">❌ Bad way:</strong> Stand frozen at the counter staring at the kitchen, doing nothing
+            until food arrives. (This would freeze your entire browser!)
+          </div>
+          <div class="highlight hl-green">
+            <strong class="c-green">✅ Good way:</strong> Give the chef your number, go sit down, live your life. The
+            chef <em>calls you back</em> when your food is ready. That's a <strong>Callback</strong> — or more modernly,
+            <strong>Async/Await</strong>.
+          </div>
+          <p class="note-mt">In WebSockets, sending a message and waiting for a server response is the same situation.
+            You need to <strong>not freeze</strong> while waiting.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ② CALLBACKS -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-orange">2</div>
+        <div>
+          <div class="sec-title">Pattern 3: Callbacks 📞</div>
+          <div class="sec-sub">The OLD way — still works, but gets messy fast</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="box">
+            <div class="box-head c-orange">📞 Real life analogy</div>
+            <div class="box-body">
+              <p>You're calling a friend. You say: <em>"Order the pizza for me, and when it arrives, <strong>call me
+                    back</strong> so I can come eat."</em></p>
+              <div class="highlight hl-orange">
+                You pass your friend a <strong>function</strong> (your callback) and say: "Run this when the task is
+                done." The friend decides WHEN to call it.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="box">
+            <div class="box-head c-orange">💻 In code</div>
+            <div class="box-body">
+              <div class="code">
+                <span class="cm">// You pass a callback function as an argument</span><br>
+                <span class="kw">function</span> <span class="fn">processData</span>(data, <strong>callback</strong>)
+                {<br>
+                &nbsp;&nbsp;<span class="cm">// Simulates 600ms of "work"</span><br>
+                &nbsp;&nbsp;<span class="fn">setTimeout</span>(() => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// "Hey, I'm done! Here's your result"</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>callback</strong>(<span class="kw">null</span>, { result: data });<br>
+                &nbsp;&nbsp;}, 600);<br>
+                }<br><br>
+                <span class="cm">// You define WHAT to do when done</span><br>
+                <span class="fn">processData</span>(<span class="str">"hello"</span>, (err, result) => {<br>
+                &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(result); <span class="cm">//
+                  runs after 600ms</span><br>
+                });
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Callback Hell -->
+      <div class="note-mt">
+        <div class="box">
+          <div class="box-head c-red">😱 The Problem: Callback Hell</div>
+          <div class="box-body">
+            <p class="note-mb">What if you need to do 3 things <em>in order</em>, each waiting for the previous? Your
+              code becomes a pyramid of doom — hard to read and impossible to fix:</p>
+            <div class="pyramid">
+              <div class="py-row"><span class="arrow">▶</span> getUser("Alice", (err, user) => {</div>
+              <div class="py-row highlight-row"><span class="indent">──</span><span class="arrow">▶</span>
+                getOrders(user.id, (err, orders) => {</div>
+              <div class="py-row highlight-row"><span class="indent">────</span><span class="arrow">▶</span>
+                getDetails(orders[0], (err, detail) => {</div>
+              <div class="py-row highlight-row"><span class="indent">──────</span><span class="arrow">▶</span> <span
+                  class="bad">// We're 6 levels deep! This is "callback hell" 😱</span></div>
+              <div class="py-row"><span class="indent">────</span>});</div>
+              <div class="py-row"><span class="indent">──</span>});</div>
+              <div class="py-row">});</div>
+            </div>
+            <p class="note-mt note-sm">This is the <strong>exact reason</strong> async/await was invented. Let's see how
+              it solves this.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ③ ASYNC/AWAIT -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">3</div>
+        <div>
+          <div class="sec-title">Pattern 4: Async / Await ✨</div>
+          <div class="sec-sub">The MODERN way — same result, reads like normal English</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="box">
+            <div class="box-head c-green">🛑 Real life analogy</div>
+            <div class="box-body">
+              <p>You're in a drive-thru. You order and the cashier says: <em>"Please pull forward and <strong>wait
+                    here</strong>."</em></p>
+              <div class="highlight hl-green">
+                <code>await</code> means: <em>"Pause right here until you get the result, then continue on to the next
+                  line."</em> The code reads top-to-bottom just like normal! No nesting at all.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="box">
+            <div class="box-head c-green">💻 In code</div>
+            <div class="box-body">
+              <div class="code">
+                <span class="cm">// "async" = this function can use await</span><br>
+                <span class="kw">async function</span> <span class="fn">handleMessage</span>(data) {<br>
+                &nbsp;&nbsp;<span class="kw">try</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// "await" = pause here until done ✋</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> result = <span class="kw">await</span> <span
+                  class="fn">processData</span>(data);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Continues here after 600ms ▶</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(result);<br>
+                &nbsp;&nbsp;} <span class="kw">catch</span> (err) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span
+                  class="str">"Error:"</span>, err);<br>
+                &nbsp;&nbsp;}<br>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side by side comparison -->
+      <div class="note-mt">
+        <div class="box">
+          <div class="box-head c-purple">⚖️ Same task, two styles — side by side</div>
+          <div class="box-body">
+            <div class="two-col">
+              <div>
+                <p class="label-red">❌ Callbacks (3 steps)</p>
+                <div class="code">
+                  <span class="fn">getUser</span>(<span class="str">"Alice"</span>, (err, user) => {<br>
+                  &nbsp;&nbsp;<span class="fn">getOrders</span>(user.id, (err, orders) => {<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">getDetails</span>(orders[0], (err, detail) => {<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span
+                    class="fn">log</span>(detail); <span class="cm">// 😵</span><br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+                  &nbsp;&nbsp;});<br>
+                  });
+                </div>
+              </div>
+              <div>
+                <p class="label-green2">✅ Async/Await (3 steps)</p>
+                <div class="code">
+                  <span class="kw">const</span> user = <span class="kw">await</span> <span
+                    class="fn">getUser</span>(<span class="str">"Alice"</span>);<br>
+                  <span class="kw">const</span> orders = <span class="kw">await</span> <span
+                    class="fn">getOrders</span>(user.id);<br>
+                  <span class="kw">const</span> detail = <span class="kw">await</span> <span
+                    class="fn">getDetails</span>(orders[0]);<br>
+                  <span class="fn">console</span>.<span class="fn">log</span>(detail); <span class="cm">// 😊
+                    clean!</span>
+                </div>
+              </div>
+            </div>
+            <p class="note-mt note-sm">✅ Async/Await does <em>exactly the same work</em> but reads like a shopping list
+              instead of a maze!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ INTERACTIVE DEMO -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">4</div>
+        <div>
+          <div class="sec-title">▶️ Try it — Watch Both Run Live</div>
+          <div class="sec-sub">Both simulate 800ms of processing (like a server doing work)</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+
+        <!-- Callback Demo -->
+        <div class="demo-card bc-orange">
+          <div class="label-orange">📞 Callback Style</div>
+
+          <div class="task-row">
+            <div class="task-icon">📤</div>
+            <div class="task-status">
+              <div class="task-label">Send to server</div>
+              <div class="task-note">processWithCallback(data, cb)</div>
+            </div>
+            <div class="task-badge" id="cb-badge1">waiting</div>
+          </div>
+          <div class="task-row">
+            <div class="task-icon">⚙️</div>
+            <div class="task-status">
+              <div class="task-label">Server processing...</div>
+              <div class="task-note">setTimeout 800ms inside callback</div>
+            </div>
+            <div class="task-badge" id="cb-badge2">waiting</div>
+          </div>
+          <div class="task-row">
+            <div class="task-icon">📥</div>
+            <div class="task-status">
+              <div class="task-label">Callback fires with result</div>
+              <div class="task-note">(err, result) => { ... }</div>
+            </div>
+            <div class="task-badge" id="cb-badge3">waiting</div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-yellow" id="btn-cb" onclick="runCallback()">Run Callback</button>
+            <button class="btn btn-ghost" onclick="resetCallback()">Reset</button>
+          </div>
+          <div class="explain" id="explain-cb"></div>
+        </div>
+
+        <!-- Async/Await Demo -->
+        <div class="demo-card bc-green">
+          <div class="label-green">✨ Async/Await Style</div>
+
+          <div class="task-row">
+            <div class="task-icon">📤</div>
+            <div class="task-status">
+              <div class="task-label">Send to server</div>
+              <div class="task-note">await processWithPromise(data)</div>
+            </div>
+            <div class="task-badge" id="aw-badge1">waiting</div>
+          </div>
+          <div class="task-row">
+            <div class="task-icon">⚙️</div>
+            <div class="task-status">
+              <div class="task-label">Server processing...</div>
+              <div class="task-note">Promise resolves after 800ms</div>
+            </div>
+            <div class="task-badge" id="aw-badge2">waiting</div>
+          </div>
+          <div class="task-row">
+            <div class="task-icon">📥</div>
+            <div class="task-status">
+              <div class="task-label">await resumes with result</div>
+              <div class="task-note">const result = await ...</div>
+            </div>
+            <div class="task-badge" id="aw-badge3">waiting</div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-green" id="btn-aw" onclick="runAsync()">Run Async/Await</button>
+            <button class="btn btn-ghost" onclick="resetAsync()">Reset</button>
+          </div>
+          <div class="explain" id="explain-aw"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ⑤ SUMMARY TABLE -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">5</div>
+        <div>
+          <div class="sec-title">📋 Quick Comparison</div>
+          <div class="sec-sub">Remember this for your exams and interviews!</div>
+        </div>
+      </div>
+
+      <div class="cheat-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>📞 Callbacks</th>
+              <th>✨ Async/Await</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Style</td>
+              <td>Pass a function as argument</td>
+              <td>Write with await keyword</td>
+            </tr>
+            <tr>
+              <td>Readability</td>
+              <td>❌ Pyramid / nested mess</td>
+              <td>✅ Reads top to bottom</td>
+            </tr>
+            <tr>
+              <td>Error handling</td>
+              <td>Manual if(err) every time</td>
+              <td>Clean try/catch block</td>
+            </tr>
+            <tr>
+              <td>Chaining steps</td>
+              <td>❌ Callback inside callback</td>
+              <td>✅ Just add another await</td>
+            </tr>
+            <tr>
+              <td>Debug-friendly</td>
+              <td>Hard — stack traces messy</td>
+              <td>Easy — reads like sync code</td>
+            </tr>
+            <tr>
+              <td>Used in</td>
+              <td>Old Node.js libraries</td>
+              <td>All modern JavaScript</td>
+            </tr>
+            <tr>
+              <td>Verdict</td>
+              <td>😰 Works but avoid it</td>
+              <td>😊 Always prefer this!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-bar">
+    <a href="learn2.html" class="nav-btn">← Lesson 2</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn primary">📚 Study Notes</a>
+  </div>
+
+  <script>
+    // ─── CALLBACK DEMO ───
+    function setBadge(id, type, text) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = `task-badge badge-${type}`;
+    }
+
+    function showExplain(id, html) {
+      const el = document.getElementById(id);
+      el.innerHTML = html;
+      el.className = 'explain show';
+    }
+
+    function runCallback() {
+      document.getElementById('btn-cb').disabled = true;
+      setBadge('cb-badge1', 'running', 'running...');
+      showExplain('explain-cb', '<strong>Step 1:</strong> You called processData() and passed a callback function as the last argument. The server is now working. Your code handed control over to the callback system.');
+
+      setTimeout(() => {
+        setBadge('cb-badge1', 'done', 'done ✓');
+        setBadge('cb-badge2', 'running', 'running...');
+        showExplain('explain-cb', '<strong>Step 2:</strong> The server is processing for 800ms. Notice — you did NOT write <code>await</code>. Instead you just passed a function and said "call me when done".');
+      }, 200);
+
+      setTimeout(() => {
+        setBadge('cb-badge2', 'done', 'done ✓');
+        setBadge('cb-badge3', 'running', 'running...');
+      }, 600);
+
+      setTimeout(() => {
+        setBadge('cb-badge3', 'done', 'done ✓');
+        showExplain('explain-cb', '<strong>Step 3 — Callback Fired! 🎉</strong> After 800ms, the system called your function with <code>(null, result)</code>. The <code>null</code> means no error. You now have your result! This works — but imagine 5 of these nested inside each other...');
+      }, 1000);
+    }
+
+    function resetCallback() {
+      ['cb-badge1', 'cb-badge2', 'cb-badge3'].forEach(id => setBadge(id, 'wait', 'waiting'));
+      document.getElementById('explain-cb').className = 'explain';
+      document.getElementById('btn-cb').disabled = false;
+    }
+
+    // ─── ASYNC/AWAIT DEMO ───
+    function runAsync() {
+      document.getElementById('btn-aw').disabled = true;
+      setBadge('aw-badge1', 'running', 'running...');
+      showExplain('explain-aw', '<strong>Step 1:</strong> You wrote <code>await processData(data)</code>. The <code>await</code> keyword tells JavaScript: "Pause here and wait for the result." The function is async so it returns a Promise.');
+
+      setTimeout(() => {
+        setBadge('aw-badge1', 'done', 'done ✓');
+        setBadge('aw-badge2', 'running', 'running...');
+        showExplain('explain-aw', '<strong>Step 2:</strong> The Promise is pending — server is working. The <code>await</code> is patiently waiting. Notice how no nesting is happening! The code just paused at that one line.');
+      }, 200);
+
+      setTimeout(() => {
+        setBadge('aw-badge2', 'done', 'done ✓');
+        setBadge('aw-badge3', 'running', 'running...');
+      }, 600);
+
+      setTimeout(() => {
+        setBadge('aw-badge3', 'done', 'done ✓');
+        showExplain('explain-aw', '<strong>Step 3 — Await Resumed! 🎉</strong> The Promise resolved! The <code>await</code> unpaused and returned the value directly into <code>const result = ...</code>. Clean, flat and readable. Error handling is just a <code>try/catch</code>. This is why modern code uses async/await!');
+      }, 1000);
+    }
+
+    function resetAsync() {
+      ['aw-badge1', 'aw-badge2', 'aw-badge3'].forEach(id => setBadge(id, 'wait', 'waiting'));
+      document.getElementById('explain-aw').className = 'explain';
+      document.getElementById('btn-aw').disabled = false;
+    }
+  </script>
+
+
+  <div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
+    <a href="index.html" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#1a2235;color:#94a3b8;text-decoration:none">&#127968; Home</a>
+    <a href="learn2.html" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#8592; Lesson 2</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#128218; Notes</a>
+    <a href="learn4.html" style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#fbbf24;color:#0a0d16;text-decoration:none;border:none">Lesson 4: Chat App &#8594;</a>
+  </div>
+</body>
+
+</html>

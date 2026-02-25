@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 2 — Listeners vs Properties</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167, 139, 250, .08), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(167, 139, 250, .1);
+      color: var(--purple);
+      border: 1px solid rgba(167, 139, 250, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--dim);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .section-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .section-title code {
+      background: rgba(255, 255, 255, .05);
+      padding: 3px 6px;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      color: var(--blue);
+    }
+
+    /* ── ANALOGY CARDS ── */
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media(max-width: 768px) {
+      .split-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .concept-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .concept-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .concept-body {
+      padding: 20px;
+    }
+
+    .analogy-text {
+      font-size: .95rem;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .analogy-highlight {
+      background: var(--card2);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border-left: 3px solid;
+      font-size: .85rem;
+      color: var(--dim);
+    }
+
+    .code-block {
+      margin-top: 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .8rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+    }
+
+    .code-block .kw {
+      color: #7dd3fc;
+    }
+
+    .code-block .fn {
+      color: #86efac;
+    }
+
+    .code-block .str {
+      color: #fca5a5;
+    }
+
+    .code-block .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    /* ── DEMO CARDS ── */
+    .demo-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .worker-area {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .worker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: .85rem;
+      font-weight: 600;
+      opacity: 0.3;
+      transition: all 0.3s;
+    }
+
+    .worker.active {
+      opacity: 1;
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .1);
+      color: #bbf7d0;
+    }
+
+    .worker.dead {
+      opacity: 0.3;
+      border-color: var(--red);
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--card2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--border);
+      transform: translateY(-1px);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-action {
+      background: var(--blue);
+      color: #082f49;
+      border: none;
+    }
+
+    .btn-action:hover:not(:disabled) {
+      background: #7dd3fc;
+    }
+
+    .log-box {
+      font-family: 'Fira Code', monospace;
+      font-size: .8rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      height: 120px;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .logLine {
+      animation: popIn 0.2s ease-out;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translateX(-5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .summary-box {
+      background: rgba(34, 197, 94, .05);
+      border: 1px solid rgba(34, 197, 94, .2);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .summary-box h3 {
+      color: var(--green);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 2</div>
+    <h1>The "Replacement" Rule</h1>
+    <p>What happens when you want to do TWO things when a message arrives? Let's look at the difference between
+      <code>onmessage</code> and <code>addEventListener</code>.</p>
+  </div>
+
+  <div class="page">
+
+    <!-- THE THEORY -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(56,189,248,.15);color:var(--blue)">1</div>
+        <div>
+          <div class="section-title">The Two Ways to Listen 🎧</div>
+          <div style="font-size:.85rem;color:var(--muted)">There are two completely different ways to tell the browser
+            what to do.</div>
+        </div>
+      </div>
+
+      <div class="split-grid">
+        <!-- Pattern 2: onmessage -->
+        <div class="concept-box">
+          <div class="concept-head" style="color:var(--yellow)">
+            ⚠️ Way 1: ws.onmessage = ...
+          </div>
+          <div class="concept-body">
+            <div class="analogy-text">
+              <strong>Analogy: A Single Job Title.</strong> Imagine a company that only has exactly <strong>one</strong>
+              slot for a "Message Handler".
+            </div>
+            <div class="analogy-highlight" style="border-left-color:var(--yellow)">
+              If you hire Alice to be the Message Handler, she does the job.<br><br>
+              If you later hire Bob to be the Message Handler... <strong>Alice gets fired immediately.</strong> Bob
+              overwrites her. Only one person can hold the job.
+            </div>
+            <div class="code-block">
+              <span class="cm">// You hire Alice</span><br>
+              ws.<span class="fn">onmessage</span> = <span class="kw">function</span> <span class="fn">Alice</span>() {
+              ... };<br><br>
+              <span class="cm">// You hire Bob. ALICE IS GONE!</span><br>
+              ws.<span class="fn">onmessage</span> = <span class="kw">function</span> <span class="fn">Bob</span>() {
+              ... };
+            </div>
+          </div>
+        </div>
+
+        <!-- Pattern 1: addEventListener -->
+        <div class="concept-box">
+          <div class="concept-head" style="color:var(--green)">
+            ✅ Way 2: ws.addEventListener(...)
+          </div>
+          <div class="concept-body">
+            <div class="analogy-text">
+              <strong>Analogy: A Mailing List.</strong> Imagine adding people to an email list for "Messages".
+            </div>
+            <div class="analogy-highlight" style="border-left-color:var(--green)">
+              If you add Alice to the list, she gets the messages.<br><br>
+              If you add Bob to the list... <strong>They BOTH get the messages!</strong> You just added another person
+              to the list. Nobody gets fired.
+            </div>
+            <div class="code-block">
+              <span class="cm">// You add Alice to the list</span><br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, <span
+                class="fn">Alice</span>);<br><br>
+              <span class="cm">// You add Bob. BOTH will run!</span><br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, <span
+                class="fn">Bob</span>);
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE DEMO: ONMESSAGE -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(251,191,36,.15);color:var(--yellow)">2</div>
+        <div>
+          <div class="section-title">Experiment 1: <code>ws.onmessage = </code></div>
+          <div style="font-size:.85rem;color:var(--muted)">Watch how new handlers destroy old ones.</div>
+        </div>
+      </div>
+
+      <div class="demo-container">
+
+        <div class="worker-area" id="exp1-workers">
+          <div class="worker inactive" id="exp1-w1">👩‍💻 Alice: Play a Sound</div>
+          <div class="worker inactive" id="exp1-w2">👨‍💻 Bob: Show Notification</div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn" onclick="exp1_hireAlice()">1. Assign Alice</button>
+          <button class="btn" onclick="exp1_hireBob()">2. Assign Bob (Watch what happens!)</button>
+          <button class="btn btn-action" onclick="exp1_simulateMessage()">📥 Simulate Server Message</button>
+          <button class="btn" onclick="exp1_clear()">Reset</button>
+        </div>
+
+        <div class="log-box" id="exp1-log">
+          <div style="color:var(--muted)">Waiting to assign handlers...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE DEMO: ADDEVENTLISTENER -->
+    <section>
+      <div class="section-label">
+        <div class="section-num" style="background:rgba(34,197,94,.15);color:var(--green)">3</div>
+        <div>
+          <div class="section-title">Experiment 2: <code>ws.addEventListener</code></div>
+          <div style="font-size:.85rem;color:var(--muted)">Watch how both handlers cooperate.</div>
+        </div>
+      </div>
+
+      <div class="demo-container">
+
+        <div class="worker-area" id="exp2-workers">
+          <div class="worker inactive" id="exp2-w1">👩‍💻 Alice: Play a Sound</div>
+          <div class="worker inactive" id="exp2-w2">👨‍💻 Bob: Show Notification</div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn" onclick="exp2_hireAlice()" id="btn-e2a">1. Add Alice's Listener</button>
+          <button class="btn" onclick="exp2_hireBob()" id="btn-e2b">2. Add Bob's Listener</button>
+          <button class="btn btn-action" onclick="exp2_simulateMessage()">📥 Simulate Server Message</button>
+          <button class="btn" onclick="exp2_clear()">Reset</button>
+        </div>
+
+        <div class="log-box" id="exp2-log" style="height: 150px">
+          <div style="color:var(--muted)">Waiting to add listeners...</div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <h3>💡 The Golden Rule</h3>
+        <p>Always use <strong><code>addEventListener</code></strong> in real apps. If you write a big app, different
+          parts of your code might need to know when a message arrives (e.g. the chat box needs to update, AND the
+          unread counter needs to update). If you use <code>onmessage</code>, they will fight and overwrite each other.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // --- EXPERIMENT 1: onmessage logic (simulated) ---
+    let exp1_currentHandler = null;
+
+    function logExp1(msg, color = "#94a3b8") {
+      const box = document.getElementById('exp1-log');
+      if (box.innerHTML.includes('Waiting')) box.innerHTML = '';
+      box.innerHTML += `<div class="logLine" style="color:${color}">> ${msg}</div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function exp1_hireAlice() {
+      // ws.onmessage = Alice
+      exp1_currentHandler = "Alice";
+
+      document.getElementById('exp1-w1').className = "worker active";
+
+      // If Bob was active, he is now DEAD (overwritten)
+      if (document.getElementById('exp1-w2').classList.contains('active')) {
+        document.getElementById('exp1-w2').className = "worker dead";
+      }
+
+      logExp1("Executed: ws.onmessage = Alice", "#fbbf24");
+    }
+
+    function exp1_hireBob() {
+      // ws.onmessage = Bob
+      exp1_currentHandler = "Bob";
+
+      document.getElementById('exp1-w2').className = "worker active";
+
+      // Alice is overwritten/fired!
+      if (document.getElementById('exp1-w1').classList.contains('active')) {
+        document.getElementById('exp1-w1').className = "worker dead";
+        logExp1("⚠️ ALICE WAS OVERWRITTEN! She will no longer receive messages.", "#f87171");
+      }
+
+      logExp1("Executed: ws.onmessage = Bob", "#fbbf24");
+    }
+
+    function exp1_simulateMessage() {
+      logExp1("--- Server sent a message ---", "#e2e8f0");
+      if (exp1_currentHandler === "Alice") {
+        logExp1("👩‍💻 Alice responds: *Playing sound DING!*", "#bbf7d0");
+      } else if (exp1_currentHandler === "Bob") {
+        logExp1("👨‍💻 Bob responds: *Showing Desktop Notification*", "#bae6fd");
+      } else {
+        logExp1("Nobody is listening! Message ignored.", "#64748b");
+      }
+    }
+
+    function exp1_clear() {
+      exp1_currentHandler = null;
+      document.getElementById('exp1-w1').className = "worker inactive";
+      document.getElementById('exp1-w2').className = "worker inactive";
+      document.getElementById('exp1-log').innerHTML = '<div style="color:var(--muted)">Waiting to assign handlers...</div>';
+    }
+
+
+    // --- EXPERIMENT 2: addEventListener logic (simulated) ---
+    let exp2_listeners = [];
+
+    function logExp2(msg, color = "#94a3b8") {
+      const box = document.getElementById('exp2-log');
+      if (box.innerHTML.includes('Waiting')) box.innerHTML = '';
+      box.innerHTML += `<div class="logLine" style="color:${color}">> ${msg}</div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function exp2_hireAlice() {
+      if (exp2_listeners.includes("Alice")) return; // Prevent double clicking logic for demo
+      exp2_listeners.push("Alice");
+      document.getElementById('exp2-w1').className = "worker active";
+      document.getElementById('btn-e2a').disabled = true;
+      logExp2("Executed: ws.addEventListener('message', Alice)", "#4ade80");
+    }
+
+    function exp2_hireBob() {
+      if (exp2_listeners.includes("Bob")) return;
+      exp2_listeners.push("Bob");
+      document.getElementById('exp2-w2').className = "worker active";
+      document.getElementById('btn-e2b').disabled = true;
+      logExp2("Executed: ws.addEventListener('message', Bob)", "#4ade80");
+    }
+
+    function exp2_simulateMessage() {
+      logExp2("--- Server sent a message ---", "#e2e8f0");
+      if (exp2_listeners.length === 0) {
+        logExp2("Nobody is listening! Message ignored.", "#64748b");
+        return;
+      }
+
+      if (exp2_listeners.includes("Alice")) {
+        logExp2("👩‍💻 Alice received it: *Playing sound DING!*", "#bbf7d0");
+      }
+      if (exp2_listeners.includes("Bob")) {
+        logExp2("👨‍💻 Bob received it: *Showing Desktop Notification*", "#bae6fd");
+      }
+    }
+
+    function exp2_clear() {
+      exp2_listeners = [];
+      document.getElementById('exp2-w1').className = "worker inactive";
+      document.getElementById('exp2-w2').className = "worker inactive";
+      document.getElementById('btn-e2a').disabled = false;
+      document.getElementById('btn-e2b').disabled = false;
+      document.getElementById('exp2-log').innerHTML = '<div style="color:var(--muted)">Waiting to add listeners...</div>';
+    }
+
+  </script>
+
+  <div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
+    <a href="index.html" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#1a2235;color:#94a3b8;text-decoration:none">&#127968; Home</a>
+    <a href="learn.html" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#8592; Lesson 1</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#128218; Notes</a>
+    <a href="learn3.html" style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#a78bfa;color:#1a0a2e;text-decoration:none;border:none">Lesson 3: Callbacks &#8594;</a>
+  </div>
+</body>
+
+</html>

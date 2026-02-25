@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 4 — Mini Project: Live Chat</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34, 197, 94, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(34, 197, 94, .1);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    /* ── RECAP STRIP ── */
+    .recap-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media(max-width:700px) {
+      .recap-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .recap-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .recap-icon {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .recap-title {
+      font-size: .8rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .recap-sub {
+      font-size: .72rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── SECTION HEADER ── */
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-num.c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* recap title colours */
+    .recap-title.c-blue {
+      color: var(--blue);
+    }
+
+    .recap-title.c-purple {
+      color: var(--purple);
+    }
+
+    .recap-title.c-yellow {
+      color: var(--yellow);
+    }
+
+    .recap-title.c-green {
+      color: var(--green);
+    }
+
+    /* ann-head colour helpers */
+    .ann-head.c-blue {
+      color: var(--blue);
+    }
+
+    .ann-head.c-purple {
+      color: var(--purple);
+    }
+
+    .ann-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .ann-head.c-green {
+      color: var(--green);
+    }
+
+    /* summary number colours */
+    .s-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .s-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .s-num.c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple);
+    }
+
+    .s-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .s-num.c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+    }
+
+    /* inline code style helper */
+    code.mono {
+      font-family: monospace;
+    }
+
+    /* ── CHAT APP ── */
+    .chat-shell {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 520px;
+    }
+
+    .chat-topbar {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card2);
+    }
+
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, .2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .chat-name {
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .chat-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: background .3s;
+      flex-shrink: 0;
+      margin-right: -4px;
+    }
+
+    .chat-status-dot.open {
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .chat-status-dot.connecting {
+      background: var(--yellow);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 currentColor;
+      }
+
+      50% {
+        box-shadow: 0 0 0 4px transparent;
+      }
+    }
+
+    .chat-status-label {
+      font-size: .76rem;
+      color: var(--muted);
+    }
+
+    .conn-btns {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    .cbtn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .cbtn:hover:not(:disabled) {
+      opacity: .8;
+    }
+
+    .cbtn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .cbtn-connect {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .cbtn-disconnect {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid rgba(248, 113, 113, .3);
+    }
+
+    /* Messages area */
+    .chat-msgs {
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--card3);
+    }
+
+    .msg-bubble {
+      max-width: 70%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: .87rem;
+      line-height: 1.5;
+      animation: msgIn .2s ease;
+    }
+
+    @keyframes msgIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .msg-bubble.mine {
+      align-self: flex-end;
+      background: rgba(56, 189, 248, .18);
+      border: 1px solid rgba(56, 189, 248, .25);
+      color: #bae6fd;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-bubble.server {
+      align-self: flex-start;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      color: var(--dim);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-bubble.sys {
+      align-self: center;
+      background: transparent;
+      color: var(--muted);
+      font-size: .76rem;
+      font-style: italic;
+      border: none;
+      padding: 2px 0;
+    }
+
+    .msg-time {
+      font-size: .68rem;
+      opacity: .6;
+      margin-top: 3px;
+    }
+
+    /* Input bar */
+    .chat-input-bar {
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      background: var(--card2);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 9px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .chat-input:focus {
+      border-color: var(--blue);
+    }
+
+    .chat-input:disabled {
+      opacity: .4;
+    }
+
+    .chat-input::placeholder {
+      color: var(--muted);
+    }
+
+    .send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--blue);
+      color: #082f49;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .2s, transform .15s;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover:not(:disabled) {
+      opacity: .85;
+      transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    /* ── PATTERN ANNOTATIONS ── */
+    .annotation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media(max-width:640px) {
+      .annotation-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ann-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .ann-head {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: .82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ann-body {
+      padding: 14px 16px;
+    }
+
+    .ann-body p {
+      font-size: .82rem;
+      color: var(--dim);
+      line-height: 1.65;
+    }
+
+    .code-snip {
+      font-family: 'Fira Code', monospace;
+      font-size: .74rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 12px;
+      color: #94a3b8;
+      overflow-x: auto;
+      margin-top: 10px;
+      line-height: 1.8;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    /* ── FINAL SUMMARY ── */
+    .final-card {
+      background: var(--card);
+      border: 1px solid rgba(34, 197, 94, .25);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .final-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 16px;
+    }
+
+    .summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .s-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .s-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+
+    .s-text {
+      flex: 1;
+      font-size: .85rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .s-text strong {
+      color: var(--text);
+    }
+
+    /* ── NAV ── */
+    .nav-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--green);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--green);
+      color: #052e16;
+      border-color: var(--green);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 4 — Mini Project</div>
+    <h1>Build a Live Chat App 💬</h1>
+    <p>Everything you've learned — WebSocket lifecycle, event listeners, and async patterns — in one real working app.
+    </p>
+  </div>
+
+  <div class="page">
+
+    <!-- RECAP -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">📚</div>
+        <div>
+          <div class="sec-title">What you've learned so far</div>
+          <div class="sec-sub">All 3 lessons combined — now we use them together</div>
+        </div>
+      </div>
+
+      <div class="recap-strip">
+        <div class="recap-item">
+          <div class="recap-icon">📞</div>
+          <div class="recap-title c-blue">Lesson 1</div>
+          <div class="recap-sub">WebSocket lifecycle: Connect → Open → Send/Receive → Close</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-icon">🎧</div>
+          <div class="recap-title c-purple">Lesson 2</div>
+          <div class="recap-sub">addEventListener (many) vs onmessage (only one)</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-icon">🔄</div>
+          <div class="recap-title c-yellow">Lesson 3</div>
+          <div class="recap-sub">Callbacks (old) vs Async/Await (modern & clean)</div>
+        </div>
+        <div class="recap-item">
+          <div class="recap-icon">🚀</div>
+          <div class="recap-title c-green">Lesson 4</div>
+          <div class="recap-sub">Build a real live chat — it all comes together here!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE CHAT DEMO -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">1</div>
+        <div>
+          <div class="sec-title">▶️ Live Chat — Try It Now</div>
+          <div class="sec-sub">Connect, type a message, press Enter or Send — the server will echo it back</div>
+        </div>
+      </div>
+
+      <div class="chat-shell">
+        <!-- Topbar -->
+        <div class="chat-topbar">
+          <div class="chat-avatar">🤖</div>
+          <div>
+            <div class="chat-name">WebSocket Echo Server</div>
+            <div class="chat-status-label" id="chatStatusLabel">Not connected</div>
+          </div>
+          <div class="chat-status-dot" id="chatDot"></div>
+          <div class="conn-btns">
+            <button class="cbtn cbtn-connect" id="btnConn" onclick="chatConnect()">Connect</button>
+            <button class="cbtn cbtn-disconnect" id="btnDisc" onclick="chatDisconnect()" disabled>Disconnect</button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-msgs" id="chatMsgs">
+          <div class="msg-bubble sys">👋 Click Connect to start chatting with the server!</div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-bar">
+          <input class="chat-input" id="chatInput" placeholder="Type a message and press Enter..." disabled />
+          <button class="send-btn" id="btnSend" onclick="chatSend()" disabled>➤</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT'S HAPPENING UNDER THE HOOD -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">2</div>
+        <div>
+          <div class="sec-title">🔍 What's happening under the hood?</div>
+          <div class="sec-sub">Every button click uses the exact patterns from Lessons 1-3</div>
+        </div>
+      </div>
+
+      <div class="annotation-grid">
+
+        <div class="ann-card">
+          <div class="ann-head c-blue">📞 Connect button → Lesson 1</div>
+          <div class="ann-body">
+            <p>Clicking Connect runs exactly what Lesson 1 taught: one line opens the socket, then the 4 lifecycle
+              events fire automatically.</p>
+            <div class="code-snip">
+              <span class="cm">// Lesson 1 — The lifecycle</span><br>
+              <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
+                class="str">'ws://localhost:8080'</span>);<br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () => showMsg(<span
+                class="str">'Connected!'</span>));<br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, () => showMsg(<span
+                class="str">'Disconnected'</span>));<br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'error'</span>, () => showMsg(<span
+                class="str">'Error!'</span>));
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-card">
+          <div class="ann-head c-purple">🎧 Receiving messages → Lesson 2</div>
+          <div class="ann-body">
+            <p>We use <code class="mono">addEventListener</code> (not onmessage) so multiple listeners
+              can react — the chat UI updates AND a title counter could also update.</p>
+            <div class="code-snip">
+              <span class="cm">// Lesson 2 — addEventListener, not onmessage</span><br>
+              ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (e) => {<br>
+              &nbsp;&nbsp;<span class="cm">// Handler A: show message in chat</span><br>
+              &nbsp;&nbsp;<span class="fn">appendBubble</span>(e.data, <span class="str">'server'</span>);<br>
+              });<br>
+              <span class="cm">// Could add a 2nd listener too — both fire!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-card">
+          <div class="ann-head c-yellow">🔄 Sending messages → Lesson 3</div>
+          <div class="ann-body">
+            <p>The send button uses <code class="mono">async/await</code> style: the message goes out,
+              the server processes it, and the response comes back asynchronously via the message event.</p>
+            <div class="code-snip">
+              <span class="cm">// Lesson 3 — async, no callback needed</span><br>
+              <span class="kw">async function</span> <span class="fn">chatSend</span>() {<br>
+              &nbsp;&nbsp;<span class="kw">const</span> text = input.value;<br>
+              &nbsp;&nbsp;<span class="cm">// Fire and forget — reply comes via addEventListener</span><br>
+              &nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({ type: <span
+                class="str">'echo'</span>, data: text }));<br>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="ann-card">
+          <div class="ann-head c-green">🔁 The full flow</div>
+          <div class="ann-body">
+            <p>This is how all 3 lessons come together in every message you send:</p>
+            <div class="code-snip">
+              <span class="cm">┌─ You click SEND ─────────────────┐</span><br>
+              <span class="cm">│ ws.send(message) │</span><br>
+              <span class="cm">│ ↓ travels over the open socket │</span><br>
+              <span class="cm">│ Server receives it │</span><br>
+              <span class="cm">│ Server calls ws.send(reply) │</span><br>
+              <span class="cm">│ ↓ travels back │</span><br>
+              <span class="cm">│ 'message' event fires on client │</span><br>
+              <span class="cm">│ Your listener shows the reply │</span><br>
+              <span class="cm">└──────────────────────────────────┘</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FINAL SUMMARY -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">3</div>
+        <div>
+          <div class="sec-title">🎓 You now know WebSockets!</div>
+          <div class="sec-sub">Here's the complete picture</div>
+        </div>
+      </div>
+
+      <div class="final-card">
+        <h3>✅ Complete WebSocket Knowledge</h3>
+        <div class="summary-list">
+          <div class="s-row">
+            <div class="s-num c-blue">1</div>
+            <div class="s-text"><strong>What it is:</strong> A permanent 2-way phone call between browser and server —
+              unlike HTTP which is a one-off letter.</div>
+          </div>
+          <div class="s-row">
+            <div class="s-num c-yellow">2</div>
+            <div class="s-text"><strong>4 lifecycle stages:</strong> <code class="mono">new WebSocket()</code> → open
+              event → send/receive → close event. Always
+              in this order.</div>
+          </div>
+          <div class="s-row">
+            <div class="s-num c-purple">3</div>
+            <div class="s-text"><strong>addEventListener vs onmessage:</strong> Use <code
+                class="mono">addEventListener</code> in real apps — it lets multiple handlers coexist.
+              <code class="mono">onmessage =</code> silently kills any previous handler.
+            </div>
+          </div>
+          <div class="s-row">
+            <div class="s-num c-green">4</div>
+            <div class="s-text"><strong>Async patterns:</strong> Use <code class="mono">async/await</code> on the server
+              for clean, readable processing. Callbacks
+              work but lead to deeply nested "callback hell" code.</div>
+          </div>
+          <div class="s-row">
+            <div class="s-num c-red">5</div>
+            <div class="s-text"><strong>Real uses:</strong> Chat apps, live scores, multiplayer games, stock tickers,
+              Google Docs live editing, AI token streaming — any time data needs to flow in real-time.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-bar">
+    <a href="learn3.html" class="nav-btn">← Lesson 3</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Study Notes</a>
+    <a href="client.html" class="nav-btn primary">🚀 Advanced Demo →</a>
+  </div>
+
+  <script>
+    let ws = null;
+
+    function now() {
+      return new Date().toLocaleTimeString('en-US', { hour12: false });
+    }
+
+    function appendBubble(text, type) {
+      const msgs = document.getElementById('chatMsgs');
+      const div = document.createElement('div');
+      div.className = `msg-bubble ${type}`;
+      div.innerHTML = `${text}<div class="msg-time">${now()}</div>`;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function setDot(cls, label) {
+      const dot = document.getElementById('chatDot');
+      dot.className = `chat-status-dot ${cls}`;
+      document.getElementById('chatStatusLabel').textContent = label;
+    }
+
+    function chatConnect() {
+      if (ws && ws.readyState < 2) return;
+      setDot('connecting', 'Connecting...');
+      appendBubble('⏳ Opening WebSocket connection...', 'sys');
+
+      // ── Lesson 1: new WebSocket ──
+      ws = new WebSocket('ws://localhost:8080');
+
+      // ── Lesson 2: addEventListener (not onmessage) ──
+      ws.addEventListener('open', () => {
+        setDot('open', 'Connected ✅');
+        appendBubble('✅ Connected! Say something...', 'sys');
+        document.getElementById('btnConn').disabled = true;
+        document.getElementById('btnDisc').disabled = false;
+        document.getElementById('chatInput').disabled = false;
+        document.getElementById('btnSend').disabled = false;
+        document.getElementById('chatInput').focus();
+      });
+
+      ws.addEventListener('message', (event) => {
+        let data;
+        try { data = JSON.parse(event.data); } catch { data = { echo: event.data }; }
+        const reply = data.echo || data.message || data.processed || JSON.stringify(data);
+        appendBubble('🤖 ' + reply, 'server');
+      });
+
+      ws.addEventListener('close', () => {
+        setDot('', 'Disconnected');
+        appendBubble('🔌 Disconnected from server.', 'sys');
+        document.getElementById('btnConn').disabled = false;
+        document.getElementById('btnDisc').disabled = true;
+        document.getElementById('chatInput').disabled = true;
+        document.getElementById('btnSend').disabled = true;
+        ws = null;
+      });
+
+      ws.addEventListener('error', () => {
+        setDot('', 'Connection failed ❌');
+        appendBubble('❌ Could not connect. Is "node server.js" running?', 'sys');
+        document.getElementById('btnConn').disabled = false;
+      });
+    }
+
+    function chatDisconnect() {
+      if (ws) { ws.close(); }
+    }
+
+    // ── Lesson 3: clean async send ──
+    async function chatSend() {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendBubble(text, 'mine');
+      ws.send(JSON.stringify({ type: 'echo', data: text }));
+      input.value = '';
+      input.focus();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('chatInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') chatSend();
+      });
+    });
+  </script>
+
+  <div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
+    <a href="index.html" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#1a2235;color:#94a3b8;text-decoration:none">&#127968; Home</a>
+    <a href="learn3.html" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#8592; Lesson 3</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" style="padding:9px 18px;border-radius:8px;border:1px solid #1f2d45;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#111827;color:#94a3b8;text-decoration:none">&#128218; Notes</a>
+    <a href="learn5.html" style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#22c55e;color:#052e16;text-decoration:none;border:none">Lesson 5: Error Handling &#8594;</a>
+  </div>
+</body>
+
+</html>

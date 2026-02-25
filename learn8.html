@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 8 — Authentication</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(251, 191, 36, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(251, 191, 36, .1);
+      color: var(--yellow);
+      border: 1px solid rgba(251, 191, 36, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-red {
+      color: var(--red);
+    }
+
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .76rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .ev {
+      color: #fbbf24;
+    }
+
+    /* demo */
+    .auth-demo {
+      background: var(--card);
+      border: 1px solid rgba(251, 191, 36, .2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .auth-topbar {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .auth-log {
+      height: 160px;
+      overflow-y: auto;
+      padding: 12px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .72rem;
+      background: var(--card3);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .lg {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lg-t {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .lg.ok .lg-m {
+      color: var(--green);
+    }
+
+    .lg.err .lg-m {
+      color: var(--red);
+    }
+
+    .lg.warn .lg-m {
+      color: var(--yellow);
+    }
+
+    .lg.sys .lg-m {
+      color: var(--dim);
+    }
+
+    .auth-form {
+      padding: 14px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .token-input {
+      flex: 1;
+      min-width: 160px;
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: .8rem;
+      color: var(--text);
+      outline: none;
+    }
+
+    .token-input:focus {
+      border-color: var(--yellow);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: #0a0d16;
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .valid-tokens {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .token-chip {
+      font-family: 'Fira Code', monospace;
+      font-size: .72rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--card3);
+      color: var(--dim);
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    .token-chip:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+
+    .golden {
+      background: rgba(251, 191, 36, .05);
+      border: 1px solid rgba(251, 191, 36, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--yellow);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--yellow);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--yellow);
+      color: #0a0d16;
+      border-color: var(--yellow);
+    }
+
+    .nav-btn.home {
+      background: var(--card2);
+    }
+
+    code.mono {
+      font-family: monospace;
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px;
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim);
+    }
+
+    .hl.yellow {
+      border-color: var(--yellow);
+      background: rgba(251, 191, 36, .05);
+      color: var(--dim);
+    }
+
+    .hl.red {
+      border-color: var(--red);
+      background: rgba(248, 113, 113, .05);
+      color: var(--dim);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 8</div>
+    <h1>Authentication 🔐</h1>
+    <p>WebSocket connections have no built-in auth. Learn how to verify <em>who</em> is connecting before letting them
+      in — using query-string tokens or the HTTP upgrade handshake.</p>
+  </div>
+  <div class="page">
+
+    <!-- 1: The Problem -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">1</div>
+        <div>
+          <div class="sec-title">The Problem — WebSockets have no auth by default 🚨</div>
+          <div class="sec-sub">Anyone can open a connection to your server</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-red">❌ Without auth — wide open server</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Anyone can connect — no check!</span><br>
+              <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<br>
+              &nbsp;&nbsp;<span class="str">'ws://localhost:8080'</span><br>
+              );
+            </div>
+            <p class="note-sm" style="color:var(--red)">A random attacker can open the URL and start sending messages
+              instantly.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-green">✅ With auth — token in the URL</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Pass your JWT in the query string</span><br>
+              <span class="kw">const</span> token = <span class="str">'eyJhbG...'</span>;<br>
+              <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<br>
+              &nbsp;&nbsp;<span class="str">`ws://localhost:8080?token=</span><span class="ev">${token}</span><span
+                class="str">`</span><br>
+              );
+            </div>
+            <p class="note-sm" style="color:var(--green)">Server reads the token before accepting the connection.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hl yellow" style="margin-top:14px">
+        <strong style="color:var(--yellow)">⚠️ Why not use WebSocket headers?</strong> The browser's <code
+          class="mono">WebSocket</code> API doesn't let you set custom headers. The only way to pass data at connect
+        time is via the <strong>URL query string</strong> or via <strong>cookies</strong> (sent automatically).
+      </div>
+    </section>
+
+    <!-- 2: Server Verification -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Server-side Token Verification 💻</div>
+          <div class="sec-sub">Verify the token in the HTTP upgrade handshake — before the socket opens</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">&lt;/&gt; server.js — verify token on connection</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> { WebSocketServer } = <span class="fn">require</span>(<span
+              class="str">'ws'</span>);<br>
+            <span class="kw">const</span> url = <span class="fn">require</span>(<span class="str">'url'</span>);<br><br>
+
+            <span class="kw">const</span> VALID_TOKENS = <span class="kw">new</span> <span class="fn">Set</span>([<span
+              class="str">'token-alice'</span>, <span class="str">'token-bob'</span>]);<br><br>
+
+            <span class="kw">const</span> wss = <span class="kw">new</span> <span class="fn">WebSocketServer</span>({
+            port: <span class="ev">8080</span> });<br><br>
+
+            wss.<span class="fn">on</span>(<span class="str">'connection'</span>, (ws, req) => {<br>
+            &nbsp;&nbsp;<span class="cm">// Parse the URL to get the token</span><br>
+            &nbsp;&nbsp;<span class="kw">const</span> { query } = url.<span class="fn">parse</span>(req.url, <span
+              class="kw">true</span>);<br>
+            &nbsp;&nbsp;<span class="kw">const</span> token = query.token;<br><br>
+
+            &nbsp;&nbsp;<span class="kw">if</span> (!VALID_TOKENS.<span class="fn">has</span>(token)) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Reject with custom code 4001 = Auth failed</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">close</span>(<span class="ev">4001</span>, <span
+              class="str">'Unauthorized'</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>;<br>
+            &nbsp;&nbsp;}<br><br>
+
+            &nbsp;&nbsp;<span class="cm">// Token valid — store the user identity on the socket</span><br>
+            &nbsp;&nbsp;ws.username = <span class="fn">getUsernameFromToken</span>(token);<br>
+            &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`✅ ${ws.username}
+              connected`</span>);<br>
+            });
+          </div>
+          <div class="hl green" style="margin-top:12px">
+            <strong style="color:var(--green)">Key point:</strong> Code <code class="mono">4001</code> falls in the
+            custom range (4000–4999). On the client, check <code class="mono">event.code === 4001</code> in the close
+            handler and redirect to the login page.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3: Live Demo -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">▶️ Auth Demo — Try Valid &amp; Invalid Tokens</div>
+          <div class="sec-sub">See how the server accepts or rejects based on the token</div>
+        </div>
+      </div>
+      <div class="auth-demo">
+        <div class="auth-topbar">🔐 Auth Simulator</div>
+        <div class="auth-log" id="authLog">
+          <div class="lg sys"><span class="lg-t">—</span><span class="lg-m">Enter a token below and click Connect. Valid
+              tokens: token-alice, token-bob</span></div>
+        </div>
+        <div class="auth-form">
+          <input class="token-input" id="tokenInput" placeholder="Enter token…" value="token-alice" />
+          <button class="btn btn-yellow" onclick="tryConnect()">🔌 Connect</button>
+          <button class="btn btn-red" onclick="tryConnect('bad-token-xyz')">❌ Try Bad Token</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('authLog').innerHTML=''">Clear</button>
+        </div>
+        <div style="padding:10px 18px 14px;background:var(--card2);border-top:1px solid var(--border)">
+          <div style="font-size:.74rem;color:var(--muted);margin-bottom:8px">Quick-fill valid tokens:</div>
+          <div class="valid-tokens">
+            <div class="token-chip" onclick="setToken('token-alice')">token-alice</div>
+            <div class="token-chip" onclick="setToken('token-bob')">token-bob</div>
+            <div class="token-chip" onclick="setToken('hacker-123')"
+              style="color:var(--red);border-color:rgba(248,113,113,.3)">hacker-123 ❌</div>
+            <div class="token-chip" onclick="setToken('')" style="color:var(--red);border-color:rgba(248,113,113,.3)">
+              (empty) ❌</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: JWT Flow -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">4</div>
+        <div>
+          <div class="sec-title">Real-world: JWT Flow 🏭</div>
+          <div class="sec-sub">How production apps combine REST login + WebSocket auth</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-blue">📋 Step-by-step production auth flow</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// STEP 1: User logs in via regular HTTP POST</span><br>
+            <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span
+              class="str">'/api/login'</span>, {<br>
+            &nbsp;&nbsp;method: <span class="str">'POST'</span>, body: <span class="fn">JSON.stringify</span>({ user,
+            pass })<br>
+            });<br>
+            <span class="kw">const</span> { token } = <span class="kw">await</span> res.<span class="fn">json</span>();
+            <span class="cm">// ← JWT from server</span><br><br>
+
+            <span class="cm">// STEP 2: Open WebSocket, pass token in URL</span><br>
+            <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
+              class="str">`wss://api.example.com/ws?token=</span><span class="ev">${token}</span><span
+              class="str">`</span>);<br><br>
+
+            <span class="cm">// STEP 3: Server verifies JWT — accepts or closes w/ 4001</span><br>
+            ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, (e) => {<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (e.code === <span class="ev">4001</span>) <span
+              class="fn">redirectToLogin</span>(); <span class="cm">// auth failed</span><br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5: Rules -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">5</div>
+        <div>
+          <div class="sec-title">⚡ Auth Rules</div>
+          <div class="sec-sub">Security checklist for WebSocket auth</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Auth Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔒</div>
+            <div class="rule-text"><strong>Always use wss:// in production</strong> — plain ws:// sends tokens in clear
+              text. Use TLS (wss://) so tokens are encrypted in transit.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">⏳</div>
+            <div class="rule-text"><strong>Keep tokens short-lived</strong> — WebSocket tokens should expire (e.g. 1
+              hour). On expiry, close with code 4002 and force the client to refresh.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🚫</div>
+            <div class="rule-text"><strong>Close with custom codes on rejection</strong> — use 4001 (Unauthorized), 4002
+              (Token expired), 4003 (Banned). The client can read these in the close handler.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🍪</div>
+            <div class="rule-text"><strong>Cookies as an alternative</strong> — if your app uses cookie-based auth
+              (HttpOnly session cookie), the browser sends it automatically with the WebSocket upgrade. No URL token
+              needed!</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🛡️</div>
+            <div class="rule-text"><strong>Verify server-side, not client-side</strong> — never trust data sent in
+              WebSocket messages for auth. A client can fake any message. Always verify at connection time on the
+              server.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn7.html" class="nav-btn">← Lesson 7</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="client.html" class="nav-btn primary">🚀 Advanced Demo →</a>
+  </div>
+
+  <script>
+    const VALID = new Set(['token-alice', 'token-bob']);
+    const names = { 'token-alice': 'Alice', 'token-bob': 'Bob' };
+    function now() { return new Date().toLocaleTimeString('en-US', { hour12: false }); }
+    function addLog(cls, msg) {
+      const el = document.getElementById('authLog');
+      const d = document.createElement('div');
+      d.className = `lg ${cls}`;
+      d.innerHTML = `<span class="lg-t">${now()}</span><span class="lg-m">${msg}</span>`;
+      el.appendChild(d); el.scrollTop = el.scrollHeight;
+    }
+    function setToken(t) { document.getElementById('tokenInput').value = t; }
+    function tryConnect(forceToken) {
+      const token = forceToken !== undefined ? forceToken : document.getElementById('tokenInput').value.trim();
+      addLog('sys', `⏳ Connecting with token: "${token || '(empty)'}"`);
+      addLog('sys', `📡 WebSocket URL: ws://localhost:8080?token=${token}`);
+      setTimeout(() => {
+        if (VALID.has(token)) {
+          const user = names[token];
+          addLog('ok', `✅ [open] Server accepted! Logged in as: ${user}`);
+          addLog('ok', `📋 ws.username = "${user}" (stored on socket server-side)`);
+        } else {
+          addLog('err', `🔒 Server read token → not in VALID_TOKENS set`);
+          addLog('err', `❌ [close] Code 4001 — Unauthorized. Redirecting to login…`);
+        }
+      }, 400);
+    }
+  </script>
+</body>
+
+</html>

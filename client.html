@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>WebSocket — Teaching Mode</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07090f;
+      --surface: #0f1521;
+      --surface2: #141d2e;
+      --surface3: #1a2540;
+      --border: #1e2d45;
+      --text: #dde3ef;
+      --muted: #5a6a84;
+      --dim: #8898aa;
+      --c1: #22d3ee;
+      --c1b: rgba(34, 211, 238, .1);
+      --c1bd: rgba(34, 211, 238, .22);
+      --c2: #fbbf24;
+      --c2b: rgba(251, 191, 36, .1);
+      --c2bd: rgba(251, 191, 36, .22);
+      --c3: #34d399;
+      --c3b: rgba(52, 211, 153, .1);
+      --c3bd: rgba(52, 211, 153, .22);
+      --c4: #a78bfa;
+      --c4b: rgba(167, 139, 250, .1);
+      --c4bd: rgba(167, 139, 250, .22);
+      --ok: #4ade80;
+      --err: #f87171;
+      --warn: #fb923c;
+      --r: 10px;
+      --rs: 6px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      display: flex;
+      flex-direction: column
+    }
+
+    /* ── APP SHELL ── */
+    .app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden
+    }
+
+    /* ── SIDEBAR ── */
+    aside {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden
+    }
+
+    .brand {
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .brand-icon {
+      font-size: 1.4rem
+    }
+
+    .brand-title {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px
+    }
+
+    .brand-sub {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 1px;
+      font-family: 'Fira Code', monospace
+    }
+
+    .lessons-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 10px
+    }
+
+    .lesson-btn {
+      width: 100%;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: var(--rs);
+      padding: 11px 13px;
+      text-align: left;
+      cursor: pointer;
+      color: var(--dim);
+      transition: all .2s;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .lesson-btn:hover {
+      background: var(--surface2);
+      color: var(--text)
+    }
+
+    .lesson-btn.active {
+      background: var(--surface2);
+      border-color: var(--border);
+      color: var(--text)
+    }
+
+    .lesson-btn.done .lbadge {
+      opacity: 1
+    }
+
+    .lbadge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      opacity: .35;
+      transition: opacity .2s
+    }
+
+    .lnum {
+      font-size: .8rem;
+      font-weight: 600;
+      line-height: 1.2
+    }
+
+    .lsub {
+      font-size: .68rem;
+      color: var(--muted);
+      margin-top: 1px;
+      font-family: 'Fira Code', monospace
+    }
+
+    .sidebar-footer {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border)
+    }
+
+    .prog-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .72rem;
+      color: var(--muted);
+      margin-bottom: 7px
+    }
+
+    .prog-bar {
+      height: 4px;
+      background: var(--surface3);
+      border-radius: 99px;
+      overflow: hidden
+    }
+
+    .prog-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--c1), var(--c4));
+      border-radius: 99px;
+      transition: width .4s
+    }
+
+    /* ── MAIN PANEL ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden
+    }
+
+    .lesson-topbar {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+      flex-shrink: 0
+    }
+
+    .lesson-number {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-family: 'Fira Code', monospace
+    }
+
+    .lesson-title {
+      font-size: 1rem;
+      font-weight: 600;
+      flex: 1
+    }
+
+    .ws-state {
+      font-size: .72rem;
+      font-family: 'Fira Code', monospace;
+      padding: 4px 12px;
+      border-radius: 99px;
+      border: 1px solid;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all .3s
+    }
+
+    .ws-state.idle {
+      color: var(--muted);
+      border-color: var(--border)
+    }
+
+    .ws-state.connecting {
+      color: var(--warn);
+      border-color: rgba(251, 146, 60, .3);
+      background: rgba(251, 146, 60, .06)
+    }
+
+    .ws-state.open {
+      color: var(--ok);
+      border-color: rgba(74, 222, 128, .3);
+      background: rgba(74, 222, 128, .06)
+    }
+
+    .ws-state.closed {
+      color: var(--err);
+      border-color: rgba(248, 113, 113, .3);
+      background: rgba(248, 113, 113, .06)
+    }
+
+    .ws-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor
+    }
+
+    .ws-state.open .ws-dot {
+      animation: blink 2s infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    .scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    /* ── OBJECTIVE BOX ── */
+    .objective {
+      border-radius: var(--r);
+      border: 1px solid;
+      padding: 14px 16px
+    }
+
+    .obj-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px
+    }
+
+    .obj-text {
+      font-size: .85rem;
+      line-height: 1.6;
+      color: var(--dim)
+    }
+
+    /* ── TWO-COLUMN CONTENT ── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    @media(max-width:920px) {
+      .content-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* ── THEORY PANEL ── */
+    .theory-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden
+    }
+
+    .card-head {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .theory-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .theory-block {
+      font-size: .8rem;
+      line-height: 1.65;
+      color: var(--dim)
+    }
+
+    .theory-block strong {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px
+    }
+
+    .tag {
+      font-size: .7rem;
+      padding: 3px 9px;
+      border-radius: 99px;
+      border: 1px solid;
+      font-family: 'Fira Code', monospace
+    }
+
+    .tag.pro {
+      color: var(--ok);
+      border-color: rgba(74, 222, 128, .25);
+      background: rgba(74, 222, 128, .06)
+    }
+
+    .tag.con {
+      color: var(--warn);
+      border-color: rgba(251, 146, 60, .25);
+      background: rgba(251, 146, 60, .06)
+    }
+
+    /* ── CODE PANEL ── */
+    .code-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    .code-body {
+      flex: 1;
+      padding: 14px 0;
+      overflow-x: auto
+    }
+
+    .code-line {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      line-height: 1.8;
+      padding: 0 12px;
+      transition: background .15s;
+      border-left: 3px solid transparent
+    }
+
+    .code-line .ln {
+      color: #334155;
+      text-align: right;
+      padding-right: 10px;
+      -webkit-user-select: none;
+      user-select: none;
+      font-size: .68rem
+    }
+
+    .code-line .lc {
+      color: #64748b;
+      white-space: pre
+    }
+
+    .code-line .lc .kw {
+      color: #7dd3fc
+    }
+
+    .code-line .lc .str {
+      color: #fca5a5
+    }
+
+    .code-line .lc .fn {
+      color: #86efac
+    }
+
+    .code-line .lc .cm {
+      color: #334155;
+      font-style: italic
+    }
+
+    .code-line .lc .ev {
+      color: #fde68a
+    }
+
+    .code-line.fired {
+      animation: lineFire .6s ease forwards
+    }
+
+    .code-line.active-now {
+      background: rgba(255, 255, 255, .04);
+      border-left-color: var(--lc, #22d3ee)
+    }
+
+    @keyframes lineFire {
+      0% {
+        background: rgba(255, 255, 200, .12)
+      }
+
+      100% {
+        background: rgba(255, 255, 255, .03)
+      }
+    }
+
+    .fired-badge {
+      font-size: .6rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 8px;
+      vertical-align: middle;
+      animation: fadeIn .3s ease
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-3px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ── STEPS ── */
+    .steps-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .step-pill {
+      flex: 1;
+      min-width: 120px;
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      padding: 10px 12px;
+      background: var(--surface);
+      cursor: pointer;
+      text-align: left;
+      transition: all .2s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .step-pill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity .2s
+    }
+
+    .step-pill.current::before {
+      opacity: 1
+    }
+
+    .step-pill.done::before {
+      opacity: 1;
+      filter: brightness(.6)
+    }
+
+    .step-num {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--muted);
+      margin-bottom: 3px
+    }
+
+    .step-label {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .step-desc {
+      font-size: .7rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .step-pill.current {
+      border-color: var(--lc, #22d3ee);
+      background: var(--surface2)
+    }
+
+    .step-pill.current .step-num {
+      color: var(--lc, #22d3ee)
+    }
+
+    .step-pill.done {
+      opacity: .5
+    }
+
+    /* ── ACTION PANEL ── */
+    .action-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .action-label {
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      border: none;
+      border-radius: var(--rs);
+      padding: 9px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      white-space: nowrap
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+      transform: translateY(-1px)
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed
+    }
+
+    .btn-primary {
+      color: #07090f
+    }
+
+    .btn-next {
+      background: var(--c1)
+    }
+
+    .btn-ghost {
+      background: var(--surface3);
+      color: var(--dim);
+      border: 1px solid var(--border)
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--err);
+      border: 1px solid rgba(248, 113, 113, .3)
+    }
+
+    .msg-input {
+      flex: 1;
+      min-width: 150px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      color: var(--text);
+      padding: 8px 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+      outline: none;
+      transition: border-color .2s
+    }
+
+    .msg-input:focus {
+      border-color: #334155
+    }
+
+    .msg-input::placeholder {
+      color: var(--muted)
+    }
+
+    /* ── EXPLANATION BOX ── */
+    .explain-box {
+      border-radius: var(--rs);
+      padding: 12px 14px;
+      font-size: .8rem;
+      line-height: 1.65;
+      display: none;
+      animation: fadeIn .3s ease
+    }
+
+    .explain-box.show {
+      display: block
+    }
+
+    .explain-box code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: rgba(255, 255, 255, .08);
+      padding: 1px 5px;
+      border-radius: 3px
+    }
+
+    /* ── LOG PANEL ── */
+    .log-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden
+    }
+
+    .log-body {
+      padding: 8px;
+      max-height: 170px;
+      overflow-y: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: .73rem
+    }
+
+    .log-entry {
+      padding: 5px 8px;
+      border-radius: 5px;
+      margin-bottom: 3px;
+      display: flex;
+      gap: 8px;
+      animation: fadeIn .2s ease;
+      line-height: 1.5
+    }
+
+    .log-t {
+      color: var(--muted);
+      flex-shrink: 0;
+      font-size: .68rem;
+      padding-top: 1px
+    }
+
+    .log-msg {
+      word-break: break-word
+    }
+
+    .log-entry.sys .log-msg {
+      color: var(--dim)
+    }
+
+    .log-entry.sent .log-msg {
+      color: #93c5fd
+    }
+
+    .log-entry.recv .log-msg {
+      color: #86efac
+    }
+
+    .log-entry.err .log-msg {
+      color: var(--err)
+    }
+
+    .log-entry.sys {
+      background: rgba(90, 106, 132, .06)
+    }
+
+    .log-entry.sent {
+      background: rgba(147, 197, 253, .05)
+    }
+
+    .log-entry.recv {
+      background: rgba(134, 239, 172, .05)
+    }
+
+    /* ── INSIGHT BOX ── */
+    .insight {
+      border-radius: var(--r);
+      padding: 13px 16px;
+      font-size: .8rem;
+      line-height: 1.7
+    }
+
+    .insight code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, .08)
+    }
+
+    /* ── LESSON NAV ── */
+    .lesson-nav {
+      padding: 14px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0
+    }
+
+    .nav-info {
+      font-size: .78rem;
+      color: var(--muted)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+        <div class="brand-title">WebSocket Teaching Mode</div>
+        <div class="brand-sub">4 Patterns · Interactive Demo</div>
+      </div>
+      <div class="lessons-nav" id="sidenav"></div>
+      <div class="sidebar-footer">
+        <div class="prog-label"><span>Overall Progress</span><span id="progText">0 / 4</span></div>
+        <div class="prog-bar">
+          <div class="prog-fill" id="progFill"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="lesson-topbar">
+        <span class="lesson-number" id="topNum"></span>
+        <span class="lesson-title" id="topTitle"></span>
+        <div class="ws-state idle" id="wsState">
+          <div class="ws-dot"></div><span id="wsStateText">CLOSED</span>
+        </div>
+      </div>
+      <div class="scroll-body" id="scrollBody"></div>
+      <div class="lesson-nav">
+        <button class="btn btn-ghost" id="btnPrev" onclick="changeLesson(-1)">◄ Previous</button>
+        <span class="nav-info" id="navInfo">Lesson 1 of 4</span>
+        <button class="btn btn-primary btn-next" id="btnNext" onclick="changeLesson(1)">Next ►</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // LESSON DATA
+    // ═══════════════════════════════════════════════════════════════════════
+    const LESSONS = [
+      {
+        id: 1, color: "#22d3ee", colorBg: "rgba(34,211,238,.1)", colorBd: "rgba(34,211,238,.22)",
+        badge: "Pattern 1 → Port 8080",
+        title: "With .on() Event Handlers",
+        short: "addEventListener / .on()",
+        port: 8080,
+        msgType: "echo",
+        objective: "Learn to listen for WebSocket events using <code>addEventListener()</code> in the browser and <code>.on()</code> in Node.js — the most flexible, composable approach.",
+        theory: {
+          what: "<strong>addEventListener(event, handler)</strong> registers a callback function for a named event. It's based on the Node.js <strong>EventEmitter</strong> pattern and the browser <strong>DOM EventTarget</strong> API. You can add as many listeners as you want for the same event.",
+          when: "Use this when you need <strong>multiple callbacks</strong> for the same event, when you need to <strong>remove a specific listener</strong> later, or when writing <strong>modular/composable</strong> code.",
+          pros: ["Multiple listeners per event", "Can removeEventListener() individually", "Standard Node.js + browser pattern", "Best for modular, scalable code"],
+          cons: ["Slightly more verbose than direct property"]
+        },
+        code: [
+          { t: "<span class='cm'>// PATTERN 1: addEventListener / .on() style</span>" },
+          { t: "" },
+          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>'ws://localhost:8080'</span>);", ev: "connecting", note: "Opens TCP connection →" },
+          { t: "" },
+          { t: "ws.<span class='fn'>addEventListener</span>(<span class='ev'>'open'</span>, () => {", ev: "open", note: "← fires on connect" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Connected!'</span>);", ev: "open" },
+          { t: "});", ev: "open" },
+          { t: "" },
+          { t: "ws.<span class='fn'>addEventListener</span>(<span class='ev'>'message'</span>, (event) => {", ev: "message", note: "← fires per message" },
+          { t: "  <span class='kw'>const</span> data = <span class='fn'>JSON.parse</span>(event.data);", ev: "message" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Received:'</span>, data);", ev: "message" },
+          { t: "});", ev: "message" },
+          { t: "" },
+          { t: "ws.<span class='fn'>addEventListener</span>(<span class='ev'>'close'</span>, (e) => {", ev: "close", note: "← fires on disconnect" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Disconnected. Code:'</span>, e.code);", ev: "close" },
+          { t: "});", ev: "close" },
+          { t: "" },
+          { t: "ws.<span class='fn'>addEventListener</span>(<span class='ev'>'error'</span>, (e) => {", ev: "error", note: "← fires on error" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>error</span>(<span class='str'>'Error:'</span>, e);", ev: "error" },
+          { t: "});", ev: "error" },
+        ],
+        steps: [
+          {
+            label: "① Open Connection", desc: "new WebSocket(url)", action: "connect",
+            explain: "<strong>new WebSocket('ws://localhost:8080')</strong> initiates the TCP handshake. The browser cycles through states: <code>CONNECTING (0)</code> → <code>OPEN (1)</code>. Once open, the <code>addEventListener('open')</code> callback fires automatically on the highlighted lines above."
+          },
+          {
+            label: "② Send a Message", desc: "ws.send(data)", action: "send", default: "Hello via addEventListener!",
+            explain: "<strong>ws.send(text)</strong> transmits bytes through the open WebSocket tunnel. On the server, <code>ws.on('message', handler)</code> fires, processes the data, and sends a reply. The client's <code>addEventListener('message')</code> then fires with the response."
+          },
+          {
+            label: "③ Disconnect", desc: "ws.close()", action: "disconnect",
+            explain: "<strong>ws.close()</strong> sends a FIN packet to begin the 4-step WebSocket closing handshake. The connection moves through: <code>OPEN (1)</code> → <code>CLOSING (2)</code> → <code>CLOSED (3)</code>. The <code>addEventListener('close')</code> fires when this completes."
+          }
+        ],
+        insight: "💡 <strong>Key insight:</strong> <code>addEventListener</code> is <em>non-destructive</em> — calling it twice for the same event registers <strong>two separate handlers</strong>, both will fire. This is very different from Pattern 2's <code>onmessage = fn</code> which <strong>overwrites</strong> any previous handler."
+      },
+      {
+        id: 2, color: "#fbbf24", colorBg: "rgba(251,191,36,.1)", colorBd: "rgba(251,191,36,.22)",
+        badge: "Pattern 2 → Port 8081",
+        title: "Without .on() — Direct Properties",
+        short: "ws.onmessage = fn",
+        port: 8081,
+        msgType: "echo",
+        objective: "Learn the direct property assignment approach: <code>ws.onmessage = handler</code> — simpler but limited to <strong>one handler per event</strong>.",
+        theory: {
+          what: "<strong>ws.onmessage = handler</strong> directly sets an event handler as a property on the WebSocket object. This is the older, simpler style inherited from the browser DOM API — <code>onmessage</code>, <code>onopen</code>, <code>onclose</code>, <code>onerror</code>.",
+          when: "Use this for <strong>quick scripts</strong>, <strong>simple demos</strong>, or when you are absolutely sure you only ever need <strong>one handler per event</strong>.",
+          pros: ["Shorter syntax", "Easy to read for simple cases", "Works in oldest browsers"],
+          cons: ["Only ONE handler per event — new assignment overwrites previous", "Cannot removeEventListener() by reference", "Less flexible for large apps"]
+        },
+        code: [
+          { t: "<span class='cm'>// PATTERN 2: Direct property assignment — no .on()</span>" },
+          { t: "" },
+          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>'ws://localhost:8081'</span>);", ev: "connecting", note: "Opens TCP connection →" },
+          { t: "" },
+          { t: "ws.<span class='ev'>onopen</span> = () => {", ev: "open", note: "← fires on connect" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Connected!'</span>);", ev: "open" },
+          { t: "};", ev: "open" },
+          { t: "" },
+          { t: "ws.<span class='ev'>onmessage</span> = (event) => {", ev: "message", note: "← fires per message" },
+          { t: "  <span class='kw'>const</span> data = <span class='fn'>JSON.parse</span>(event.data);", ev: "message" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Received:'</span>, data);", ev: "message" },
+          { t: "};", ev: "message" },
+          { t: "" },
+          { t: "ws.<span class='ev'>onclose</span> = (event) => {", ev: "close", note: "← fires on disconnect" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Disconnected. Code:'</span>, event.code);", ev: "close" },
+          { t: "};", ev: "close" },
+          { t: "" },
+          { t: "ws.<span class='ev'>onerror</span> = (event) => {", ev: "error", note: "← fires on error" },
+          { t: "  <span class='fn'>console</span>.<span class='fn'>error</span>(<span class='str'>'Error occurred'</span>);", ev: "error" },
+          { t: "};", ev: "error" },
+        ],
+        steps: [
+          {
+            label: "① Open Connection", desc: "new WebSocket(url)", action: "connect",
+            explain: "Same as Pattern 1 — <strong>new WebSocket(url)</strong> opens the TCP connection. Once established, <code>ws.onopen</code> is called automatically. Notice we assign the handler with <code>=</code> like a regular variable, not with <code>.on()</code>."
+          },
+          {
+            label: "② Send a Message", desc: "ws.send(data)", action: "send", default: "Hello via onmessage property!",
+            explain: "<strong>ws.send(data)</strong> works identically to Pattern 1 — the wire protocol is the same. The difference is entirely in how the <strong>client registers the handler</strong>: <code>ws.onmessage = fn</code> vs <code>ws.addEventListener('message', fn)</code>."
+          },
+          {
+            label: "③ Disconnect", desc: "ws.close()", action: "disconnect",
+            explain: "<strong>ws.close()</strong> is identical to Pattern 1. The <code>ws.onclose</code> property fires when the connection ends. Try connecting again after — you'd have to reassign <code>ws.onmessage</code> to a new socket; the old handler is lost with the old socket."
+          }
+        ],
+        insight: "⚠️ <strong>Critical difference vs Pattern 1:</strong> If you write <code>ws.onmessage = handlerA</code> then later <code>ws.onmessage = handlerB</code> — <strong>handlerA is gone forever</strong>. With <code>addEventListener</code> both handlers would coexist. This is why large apps prefer Pattern 1."
+      },
+      {
+        id: 3, color: "#34d399", colorBg: "rgba(52,211,153,.1)", colorBd: "rgba(52,211,153,.22)",
+        badge: "Pattern 3 → Port 8080",
+        title: "With Callbacks",
+        short: "callback(err, result)",
+        port: 8080,
+        msgType: "callback-request",
+        objective: "Understand the traditional <strong>Node.js callback pattern</strong> — passing a function as the last argument to be called when async work completes.",
+        theory: {
+          what: "A <strong>callback</strong> is a function you pass as an argument to another function. That function calls it back when its async work is done, passing <code>(error, result)</code>. This was the <strong>primary async pattern</strong> in Node.js before Promises existed.",
+          when: "You still encounter this pattern in <strong>older Node.js codebases</strong>, legacy libraries (e.g. <code>fs.readFile(path, callback)</code>), and when integrating with APIs that don't support Promises.",
+          pros: ["Universal — works everywhere", "No runtime overhead", "Simple mental model for single async op"],
+          cons: ["Callback hell — nested callbacks become unreadable", "Error handling must be manual every time", "Hard to chain multiple async ops", "Cannot use try/catch"]
+        },
+        code: [
+          { t: "<span class='cm'>// PATTERN 3: Callback-based processing (server-side)</span>" },
+          { t: "" },
+          { t: "<span class='kw'>function</span> <span class='fn'>processWithCallback</span>(data, <span class='fn'>callback</span>) {" },
+          { t: "  <span class='fn'>setTimeout</span>(() => {" },
+          { t: "    <span class='kw'>if</span> (!data) <span class='kw'>return</span> <span class='fn'>callback</span>(<span class='kw'>new</span> Error(<span class='str'>'No data'</span>));" },
+          { t: "    <span class='fn'>callback</span>(<span class='kw'>null</span>, { processed: data });  <span class='cm'>// null = no error</span>" },
+          { t: "  }, 600);" },
+          { t: "}" },
+          { t: "" },
+          { t: "<span class='cm'>// Called inside ws.on('message'):</span>" },
+          { t: "<span class='fn'>processWithCallback</span>(data, (err, result) => {", ev: "message", note: "← callback fires after 600ms" },
+          { t: "  <span class='kw'>if</span> (err) <span class='kw'>return</span> ws.<span class='fn'>send</span>(<span class='fn'>JSON.stringify</span>({ error: err.message }));", ev: "message" },
+          { t: "  ws.<span class='fn'>send</span>(<span class='fn'>JSON.stringify</span>({ result }));   <span class='cm'>// success</span>", ev: "message", note: "← result sent back" },
+          { t: "});", ev: "message" },
+        ],
+        steps: [
+          {
+            label: "① Connect", desc: "to Port 8080", action: "connect",
+            explain: "Connect to port 8080. This server handles <strong>callback-request</strong> messages using <code>processWithCallback(data, callback)</code>. The callback pattern is entirely on the <strong>server side</strong> — the client just sends a request and waits."
+          },
+          {
+            label: "② Send Callback Request", desc: "server uses callback", action: "send", default: "Learn callbacks!",
+            explain: "Your message is sent as <code>{ type: 'callback-request', data: '...' }</code>. The server calls <code>processWithCallback(data, (err, result) => { ... })</code>. After 600ms, the callback fires with <code>(null, result)</code>, and the server sends the result back to you."
+          },
+          {
+            label: "③ Disconnect", desc: "ws.close()", action: "disconnect",
+            explain: "Disconnects the WebSocket. Notice how callbacks can lead to deeply nested code when you chain multiple async operations — this is called <strong>'callback hell'</strong>. Pattern 4 (async/await) solves this elegantly."
+          }
+        ],
+        insight: "📚 <strong>Callback Hell example:</strong> <code>readFile(path, (err, data) => { parseJSON(data, (err, obj) => { saveDB(obj, (err, res) => { ... }) }) })</code> — this gets unmanageable fast. That's why async/await (Pattern 4) was invented."
+      },
+      {
+        id: 4, color: "#a78bfa", colorBg: "rgba(167,139,250,.1)", colorBd: "rgba(167,139,250,.22)",
+        badge: "Pattern 4 → Port 8080",
+        title: "Without Callbacks — async/await",
+        short: "await processWithPromise()",
+        port: 8080,
+        msgType: "async-request",
+        objective: "Learn the modern <strong>async/await</strong> approach — write asynchronous code that reads like synchronous code, with powerful error handling via <code>try/catch</code>.",
+        theory: {
+          what: "<strong>async/await</strong> is syntactic sugar over Promises. An <code>async</code> function always returns a Promise. The <code>await</code> keyword pauses execution until the Promise resolves, then returns the value — allowing you to write async code in a sequential, readable style.",
+          when: "Use async/await in <strong>all modern Node.js and browser code</strong>. It completely replaces callbacks and makes chaining async operations trivial and readable.",
+          pros: ["Reads like synchronous code", "try/catch works for error handling", "Easy to chain multiple async ops", "Debugging is far simpler"],
+          cons: ["Requires understanding of Promises underneath", "Must remember 'await' in async functions", "All callers must also be async if they await"]
+        },
+        code: [
+          { t: "<span class='cm'>// PATTERN 4: async/await — zero callbacks</span>" },
+          { t: "" },
+          { t: "<span class='kw'>function</span> <span class='fn'>processWithPromise</span>(data) {" },
+          { t: "  <span class='kw'>return new</span> <span class='fn'>Promise</span>((resolve, reject) => {" },
+          { t: "    <span class='fn'>setTimeout</span>(() => {" },
+          { t: "      <span class='kw'>if</span> (!data) <span class='kw'>return</span> <span class='fn'>reject</span>(<span class='kw'>new</span> Error(<span class='str'>'No data'</span>));" },
+          { t: "      <span class='fn'>resolve</span>({ processed: data });" },
+          { t: "    }, 600);" },
+          { t: "  });" },
+          { t: "}" },
+          { t: "" },
+          { t: "<span class='cm'>// Called inside async ws.on('message') handler:</span>" },
+          { t: "<span class='kw'>try</span> {", ev: "message", note: "← await pauses here" },
+          { t: "  <span class='kw'>const</span> result = <span class='kw'>await</span> <span class='fn'>processWithPromise</span>(data);", ev: "message" },
+          { t: "  ws.<span class='fn'>send</span>(<span class='fn'>JSON.stringify</span>({ result }));", ev: "message", note: "← continues after resolve" },
+          { t: "} <span class='kw'>catch</span> (err) {", ev: "message" },
+          { t: "  ws.<span class='fn'>send</span>(<span class='fn'>JSON.stringify</span>({ error: err.message }));", ev: "message" },
+          { t: "}", ev: "message" },
+        ],
+        steps: [
+          {
+            label: "① Connect", desc: "to Port 8080", action: "connect",
+            explain: "Connect to port 8080. This time the server handles <strong>async-request</strong> messages using <code>await processWithPromise(data)</code>. No callback parameter — the function <strong>returns a Promise</strong> instead."
+          },
+          {
+            label: "② Send Async Request", desc: "server uses await", action: "send", default: "Learn async/await!",
+            explain: "Message is sent as <code>{ type: 'async-request', data: '...' }</code>. The server handler is an <code>async</code> function. It calls <code>const result = await processWithPromise(data)</code> — execution <strong>pauses</strong> for 600ms, then resumes. No nesting, no callback arguments."
+          },
+          {
+            label: "③ Disconnect", desc: "ws.close()", action: "disconnect",
+            explain: "Compare how clean Pattern 4 is vs Pattern 3: callbacks require nesting and manual <code>if(err)</code> checks everywhere. With async/await, a simple <code>try/catch</code> block catches all errors, and the flow reads top-to-bottom like normal code."
+          }
+        ],
+        insight: "🚀 <strong>async/await vs callbacks — side by side:</strong><br>Callback: <code>getData(x, (err, r) => { saveDB(r, (err2, s) => { ... }) })</code><br>Async/await: <code>const r = await getData(x); const s = await saveDB(r);</code><br><br>Same work, dramatically more readable. Always prefer async/await in modern code."
+      }
+    ];
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════════════════════════════════
+    let currentLesson = 0;
+    let ws = null;
+    let completedSteps = {};   // { lessonId: maxStepIndex }
+    let completedLessons = new Set();
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // UTILITIES
+    // ═══════════════════════════════════════════════════════════════════════
+    const $ = id => document.getElementById(id);
+    const hms = () => new Date().toLocaleTimeString('en-US', { hour12: false });
+
+    function addLog(type, msg) {
+      const el = $("logBody");
+      if (!el) return;
+      const d = document.createElement("div");
+      d.className = `log-entry ${type}`;
+      d.innerHTML = `<span class="log-t">${hms()}</span><span class="log-msg">${msg}</span>`;
+      el.appendChild(d);
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function setWsState(state) {
+      const el = $("wsState");
+      if (!el) return;
+      el.className = `ws-state ${state}`;
+      const labels = { idle: "CLOSED", connecting: "CONNECTING...", open: "OPEN", closed: "CLOSED" };
+      $("wsStateText").textContent = labels[state] || state.toUpperCase();
+    }
+
+    function fireCodeLines(eventName) {
+      const L = LESSONS[currentLesson];
+      document.querySelectorAll(".code-line[data-ev]").forEach(el => {
+        if (el.dataset.ev === eventName) {
+          el.classList.add("active-now", "fired");
+          // Add "fired" badge if not already there
+          const span = el.querySelector(".fired-badge");
+          if (!span) {
+            const badge = document.createElement("span");
+            badge.className = "fired-badge";
+            badge.style.background = L.colorBg;
+            badge.style.color = L.color;
+            badge.style.border = `1px solid ${L.colorBd}`;
+            badge.textContent = "▶ fired!";
+            el.querySelector(".lc").appendChild(badge);
+            setTimeout(() => badge.remove(), 3000);
+          }
+          setTimeout(() => el.classList.remove("active-now"), 2500);
+        }
+      });
+    }
+
+    function showExplain(text) {
+      const el = $("explainBox");
+      if (!el) return;
+      const L = LESSONS[currentLesson];
+      el.className = "explain-box show";
+      el.style.background = L.colorBg;
+      el.style.border = `1px solid ${L.colorBd}`;
+      el.style.color = "#94a3b8";
+      el.innerHTML = text;
+    }
+
+    function setStep(idx) {
+      const L = LESSONS[currentLesson];
+      const lId = L.id;
+      if (!completedSteps[lId]) completedSteps[lId] = -1;
+
+      document.querySelectorAll(".step-pill").forEach((el, i) => {
+        el.className = "step-pill" +
+          (i === idx ? " current" : i < idx ? " done" : "");
+        el.style.setProperty("--lc", L.color);
+        el.querySelector(".step-pill-bar").style.background = L.color;
+      });
+
+      const step = L.steps[idx];
+      if (step) showExplain(step.explain);
+    }
+
+    function updateSidebar() {
+      const done = completedLessons.size;
+      $("progFill").style.width = (done / 4 * 100) + "%";
+      $("progText").textContent = `${done} / 4`;
+      document.querySelectorAll(".lesson-btn").forEach((el, i) => {
+        el.className = "lesson-btn" +
+          (i === currentLesson ? " active" : "") +
+          (completedLessons.has(i) ? " done" : "");
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // RENDER LESSON
+    // ═══════════════════════════════════════════════════════════════════════
+    function renderLesson(idx) {
+      const L = LESSONS[idx];
+
+      // Topbar
+      $("topNum").textContent = L.badge;
+      $("topNum").style.background = L.colorBg;
+      $("topNum").style.color = L.color;
+      $("topNum").style.border = `1px solid ${L.colorBd}`;
+      $("topTitle").textContent = L.title;
+
+      // Nav
+      $("navInfo").textContent = `Lesson ${idx + 1} of 4`;
+      $("btnPrev").disabled = idx === 0;
+      $("btnNext").style.background = L.color;
+
+      // Code lines
+      const codeLines = L.code.map((line, i) => {
+        if (!line.t) return `<div class="code-line"><span class="ln"></span><span class="lc"> </span></div>`;
+        const ev = line.ev ? `data-ev="${line.ev}"` : "";
+        const note = line.note ? `<span style="color:var(--muted);font-style:italic;font-size:.68rem;margin-left:10px">${line.note}</span>` : "";
+        return `<div class="code-line" ${ev} style="--lc:${L.color}">
+      <span class="ln">${i + 1}</span>
+      <span class="lc">${line.t}${note}</span>
+    </div>`;
+      }).join("");
+
+      // Steps pills
+      const stepPills = L.steps.map((s, i) =>
+        `<div class="step-pill${i === 0 ? " current" : ""}" style="--lc:${L.color}">
+      <div class="step-pill-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:${L.color};opacity:${i === 0 ? 1 : 0};transition:opacity .2s;border-radius:var(--rs) var(--rs) 0 0"></div>
+      <div class="step-num">Step ${i + 1}</div>
+      <div class="step-label">${s.label}</div>
+      <div class="step-desc">${s.desc}</div>
+    </div>`
+      ).join("");
+
+      const defaultMsg = L.steps[1]?.default || "Hello WebSocket!";
+
+      $("scrollBody").innerHTML = `
+    <!-- Objective -->
+    <div class="objective" style="background:${L.colorBg};border-color:${L.colorBd}">
+      <div class="obj-label" style="color:${L.color}">🎯 Learning Objective</div>
+      <div class="obj-text">${L.objective}</div>
+    </div>
+
+    <!-- Theory + Code -->
+    <div class="content-grid">
+      <div class="theory-card">
+        <div class="card-head">📖 Theory</div>
+        <div class="theory-body">
+          <div class="theory-block"><strong>What is it?</strong><br>${L.theory.what}</div>
+          <div class="theory-block"><strong>When to use?</strong><br>${L.theory.when}</div>
+          <div class="theory-block">
+            <strong>Pros:</strong>
+            <div class="tag-list">${L.theory.pros.map(p => `<span class="tag pro">${p}</span>`).join("")}</div>
+          </div>
+          <div class="theory-block">
+            <strong>Cons:</strong>
+            <div class="tag-list">${L.theory.cons.map(c => `<span class="tag con">${c}</span>`).join("")}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-card">
+        <div class="card-head" style="color:${L.color}">
+          &lt;/&gt; Code — Lines light up as they execute
+        </div>
+        <div class="code-body">${codeLines}</div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps-row">${stepPills}</div>
+
+    <!-- Action Panel -->
+    <div class="action-panel" style="border-color:${L.colorBd}">
+      <div class="action-label">🔬 Try It — Follow the steps above</div>
+      <div class="action-row">
+        <button id="btnConnect" class="btn btn-primary" style="background:${L.color};color:#07090f" onclick="doConnect()">
+          ① Connect
+        </button>
+        <button id="btnDisconnect" class="btn btn-danger" onclick="doDisconnect()" disabled>
+          Disconnect
+        </button>
+        <button class="btn btn-ghost" onclick="$('logBody').innerHTML=''">Clear Log</button>
+      </div>
+      <div class="action-row">
+        <input id="msgInput" class="msg-input" placeholder="${defaultMsg}" value="${defaultMsg}"/>
+        <button id="btnSend" class="btn btn-ghost" onclick="doSend()" disabled style="color:${L.color};border-color:${L.colorBd}">
+          ② Send
+        </button>
+      </div>
+    </div>
+
+    <!-- Explanation -->
+    <div class="explain-box show" id="explainBox" style="background:${L.colorBg};border:1px solid ${L.colorBd};color:#94a3b8">
+      ${L.steps[0].explain}
+    </div>
+
+    <!-- Log -->
+    <div class="log-card">
+      <div class="card-head">📡 Event Log <span style="color:var(--muted);font-size:.68rem;margin-left:8px">— watch events fire in real-time</span></div>
+      <div class="log-body" id="logBody"></div>
+    </div>
+
+    <!-- Insight -->
+    <div class="insight" style="background:${L.colorBg};border:1px solid ${L.colorBd};color:#94a3b8">
+      ${L.insight}
+    </div>
+  `;
+
+      setStep(0);
+      updateSidebar();
+      setWsState("idle");
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // WEBSOCKET ACTIONS
+    // ═══════════════════════════════════════════════════════════════════════
+    function doConnect() {
+      const L = LESSONS[currentLesson];
+      if (ws && ws.readyState < 2) ws.close();
+
+      setWsState("connecting");
+      fireCodeLines("connecting");
+      addLog("sys", `⏳ Connecting to ws://localhost:${L.port}...`);
+      setStep(0);
+
+      ws = new WebSocket(`ws://localhost:${L.port}`);
+
+      ws.addEventListener("open", () => {
+        setWsState("open");
+        fireCodeLines("open");
+        addLog("sys", `✅ [open] Connected! addEventListener('open') fired.`);
+        $("btnConnect").disabled = true;
+        $("btnDisconnect").disabled = false;
+        $("btnSend").disabled = false;
+        setStep(1);
+      });
+
+      ws.addEventListener("message", (event) => {
+        setWsState("open");
+        fireCodeLines("message");
+        let d; try { d = JSON.parse(event.data); } catch { d = event.data; }
+        const text = typeof d === "object" ? (d.echo || d.processed || d.message || JSON.stringify(d)) : d;
+        addLog("recv", `📨 [message] ${text}`);
+        // Mark step 2 done (response received)
+        const lId = L.id;
+        if (!completedSteps[lId] || completedSteps[lId] < 2) {
+          completedSteps[lId] = 2;
+        }
+      });
+
+      ws.addEventListener("close", (e) => {
+        setWsState("closed");
+        fireCodeLines("close");
+        addLog("sys", `🔌 [close] Disconnected. Code: ${e.code} — close event fired.`);
+        $("btnConnect").disabled = false;
+        $("btnDisconnect").disabled = true;
+        $("btnSend").disabled = true;
+        completedLessons.add(currentLesson);
+        updateSidebar();
+        ws = null;
+      });
+
+      ws.addEventListener("error", () => {
+        fireCodeLines("error");
+        addLog("err", `❌ [error] Connection failed! Is 'node server.js' running?`);
+        setWsState("closed");
+      });
+    }
+
+    function doSend() {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      const L = LESSONS[currentLesson];
+      const input = $("msgInput");
+      const text = input.value.trim() || input.placeholder;
+      const payload = JSON.stringify({ type: L.msgType, data: text });
+      ws.send(payload);
+      addLog("sent", `📤 Sent: "${text}" (type: ${L.msgType})`);
+      setStep(1);
+    }
+
+    function doDisconnect() {
+      if (ws) { ws.close(); setStep(2); }
+    }
+
+    function gotoLesson(idx) {
+      if (idx === currentLesson) return;
+      if (ws && ws.readyState < 2) ws.close();
+      ws = null;
+      currentLesson = idx;
+      renderLesson(idx);
+      buildSidebar();
+      updateSidebar();
+      $("scrollBody").scrollTop = 0;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // LESSON NAVIGATION
+    // ═══════════════════════════════════════════════════════════════════════
+    function changeLesson(dir) {
+      const next = currentLesson + dir;
+      if (next < 0 || next >= LESSONS.length) return;
+      if (ws && ws.readyState < 2) ws.close();
+      ws = null;
+      currentLesson = next;
+      renderLesson(currentLesson);
+      $("scrollBody").scrollTop = 0;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // BUILD SIDEBAR
+    // ═══════════════════════════════════════════════════════════════════════
+    function buildSidebar() {
+      $("sidenav").innerHTML = LESSONS.map((L, i) => `
+    <button class="lesson-btn${i === currentLesson ? " active" : ""}${completedLessons.has(i) ? " done" : ""}" onclick="gotoLesson(${i})">
+      <div class="lbadge" style="background:${L.colorBg};color:${L.color};border:1px solid ${L.colorBd}">
+        ${i + 1}
+      </div>
+      <div>
+        <div class="lnum">${L.title}</div>
+        <div class="lsub">${L.short}</div>
+      </div>
+    </button>
+  `).join("");
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════════════════════════════════════
+    buildSidebar();
+    renderLesson(0);
+
+    // Sidebar click is handled directly via onclick="gotoLesson(i)" on each button
+  </script>
+</body>
+
+</html>

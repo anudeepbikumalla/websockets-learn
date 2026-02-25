@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 6 — Broadcasting</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, .07), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(56, 189, 248, .1);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sec-num.c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+    }
+
+    .sec-num.c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .sec-num.c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow);
+    }
+
+    .sec-num.c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple);
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .box-head.c-blue {
+      color: var(--blue);
+    }
+
+    .box-head.c-green {
+      color: var(--green);
+    }
+
+    .box-head.c-yellow {
+      color: var(--yellow);
+    }
+
+    .box-head.c-orange {
+      color: var(--orange);
+    }
+
+    .box-head.c-red {
+      color: var(--red);
+    }
+
+    .box-body {
+      padding: 16px 18px;
+    }
+
+    .box-body p {
+      font-size: .87rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9;
+    }
+
+    .kw {
+      color: #7dd3fc;
+    }
+
+    .fn {
+      color: #86efac;
+    }
+
+    .str {
+      color: #fca5a5;
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic;
+    }
+
+    .ev {
+      color: #fbbf24;
+    }
+
+    /* broadcast demo */
+    .broadcast-arena {
+      background: var(--card);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .arena-header {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .arena-title {
+      font-weight: 700;
+      font-size: .9rem;
+      flex: 1;
+    }
+
+    .client-count {
+      font-size: .78rem;
+      color: var(--blue);
+      font-weight: 600;
+      background: rgba(56, 189, 248, .1);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 99px;
+      padding: 3px 10px;
+    }
+
+    .clients-row {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      flex-wrap: wrap;
+    }
+
+    .client-box {
+      flex: 1;
+      min-width: 160px;
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color .3s;
+    }
+
+    .client-box.active {
+      border-color: rgba(56, 189, 248, .4);
+    }
+
+    .client-header {
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: .78rem;
+      font-weight: 600;
+    }
+
+    .client-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .client-dot.on {
+      background: var(--green);
+      box-shadow: 0 0 6px rgba(34, 197, 94, .4);
+    }
+
+    .client-msgs {
+      height: 90px;
+      overflow-y: auto;
+      padding: 8px 12px;
+      font-size: .72rem;
+      color: var(--dim);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .client-msg {
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+    }
+
+    .client-msg.broadcast {
+      color: var(--blue);
+    }
+
+    .arena-controls {
+      padding: 14px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .msg-input {
+      flex: 1;
+      min-width: 140px;
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      color: var(--text);
+      outline: none;
+    }
+
+    .msg-input:focus {
+      border-color: var(--blue);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: #431407;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    /* diagram */
+    .diagram {
+      background: var(--card3);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+      color: var(--dim);
+      line-height: 2;
+    }
+
+    .d-server {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .d-client {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .d-arrow {
+      color: var(--yellow);
+    }
+
+    .d-msg {
+      color: var(--purple);
+    }
+
+    .golden {
+      background: rgba(56, 189, 248, .05);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--text);
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--blue);
+      color: var(--text);
+    }
+
+    .nav-btn.primary {
+      background: var(--blue);
+      color: #082f49;
+      border-color: var(--blue);
+    }
+
+    .nav-btn.home {
+      background: var(--card2);
+      color: var(--dim);
+    }
+
+    code.mono {
+      font-family: monospace;
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-tag">🎓 Lesson 6</div>
+    <h1>Broadcasting 📢</h1>
+    <p>One client sends a message — the server forwards it to <em>every</em> connected client instantly. The backbone of
+      every live feed, chat room, and real-time dashboard.</p>
+  </div>
+
+  <div class="page">
+
+    <!-- ① WHAT IS BROADCASTING -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">1</div>
+        <div>
+          <div class="sec-title">What is Broadcasting? 📡</div>
+          <div class="sec-sub">The difference between echo and broadcast</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-yellow">🔁 Echo (what you've seen so far)</div>
+          <div class="box-body">
+            <div class="diagram">
+              <span class="d-client">Client A</span> <span class="d-arrow">──send──▶</span> <span
+                class="d-server">Server</span><br>
+              <span class="d-server">Server</span> <span class="d-arrow">──reply──▶</span> <span class="d-client">Client
+                A only</span><br>
+              <br>
+              <span class="cm">// Client B, C, D hear nothing</span>
+            </div>
+            <p class="note-sm">Like texting someone — only they see your message.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-blue">📢 Broadcast (Lesson 6)</div>
+          <div class="box-body">
+            <div class="diagram">
+              <span class="d-client">Client A</span> <span class="d-arrow">──send──▶</span> <span
+                class="d-server">Server</span><br>
+              <span class="d-server">Server</span> <span class="d-arrow">──▶</span> <span class="d-client">Client
+                A</span><br>
+              <span class="d-server">Server</span> <span class="d-arrow">──▶</span> <span class="d-client">Client
+                B</span><br>
+              <span class="d-server">Server</span> <span class="d-arrow">──▶</span> <span class="d-client">Client
+                C</span><br>
+            </div>
+            <p class="note-sm">Like posting in a group chat — everyone sees it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ② SERVER CODE -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">The Server Code 💻</div>
+          <div class="sec-sub">Server keeps a list of all clients and loops through them</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head c-green">&lt;/&gt; server.js — broadcast to all clients</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> WebSocket = <span class="fn">require</span>(<span
+              class="str">'ws'</span>);<br>
+            <span class="kw">const</span> wss = <span class="kw">new</span> WebSocket.<span class="fn">Server</span>({
+            port: <span class="ev">8080</span> });<br><br>
+
+            <span class="cm">// wss.clients = a Set of ALL connected sockets</span><br>
+            wss.<span class="fn">on</span>(<span class="str">'connection'</span>, (ws) => {<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'message'</span>, (raw) => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> msg = raw.<span class="fn">toString</span>();<br><br>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// ── The broadcast loop ──</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;wss.clients.<span class="fn">forEach</span>((client) => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (client.readyState === WebSocket.<span
+              class="ev">OPEN</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.<span class="fn">send</span>(<span
+              class="fn">JSON.stringify</span>({<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: <span class="str">'broadcast'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from: <span class="str">'anonymous'</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text: msg<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;});<br>
+            });
+          </div>
+          <p class="note-sm">💡 <strong style="color:var(--text)">Key insight:</strong> <code
+              class="mono">wss.clients</code> is a live <code class="mono">Set</code> — it auto-updates as clients
+            connect and disconnect. Always check <code class="mono">readyState === OPEN</code> before sending or you'll
+            get errors.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ③ LIVE DEMO -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">3</div>
+        <div>
+          <div class="sec-title">▶️ Simulated Broadcast Demo</div>
+          <div class="sec-sub">Three virtual "clients" — send a message and watch all three receive it</div>
+        </div>
+      </div>
+
+      <div class="broadcast-arena">
+        <div class="arena-header">
+          <div class="arena-title">📡 Broadcast Demo — 3 Virtual Clients</div>
+          <div class="client-count" id="connCount">0 connected</div>
+        </div>
+
+        <div class="clients-row">
+          <div class="client-box" id="box0">
+            <div class="client-header">
+              <div class="client-dot" id="dot0"></div>
+              <span>Client A (You)</span>
+            </div>
+            <div class="client-msgs" id="msgs0">
+              <div style="color:var(--muted);font-size:.68rem">Not connected</div>
+            </div>
+          </div>
+          <div class="client-box" id="box1">
+            <div class="client-header">
+              <div class="client-dot" id="dot1"></div>
+              <span>Client B</span>
+            </div>
+            <div class="client-msgs" id="msgs1">
+              <div style="color:var(--muted);font-size:.68rem">Not connected</div>
+            </div>
+          </div>
+          <div class="client-box" id="box2">
+            <div class="client-header">
+              <div class="client-dot" id="dot2"></div>
+              <span>Client C</span>
+            </div>
+            <div class="client-msgs" id="msgs2">
+              <div style="color:var(--muted);font-size:.68rem">Not connected</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arena-controls">
+          <button class="btn btn-green" id="btnConnect" onclick="simConnect()">Connect All 3</button>
+          <input class="msg-input" id="broadcastInput" placeholder="Type a message…" disabled />
+          <button class="btn btn-blue" id="btnBroadcast" onclick="simBroadcast()" disabled>📢 Broadcast</button>
+          <button class="btn btn-ghost" onclick="simDisconnect()">Disconnect</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ VARIANTS -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">4</div>
+        <div>
+          <div class="sec-title">Broadcast Variants 🎛️</div>
+          <div class="sec-sub">Broadcast to all, or everyone except the sender</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head c-blue">📢 Send to ALL (including sender)</div>
+          <div class="box-body">
+            <div class="code">
+              wss.clients.<span class="fn">forEach</span>((client) => {<br>
+              &nbsp;&nbsp;<span class="kw">if</span> (client.readyState === WebSocket.<span class="ev">OPEN</span>)
+              {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;client.<span class="fn">send</span>(msg);<br>
+              &nbsp;&nbsp;}<br>
+              });
+            </div>
+            <p class="note-sm">Used for: live score tickers, announcement boards, server-initiated pushes.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head c-orange">📤 Send to OTHERS (exclude sender)</div>
+          <div class="box-body">
+            <div class="code">
+              wss.clients.<span class="fn">forEach</span>((client) => {<br>
+              &nbsp;&nbsp;<span class="kw">if</span> (client !== ws &&<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.readyState === WebSocket.<span class="ev">OPEN</span>) {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;client.<span class="fn">send</span>(msg);<br>
+              &nbsp;&nbsp;}<br>
+              });
+            </div>
+            <p class="note-sm">Used for: chat apps where sender sees their own message immediately without an echo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑤ GOLDEN RULES -->
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">5</div>
+        <div>
+          <div class="sec-title">⚡ Broadcasting Rules</div>
+          <div class="sec-sub">Know these before shipping to production</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Broadcast Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">☑️</div>
+            <div class="rule-text"><strong>Always check readyState === OPEN</strong> before sending — a client in
+              CLOSING/CLOSED state will throw an error.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-text"><strong>wss.clients is a live Set</strong> — you don't need to manage it yourself.
+              Clients are added on connect and removed on disconnect automatically.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📏</div>
+            <div class="rule-text"><strong>Broadcast scales linearly</strong> — 1000 clients = 1000 send() calls per
+              message. For very high traffic, consider a message broker like Redis Pub/Sub.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🏷️</div>
+            <div class="rule-text"><strong>Include metadata</strong> — always send <code
+                class="mono">{ type, from, text, timestamp }</code> so clients can display and filter messages
+              correctly.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn5.html" class="nav-btn">← Lesson 5</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn7.html" class="nav-btn primary">Lesson 7: Rooms →</a>
+  </div>
+
+  <script>
+    let connected = false;
+    let msgCounter = 0;
+
+    function addMsg(idx, text, isBroadcast) {
+      const el = document.getElementById(`msgs${idx}`);
+      const d = document.createElement('div');
+      d.className = `client-msg${isBroadcast ? ' broadcast' : ''}`;
+      d.textContent = text;
+      el.appendChild(d);
+      el.scrollTop = el.scrollHeight;
+      // flash the box
+      document.getElementById(`box${idx}`).classList.add('active');
+      setTimeout(() => document.getElementById(`box${idx}`).classList.remove('active'), 600);
+    }
+
+    function simConnect() {
+      connected = true;
+      [0, 1, 2].forEach(i => {
+        document.getElementById(`dot${i}`).className = 'client-dot on';
+        document.getElementById(`msgs${i}`).innerHTML = '';
+        addMsg(i, '✅ Connected to ws://localhost:8080', false);
+      });
+      document.getElementById('connCount').textContent = '3 connected';
+      document.getElementById('btnConnect').disabled = true;
+      document.getElementById('broadcastInput').disabled = false;
+      document.getElementById('btnBroadcast').disabled = false;
+      document.getElementById('broadcastInput').focus();
+    }
+
+    function simBroadcast() {
+      if (!connected) return;
+      const input = document.getElementById('broadcastInput');
+      const text = input.value.trim() || 'Hello everyone!';
+      msgCounter++;
+
+      // Client A sends
+      addMsg(0, `📤 You sent: "${text}"`, false);
+
+      // Simulate server broadcasting to all 3 after small delay
+      setTimeout(() => {
+        [0, 1, 2].forEach(i => addMsg(i, `📨 [broadcast] ${text}`, true));
+      }, 180);
+
+      input.value = '';
+      input.focus();
+    }
+
+    function simDisconnect() {
+      connected = false;
+      [0, 1, 2].forEach(i => {
+        document.getElementById(`dot${i}`).className = 'client-dot';
+        addMsg(i, '🔌 Disconnected', false);
+      });
+      document.getElementById('connCount').textContent = '0 connected';
+      document.getElementById('btnConnect').disabled = false;
+      document.getElementById('broadcastInput').disabled = true;
+      document.getElementById('btnBroadcast').disabled = true;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('broadcastInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') simBroadcast();
+      });
+    });
+  </script>
+</body>
+
+</html>
