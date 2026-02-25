@@ -544,7 +544,66 @@
     </section>
   </div>
 
-  <div class="nav-bar">
+  
+
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <!-- 📋 Quick Cheat Sheet -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Offline Queue</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>queue = []</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Buffer for unsent messages</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Client-side array</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>queue.push(msg)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Save message when offline</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When ws.readyState !== OPEN</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>queue.forEach(msg =&gt; ws.send(msg))</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Flush queue on reconnect</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">In the open handler</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 💡 Key Takeaways -->
+    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Users will go offline — WiFi drops, subway tunnels, laptop lid closes. Their messages <strong>should not be lost</strong>.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>An <strong>offline queue</strong> buffers messages in an array. When the connection comes back, flush (send) the entire queue.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Check <code>ws.readyState === WebSocket.OPEN</code> before sending. If not open, push to the queue instead.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Set a <strong>max queue size</strong> (e.g., 100 messages) to avoid memory issues if the user is offline for a long time.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>For critical apps, also save the queue to <code>localStorage</code> so it survives page refreshes.</span></div>
+    </div>
+
+    <!-- 💻 Production Pattern -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Offline message queue</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>const queue = []; // Messages waiting to be sent
+const MAX_QUEUE = 100;
+
+function send(data) {
+  const message = JSON.stringify(data);
+
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(message);  // Online — send immediately
+  } else {
+    // Offline — save to queue (with size limit)
+    if (queue.length < MAX_QUEUE) {
+      queue.push(message);
+      console.log(`📦 Queued (${queue.length} waiting)`);
+    }
+  }
+}
+
+// When connection comes back, flush the queue
+ws.addEventListener('open', () => {
+  console.log(`🔄 Flushing ${queue.length} queued messages...`);
+  while (queue.length > 0) {
+    ws.send(queue.shift());  // Send oldest first
+  }
+});</code></pre>
+    </div>
+  </div>
+
+<div class="nav-bar">
     <a href="index.html" class="nav-btn home">🏠 Home</a>
     <a href="learn17.html" class="nav-btn">← Lesson 17</a>
     <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>

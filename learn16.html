@@ -566,7 +566,69 @@
     </section>
   </div>
 
-  <div class="nav-bar">
+  
+
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <!-- 📋 Quick Cheat Sheet -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Typing Indicators</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.send({type: 'typing', user})</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Notify server that user is typing</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">On keydown/input</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>debounce(sendTyping, 300)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Don't spam typing events</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Wait 300ms between sends</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>setTimeout(clearTyping, 3000)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Auto-clear "typing" after 3 seconds</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If user stops typing</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 💡 Key Takeaways -->
+    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Typing indicators show <strong>"Alice is typing..."</strong> in real-time. This makes conversations feel alive.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span><strong>Debouncing</strong> is critical — don't send a typing event for every keystroke. Wait until the user pauses for 300ms.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Auto-clear the indicator after <strong>3 seconds of silence</strong>. Otherwise it stays forever if the user stops and doesn't send.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Only broadcast typing to the <strong>relevant room/conversation</strong> — not to all users globally.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>This is a simple but powerful UX pattern — it tells the other person to <strong>wait before leaving the chat</strong>.</span></div>
+    </div>
+
+    <!-- 💻 Production Pattern -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Typing indicator with debounce</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>// CLIENT — Send typing events (debounced)
+let typingTimer;
+input.addEventListener('input', () => {
+  clearTimeout(typingTimer);
+
+  // Only send one 'typing' event per 300ms
+  typingTimer = setTimeout(() => {
+    ws.send(JSON.stringify({
+      type: 'typing',
+      user: myUsername
+    }));
+  }, 300);
+});
+
+// CLIENT — Show and auto-clear typing indicator
+ws.addEventListener('message', (event) => {
+  const msg = JSON.parse(event.data);
+  if (msg.type === 'typing') {
+    showTyping(msg.user); // Display "Alice is typing..."
+
+    // Clear after 3 seconds if no more typing events
+    clearTimeout(window.typingClearTimer);
+    window.typingClearTimer = setTimeout(() => {
+      hideTyping(msg.user);
+    }, 3000);
+  }
+});</code></pre>
+    </div>
+  </div>
+
+<div class="nav-bar">
     <a href="index.html" class="nav-btn home">🏠 Home</a>
     <a href="learn15.html" class="nav-btn">← Lesson 15</a>
     <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>

@@ -707,7 +707,68 @@
 
   </div>
 
-  <div class="nav-bar">
+  
+
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <!-- 📋 Quick Cheat Sheet -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Authentication</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>new WebSocket(url + '?token=xxx')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Send auth token in URL query</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Client connects with token</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>new URL(req.url, 'http://x').searchParams</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Extract token from URL on server</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server reads the token</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.close(4001, 'Unauthorized')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Reject connection with custom code</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If token is invalid</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>jwt.verify(token, secret)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Validate a JWT token</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server-side check</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 💡 Key Takeaways -->
+    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>WebSockets can't send custom HTTP headers during the handshake — so we pass the <strong>token in the URL query string</strong>.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Always <strong>validate the token on the server</strong> immediately during the connection event. Reject bad tokens instantly.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Custom close codes 4000-4999 are yours to define — use <code>4001</code> for unauthorized, <code>4002</code> for expired token, etc.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>JWTs (JSON Web Tokens) are the most common auth method — they contain user data encoded inside the token itself.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Never trust the client — <strong>always verify server-side</strong>. A malicious user can send any token they want.</span></div>
+    </div>
+
+    <!-- 💻 Production Pattern -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 WebSocket authentication flow</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>// CLIENT — Connect with auth token in URL
+const token = localStorage.getItem('auth_token');
+const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
+
+// SERVER — Validate the token on connection
+wss.on('connection', (ws, req) => {
+  // 1. Extract token from the URL query string
+  const url = new URL(req.url, 'http://localhost');
+  const token = url.searchParams.get('token');
+
+  // 2. Verify the token (using JWT or your own logic)
+  try {
+    const user = jwt.verify(token, SECRET_KEY);
+    ws.userId = user.id;  // Attach user info to connection
+    ws.send(JSON.stringify({ type: 'auth', status: 'ok' }));
+  } catch (err) {
+    // 3. Reject invalid tokens immediately!
+    ws.close(4001, 'Invalid or expired token');
+    return; // Stop processing
+  }
+
+  ws.on('message', (msg) => {
+    console.log(`Message from user ${ws.userId}:`, msg);
+  });
+});</code></pre>
+    </div>
+  </div>
+
+<div class="nav-bar">
     <a href="index.html" class="nav-btn home">🏠 Home</a>
     <a href="learn7.html" class="nav-btn">← Lesson 7</a>
     <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>

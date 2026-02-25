@@ -682,7 +682,77 @@
     </section>
   </div>
 
-  <div class="nav-bar">
+  
+
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <!-- 📋 Quick Cheat Sheet -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Rate Limiting</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>Token Bucket</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Allow bursts, refill over time</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Most common algorithm</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>tokens--</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Consume a token per message</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If tokens > 0, allow</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>setInterval(() =&gt; tokens++, refillRate)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Refill tokens over time</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server-side timer</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.close(4008, 'Rate limited')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Kick abusive clients</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Custom close code</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 💡 Key Takeaways -->
+    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Without rate limiting, a single malicious client can send <strong>thousands of messages per second</strong> and crash your server.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>The <strong>Token Bucket</strong> algorithm: You have N tokens. Each message costs 1 token. Tokens refill over time. No tokens = message rejected.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>This is like a <strong>coffee punch card</strong> — you get 10 free coffees, use them up, and have to wait for new ones.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Set reasonable limits: e.g., 10 messages per second for chat, 1 message per second for expensive operations.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Always <strong>warn the user</strong> before disconnecting them. Send a warning at 80% usage, disconnect at 100%.</span></div>
+    </div>
+
+    <!-- 💻 Production Pattern -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Token Bucket rate limiter</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>class TokenBucket {
+  constructor(maxTokens, refillRate) {
+    this.tokens = maxTokens;     // Start full
+    this.maxTokens = maxTokens;  // Maximum capacity
+    this.refillRate = refillRate; // Tokens added per second
+
+    // Refill tokens over time
+    setInterval(() => {
+      this.tokens = Math.min(this.maxTokens, this.tokens + 1);
+    }, 1000 / this.refillRate);
+  }
+
+  // Returns true if message is allowed, false if rate limited
+  consume() {
+    if (this.tokens > 0) {
+      this.tokens--;
+      return true;   // ✅ Allowed
+    }
+    return false;     // ❌ Rate limited!
+  }
+}
+
+// Give each client their own bucket (10 msgs max, refill 2/sec)
+wss.on('connection', (ws) => {
+  const bucket = new TokenBucket(10, 2);
+
+  ws.on('message', (data) => {
+    if (!bucket.consume()) {
+      ws.send(JSON.stringify({ error: '⚠️ Slow down! Rate limited.' }));
+      return; // Drop the message
+    }
+    // Process the message normally...
+  });
+});</code></pre>
+    </div>
+  </div>
+
+<div class="nav-bar">
     <a href="index.html" class="nav-btn home">🏠 Home</a>
     <a href="learn12.html" class="nav-btn">← Lesson 12</a>
     <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>

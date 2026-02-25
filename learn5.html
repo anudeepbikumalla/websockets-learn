@@ -998,7 +998,80 @@
 
   </div>
 
-  <div class="nav-bar">
+  
+
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
+    <!-- 📋 Quick Cheat Sheet -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#e2e8f0">📋 Quick Cheat Sheet — Error Handling & Auto-Reconnect</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+          <thead><tr><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:#1a2235;color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>event.code</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Why the connection closed (1000=normal)</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">In the close event</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>event.wasClean</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">true if server said goodbye properly</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">In the close event</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>event.reason</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Optional text explanation</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">In the close event</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>Math.min(1000 * 2**n, 30000)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Exponential backoff formula</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Wait 1s, 2s, 4s, 8s...</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>clearTimeout(timer)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#e2e8f0">Cancel a pending reconnect</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When user disconnects manually</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 💡 Key Takeaways -->
+    <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.18);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:#38bdf8;margin-bottom:12px">💡 Key Takeaways for Beginners</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Connections <strong>will</strong> drop — WiFi changes, server restarts, timeouts. Your app must handle this gracefully.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Close code <code>1000</code> means <strong>intentional close</strong> — don't auto-reconnect. Any other code = unexpected = try again.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span><strong>Exponential backoff</strong> = wait longer between each retry (1s → 2s → 4s → 8s). This avoids flooding a struggling server.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>Always set a <strong>max retry limit</strong> (e.g., 8 attempts). Don't retry forever — tell the user if it's truly down.</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:#38bdf8;flex-shrink:0">▸</span><span>The <code>error</code> event is <strong>always followed by close</strong>. Put your reconnect logic in <code>close</code>, not <code>error</code>.</span></div>
+    </div>
+
+    <!-- 💻 Production Pattern -->
+    <div style="background:#111827;border:1px solid #1f2d45;border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:#86efac">💻 Auto-reconnect with exponential backoff</div>
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:#0d1117"><code>let ws, retries = 0;
+const MAX_RETRIES = 8;  // Give up after 8 attempts
+let retryTimer = null;
+
+function connect() {
+  ws = new WebSocket('ws://localhost:8080');
+
+  ws.addEventListener('open', () => {
+    console.log('✅ Connected!');
+    retries = 0;  // Reset counter on success!
+  });
+
+  ws.addEventListener('close', (event) => {
+    // Code 1000 = user clicked disconnect. Don't retry.
+    if (event.code === 1000) return;
+
+    // Too many retries? Give up.
+    if (retries >= MAX_RETRIES) {
+      console.log('❌ Server unreachable after 8 tries');
+      return;
+    }
+
+    // Exponential backoff: 1s, 2s, 4s, 8s, 16s, 30s max
+    const delay = Math.min(1000 * 2 ** retries, 30000);
+    console.log(`🔄 Retry #${retries + 1} in ${delay/1000}s…`);
+    retries++;
+    retryTimer = setTimeout(connect, delay);
+  });
+
+  ws.addEventListener('error', () => {
+    // Error always triggers close — reconnect logic is there
+    console.error('⚠️ Connection error');
+  });
+}
+
+connect(); // Start the first connection</code></pre>
+    </div>
+  </div>
+
+<div class="nav-bar">
   <a href="index.html" class="nav-btn home">&#127968; Home</a>
   <a href="learn4.html" class="nav-btn">&#8592; Lesson 4</a>
   <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">&#128218; Notes</a>
