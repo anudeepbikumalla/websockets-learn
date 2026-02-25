@@ -15,20 +15,20 @@
       box-sizing: border-box
     }
 
-    :root {
-      --bg: #0a0d16;
-      --card: #111827;
-      --card2: #1a2235;
-      --card3: #0d1525;
-      --border: #1f2d45;
-      --text: #e2e8f0;
+        :root {
+      --bg: #ffffff;
+      --card: #f8fafc;
+      --card2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
       --muted: #64748b;
-      --dim: #94a3b8;
-      --green: #22c55e;
-      --blue: #38bdf8;
-      --yellow: #fbbf24;
-      --red: #f87171;
-      --white: #f8fafc
+      --dim: #475569;
+      --green: #16a34a;
+      --blue: #0284c7;
+      --purple: #7c3aed;
+      --yellow: #ca8a04;
+      --red: #dc2626;
+      --orange: #ea580c;
     }
 
     body {
@@ -168,25 +168,25 @@
     .code {
       font-family: 'Fira Code', monospace;
       font-size: .75rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 14px;
-      color: #94a3b8;
+      color: #334155;
       overflow-x: auto;
       line-height: 1.9
     }
 
     .kw {
-      color: #7dd3fc
+      color: #0284c7
     }
 
     .fn {
-      color: #86efac
+      color: #16a34a
     }
 
     .str {
-      color: #fca5a5
+      color: #dc2626
     }
 
     .cm {
@@ -657,56 +657,7 @@
 
   </div>
 
-  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Automatic HTTP Fallback (Socket.io)</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Client-side Socket.io connects magically
-import { io } from 'socket.io-client';
-
-// Tests standard HTTP Long Polling first, then upgrades to HTTP/1.1 Upgrade
-// If strict corporate proxies block WS, it remains on HTTP!
-const socket = io('https://api.myapp.com');
-
-socket.on('connect', () =&gt; {
-  console.log('Connected via:', socket.io.engine.transport.name); 
-  // Outputs "polling" or "websocket"
-});</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Socket.io Namespaces (APIs)</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Server-side
-const io = require('socket.io')(3000);
-
-// Admin Namespace (independent pipeline)
-const adminIo = io.of('/admin');
-adminIo.on('connection', (socket) =&gt; {
-  socket.emit('alert', 'Admin connected');
-});
-
-// Client connects specifically to admin
-const adminSocket = io('http://localhost:3000/admin');</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Built-in Room Broadcasting</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Socket.io has Map-based rooms built in! No manual coding required.
-io.on('connection', (socket) =&gt; {
-  
-  // Join a specific chat room
-  socket.join('room_101');
-  
-  // Broadcast uniquely to everyone in room_101
-  io.to('room_101').emit('new_message', 'Hello Room!');
-  
-  // Broadcast to Everyone EXCEPT the sender in the room
-  socket.to('room_101').emit('user_joined', 'Alice');
-});</code></pre>
-      </div>
-    </div>
-  </div>
-<!-- 🧠 TEST YOURSELF QUIZ -->
+  <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

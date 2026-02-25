@@ -15,19 +15,20 @@
       box-sizing: border-box
     }
 
-    :root {
-      --bg: #0a0d16;
-      --card: #111827;
-      --card2: #1a2235;
-      --card3: #0d1525;
-      --border: #1f2d45;
-      --text: #e2e8f0;
+        :root {
+      --bg: #ffffff;
+      --card: #f8fafc;
+      --card2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
       --muted: #64748b;
-      --dim: #94a3b8;
-      --green: #22c55e;
-      --blue: #38bdf8;
-      --yellow: #fbbf24;
-      --red: #f87171
+      --dim: #475569;
+      --green: #16a34a;
+      --blue: #0284c7;
+      --purple: #7c3aed;
+      --yellow: #ca8a04;
+      --red: #dc2626;
+      --orange: #ea580c;
     }
 
     body {
@@ -150,25 +151,25 @@
     .code {
       font-family: 'Fira Code', monospace;
       font-size: .75rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 14px;
-      color: #94a3b8;
+      color: #334155;
       overflow-x: auto;
       line-height: 1.9
     }
 
     .kw {
-      color: #7dd3fc
+      color: #0284c7
     }
 
     .fn {
-      color: #86efac
+      color: #16a34a
     }
 
     .str {
-      color: #fca5a5
+      color: #dc2626
     }
 
     .cm {
@@ -579,70 +580,7 @@
 
   </div>
 
-  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
-  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Artillery YAML Load Test</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code># load-test.yml
-# Simulates a marketing spike: Ramps up to 500 concurrent connections
-config:
-  target: "ws://my-production-server.com"
-  phases:
-    - duration: 60       # Run for 60 seconds
-      arrivalRate: 50    # 50 new clients per second
-      rampTo: 500        # Ramp up to 500 concurrent
-
-scenarios:
-  - engine: "ws"
-    flow:
-      - send: "{\"type\":\"CONNECT\"}"
-      - think: 2         # Pauses execution for 2s (simulates humans)
-      - send: "{\"type\":\"HEAVY_DB_QUERY\"}"
-      # Creates massive read/write contention on the backend!</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">K6 Load Test Script (JS)</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>import ws from 'k6/ws';
-import { check } from 'k6';
-
-export default function () {
-  const url = 'ws://api.myapp.com/chat';
-  const response = ws.connect(url, null, function (socket) {
-    socket.on('open', () =&gt; console.log('connected'));
-    
-    socket.on('message', (msg) =&gt; {
-      // Assert that server replies quickly
-      check(msg, { 'received expected payload': (m) =&gt; m.includes('ACK') });
-      socket.close();
-    });
-    
-    // Simulate user behavior
-    socket.send('Hello from k6 bot!');
-  });
-  
-  check(response, { 'status is 101 Switching Protocols': (r) =&gt; r && r.status === 101 });
-}</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Load Testing Cluster Memory</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Node.js process profiling during load tests
-const v8 = require('v8');
-
-setInterval(() =&gt; {
-  const stats = v8.getHeapStatistics();
-  const mbUsed = Math.round(stats.used_heap_size / 1024 / 1024);
-  
-  // If a single process exceeds 1.5GB, PM2 will likely kill it
-  if (mbUsed &gt; 1000) {
-    console.warn(`DANGER! Memory leak detected during load test: ${mbUsed}MB`);
-  }
-}, 5000);</code></pre>
-      </div>
-    </div>
-  </div>
-<!-- 🧠 TEST YOURSELF QUIZ -->
+  <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">

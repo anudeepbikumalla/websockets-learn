@@ -15,20 +15,20 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --bg: #0a0d16;
-      --card: #111827;
-      --card2: #1a2235;
-      --card3: #0d1525;
-      --border: #1f2d45;
-      --text: #e2e8f0;
+            :root {
+      --bg: #ffffff;
+      --card: #f8fafc;
+      --card2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
       --muted: #64748b;
-      --dim: #94a3b8;
-      --green: #22c55e;
-      --blue: #38bdf8;
-      --purple: #a78bfa;
-      --yellow: #fbbf24;
-      --red: #f87171;
+      --dim: #475569;
+      --green: #16a34a;
+      --blue: #0284c7;
+      --purple: #7c3aed;
+      --yellow: #ca8a04;
+      --red: #dc2626;
+      --orange: #ea580c;
     }
 
     body {
@@ -517,26 +517,26 @@
     .code-snip {
       font-family: 'Fira Code', monospace;
       font-size: .74rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 7px;
       padding: 10px 12px;
-      color: #94a3b8;
+      color: #334155;
       overflow-x: auto;
       margin-top: 10px;
       line-height: 1.8;
     }
 
     .kw {
-      color: #7dd3fc;
+      color: #0284c7;
     }
 
     .fn {
-      color: #86efac;
+      color: #16a34a;
     }
 
     .str {
-      color: #fca5a5;
+      color: #dc2626;
     }
 
     .cm {
@@ -1130,48 +1130,64 @@ ws.addEventListener('message', (event) => {
 
   </div>
 
-  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Customer Support Ticketing Payload</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const payload = {
-  type: "SUPPORT_MSG",
-  ticketId: "TKT-9912",
-  sender: { id: "u44", role: "customer" },
-  content: "I need a refund for my order.",
-  timestamp: new Date().toISOString()
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Customer Support Chat Routing (Intercom)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A massive e-commerce site has 500 support agents online. When a customer opens the chat bubble to ask about a refund, the server needs to know *exactly* which customer it is, what department they need, and if they've already been assigned an agent. You cannot just send the string 'Hello' over the socket.<br><br>**The End-to-End Flow:** The moment the chat widget opens, the browser constructs a strict JSON payload. It includes the user's secure token, the current URL they are viewing (to give the agent context), and the text content. When the Node.js server receives this JSON, it parses it, checks its Redis cache to see if `userId: 456` already has an active ticket, and if not, routes the entire JSON object to the 'Billing' pool of agents. This structured data is what makes complex routing possible.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const payload = {
+  type: "NEW_TICKET",
+  customer: { id: "cust_789", token: "jwt_abc123" },
+  context: { url: "/checkout", category: "billing" },
+  message: "I was double charged.",
+  timestamp: Date.now()
 };
+
 ws.send(JSON.stringify(payload));</code></pre>
+        </div>
       </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Multiplayer Game State Sync</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const playerState = {
-  type: "PLAYER_MOVE",
-  playerId: "player-1",
-  position: { x: 120.5, y: 45.0, z: 0.0 },
-  rotation: 90
-};
-// Send position 60 times a second
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Multiplayer Game State Broadcast (Valorant / League)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** In a fast-paced game, the server needs to know exactly where you are, where you are looking, and if you are shooting, 60 times every second. Sending separate messages for X, Y, Z, and Rotation would clog the network pipe and result in fragmented data arriving out of order (jumps).r><br>**The End-to-End Flow:** The game client bundles every single piece of the player's current physical state into one compact JSON object. A JavaScript `setInterval` loop runs at 60Hz. It grabs the player's 3D coordinates, attaches them to the JSON, and fires it over the WebSocket. The game server receives this snapshot, validates that the player hasn't moved impossibly fast (anti-cheat), and then immediately echoes that exact JSON down to the other 9 players in the lobby so their screens update smoothly.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Run this loop 60 times a second
 setInterval(() =&gt; {
-  ws.send(JSON.stringify(playerState));
-}, 1000 / 60);</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">IoT Temperature Sensor Report</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const sensorData = {
-  type: "TELEMETRY",
-  deviceId: "therm-01",
-  metrics: {
-    temp_c: 22.4,
-    humidity: 45
-  },
-  batteryLevel: 89
-};
-if (ws.readyState === WebSocket.OPEN) {
-  ws.send(JSON.stringify(sensorData));
-}</code></pre>
+  const gameState = {
+    type: "PLAYER_STATE",
+    id: "player_jett",
+    pos: { x: 145.2, y: 12.0, z: -55.4 },
+    aimAngle: 95.5,
+    isFiring: false
+  };
+  
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(gameState));
+  }
+}, 1000 / 60); // 16.6ms</code></pre>
+        </div>
       </div>
     </div>
   </div>

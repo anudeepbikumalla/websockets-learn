@@ -15,21 +15,20 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --bg: #0a0d16;
-      --card: #111827;
-      --card2: #1a2235;
-      --card3: #0d1525;
-      --border: #1f2d45;
-      --text: #e2e8f0;
+            :root {
+      --bg: #ffffff;
+      --card: #f8fafc;
+      --card2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
       --muted: #64748b;
-      --dim: #94a3b8;
-      --green: #22c55e;
-      --blue: #38bdf8;
-      --purple: #a78bfa;
-      --yellow: #fbbf24;
-      --red: #f87171;
-      --orange: #fb923c;
+      --dim: #475569;
+      --green: #16a34a;
+      --blue: #0284c7;
+      --purple: #7c3aed;
+      --yellow: #ca8a04;
+      --red: #dc2626;
+      --orange: #ea580c;
     }
 
     body {
@@ -191,25 +190,25 @@
     .code {
       font-family: 'Fira Code', monospace;
       font-size: .77rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 14px;
-      color: #94a3b8;
+      color: #334155;
       overflow-x: auto;
       line-height: 1.9;
     }
 
     .kw {
-      color: #7dd3fc;
+      color: #0284c7;
     }
 
     .fn {
-      color: #86efac;
+      color: #16a34a;
     }
 
     .str {
-      color: #fca5a5;
+      color: #dc2626;
     }
 
     .cm {
@@ -725,57 +724,83 @@
 
   </div>
 
-  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Discord-style Channels (Rooms)</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Server-side: Map&lt;roomId, Set&lt;WebSocket&gt;&gt;
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Massive Guild Chat Architecture (Discord Rooms)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A massive Discord server has 10,000 online members split across 50 different text channels (#general, #memes, #dev-talk). If you use a simple broadcast loop (`wss.clients.forEach`) for every message, the server would send a #general message to all 10,000 people, even those reading #memes. This would incinerate bandwidth and crash the client's browser attempting to parse irrelevant data.<br><br>**The End-to-End Flow:** To solve this, developers implement 'Rooms' (or Channels/Topics). In the Node.js RAM, they create a master JavaScript `Map`. The keys are the channel IDs (`#general`). The values are smaller `Set()`s of ONLY the WebSockets currently viewing that channel. When Alice posts in #general, the server looks up the '#general' key in the Map, pulls out the specific Set of 2,000 users, and loops *only* through them. Bob in #memes never receives the packet.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// The Master Room Registry: Map&lt;RoomIdentifier, Set&lt;WebSocket&gt;&gt;
 const channels = new Map();
 
 function joinChannel(ws, channelId) {
-  if (!channels.has(channelId)) channels.set(channelId, new Set());
+  // If this channel doesn't exist yet, initialize an empty Set
+  if (!channels.has(channelId)) {
+    channels.set(channelId, new Set());
+  }
+  
+  // Add this user's specific TCP socket to the designated channel's Set
   channels.get(channelId).add(ws);
 }
 
+// When Alice types in #general, this function is called
 function broadcastToChannel(channelId, message) {
+  // Instantly grab ONLY the users in this specific room
   const roomClients = channels.get(channelId);
-  if (!roomClients) return;
+  if (!roomClients) return; // Room is empty
   
+  // Loop through only the relevant users, saving 80% CPU overhead
   for (const client of roomClients) {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
+      client.send(JSON.stringify(message));
     }
   }
 }</code></pre>
+        </div>
       </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Game Matchmaking Lobbies</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>function startGame(lobbyId) {
-  const lobby = channels.get(lobbyId);
-  if (lobby && lobby.size === 4) { // Requires exactly 4 players
-    broadcastToChannel(lobbyId, JSON.stringify({ event: "START_GAME" }));
-    // Move players to active games Map
-    activeGames.set(lobbyId, lobby);
-    channels.delete(lobbyId); // Destroy the lobby
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Secure Game Matchmaking (Fortnite Lobbies)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When 100 players queue for a Battle Royale, they sit in a temporary matchmaking lobby. When the server finds a match, it needs to yank exactly those 100 people out of the global matchmaking pool and seamlessly dump them into a dedicated physics server instance without dropping their connections.<br><br>**The End-to-End Flow:** The server treats the matchmaking queue as an enormous WebSocket Room. Once the matchmaker selects 100 users, it removes their WebSocket objects from the 'Queue' Room, creates a brand new Room (e.g., `match-uuid-992`), pushing the 100 players inside. It then executes a targeted room broadcast of `START_GAME` containing the IP address of the dedicated physics server. The 100 clients disconnect from the lobby server and seamlessly open a new WebSocket to the physics server to begin the match.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>function initializeMatch(lobbyId) {
+  const currentLobby = channels.get(lobbyId); // Get the 100 waiting sockets
+  
+  if (currentLobby && currentLobby.size === 100) {
+    const payload = JSON.stringify({ 
+      event: "START_GAME", 
+      serverIp: "192.168.1.55:9001" 
+    });
+    
+    // Broadcast the launch codes only to these 100 players
+    broadcastToChannel(lobbyId, payload);
+    
+    // Memory Cleanup: The lobby is empty, destroy the Set to free up RAM!
+    channels.delete(lobbyId); 
   }
 }</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Zoom Breakout Rooms</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>// Host broadcasts a warning to ALL sub-rooms
-function warnAllBreakoutRooms() {
-  const msg = JSON.stringify({ text: "Rooms closing in 60 seconds!" });
-  // Iterate through all Mapped rooms
-  for (const [roomId, clientsSet] of channels.entries()) {
-    if (roomId.startsWith('breakout-')) {
-      for (const client of clientsSet) {
-         client.send(msg);
-      }
-    }
-  }
-}</code></pre>
+        </div>
       </div>
     </div>
   </div>

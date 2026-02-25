@@ -15,19 +15,20 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --bg: #0a0d16;
-      --card: #111827;
-      --card2: #1a2235;
-      --border: #1f2d45;
-      --text: #e2e8f0;
+            :root {
+      --bg: #ffffff;
+      --card: #f8fafc;
+      --card2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
       --muted: #64748b;
-      --dim: #94a3b8;
-      --green: #22c55e;
-      --blue: #38bdf8;
-      --purple: #a78bfa;
-      --yellow: #fbbf24;
-      --red: #f87171;
+      --dim: #475569;
+      --green: #16a34a;
+      --blue: #0284c7;
+      --purple: #7c3aed;
+      --yellow: #ca8a04;
+      --red: #dc2626;
+      --orange: #ea580c;
     }
 
     body {
@@ -174,24 +175,24 @@
       margin-top: 16px;
       font-family: 'Fira Code', monospace;
       font-size: .8rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 14px;
-      color: #94a3b8;
+      color: #334155;
       overflow-x: auto;
     }
 
     .code-block .kw {
-      color: #7dd3fc;
+      color: #0284c7;
     }
 
     .code-block .fn {
-      color: #86efac;
+      color: #16a34a;
     }
 
     .code-block .str {
-      color: #fca5a5;
+      color: #dc2626;
     }
 
     .code-block .cm {
@@ -281,7 +282,7 @@
     .log-box {
       font-family: 'Fira Code', monospace;
       font-size: .8rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
       height: 120px;
@@ -680,51 +681,129 @@
 
   </div>
 
-  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Multi-Widget Dashboard</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const sharedWs = new WebSocket('ws://api.myapp.com');
-// Widget 1 listens for notifications
-sharedWs.addEventListener('message', (e) =&gt; {
-  const data = JSON.parse(e.data);
-  if (data.type === 'ALERT') showToast(data.text);
-});
-// Widget 2 listens for chat messages
-sharedWs.addEventListener('message', (e) =&gt; {
-  const data = JSON.parse(e.data);
-  if (data.type === 'CHAT') appendToChat(data.text);
-});</code></pre>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Modular Multi-Widget Dashboard (Bloomberg Terminal)</span>
       </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Connection Status Light</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const ws = new WebSocket('ws://app.local');
-const statusLight = document.getElementById('status');
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A financial desktop app has 15 different widgets open simultaneously: a Stock Chart, a Breaking News Feed, a Chat window with a broker, and an Account Balance display. If every widget opened its own `new WebSocket()`, the browser would choke on 15 concurrent TCP connections, draining battery and exhausting server ports.<br><br>**The End-to-End Flow:** The application architects a 'Shared Singleton Connection'. The app opens exactly ONE WebSocket to the backend. All data—stocks, news, and chat—flows down this single pipe in a massive mixed stream. Because the engineers use `addEventListener`, they can write independent, decoupled Javascript files for each widget. The News Widget attaches a listener that ignores chat messages. The Chat Widget attaches a listener that ignores stock prices. If they had used the older `ws.onmessage = handler` syntax, the last widget to load would overwrite the handlers of all the previous widgets, breaking the app.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Core App Data Layer: Create ONE shared connection for the entire page
+const sharedWs = new WebSocket('wss://api.trading-terminal.com/firehose');
 
-ws.addEventListener('open', () =&gt; {
-  statusLight.className = "indicator green";
-  statusLight.innerText = "Online";
+// --- In news_widget.js ---
+// This file only cares about breaking news
+sharedWs.addEventListener('message', (event) =&gt; {
+  const data = JSON.parse(event.data);
+  // Important: We must FILTER the firehose for our specific domain
+  if (data.domain === 'NEWS_ALERT') {
+    document.getElementById('news-ticker').prepend(`&lt;li&gt;${data.headline}&lt;/li&gt;`);
+  }
 });
-ws.addEventListener('close', () =&gt; {
-  statusLight.className = "indicator red";
-  statusLight.innerText = "Offline";
-});</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Analytics Event Tracker</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const ws = new WebSocket('ws://analytics.server');
-// Track every time the user clicks on the page
-document.addEventListener('click', (e) =&gt; {
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ 
-      event: 'user_click', 
-      x: e.clientX, 
-      y: e.clientY 
-    }));
+
+// --- In chat_widget.js ---
+// This file is completely unaware of the news widget
+sharedWs.addEventListener('message', (event) =&gt; {
+  const data = JSON.parse(event.data);
+  // We only intercept messages meant for the chat domain
+  if (data.domain === 'DIRECT_MESSAGE') {
+    appendMessageBubble(data.sender, data.text);
   }
 });</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Global Connection Status Indicator (Slack)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Users in a chat app need to know if they are actually connected to the internet. If their Wi-Fi drops, they shouldn't be able to type out a 5-paragraph message only to hit 'Send' and watch it disappear into the void. They need a visual indicator (a green/red dot) at the top of the app.<br><br>**The End-to-End Flow:** Native WebSockets provide robust lifecycle events natively in the browser. The frontend engineers attach listeners directly to the formal `open` and `close` events emitted by the network layer. When the TCP handshake succeeds, `addEventListener('open')` fires, and a function paints the top-bar dot green and enables the chat input field. If the user walks into an elevator and loses signal, the TCP socket is severed, `addEventListener('close')` fires instantly, painting the dot red and disabling the text input so the user knows they are offline.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const ws = new WebSocket('wss://chat.enterprise.com');
+
+// Grab our visual indicator and text input from the DOM
+const statusLight = document.getElementById('connection-status');
+const chatInput = document.getElementById('message-box');
+
+// The formal TCP handshake succeeded!
+ws.addEventListener('open', () =&gt; {
+  statusLight.className = "indicator green";
+  statusLight.innerText = "Connected";
+  
+  // Safe to let the user type now
+  chatInput.disabled = false;
+  chatInput.placeholder = "Type a message...";
+});
+
+// The formal TCP connection was severed (Wi-Fi dropped, server crashed)
+ws.addEventListener('close', () =&gt; {
+  statusLight.className = "indicator red";
+  statusLight.innerText = "Reconnecting...";
+  
+  // Protect the user from losing data
+  chatInput.disabled = true;
+  chatInput.placeholder = "Waiting for network...";
+});</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 3: Silent Analytics Tracker (Google Analytics 4)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A marketing team wants to track exactly where users click on the screen, how far down the page they scroll, and how long they hover over a checkout button. Sending a standard HTTP REST request for every single mouse movement would trigger massive CORS preflight overhead and DDOS the analytics server.<br><br>**The End-to-End Flow:** The application injects a silent, invisible WebSocket connection in the background. Instead of attaching a listener to the WebSocket to *receive* data, the engineers attach listeners to the *Browser DOM itself* (`document.addEventListener`). Every time the user moves their mouse or clicks, the DOM listener fires, packages the X/Y coordinates into a tiny JSON string, and pushes it up the persistent WebSocket pipe. This results in zero HTTP header overhead, allowing the tracking of thousands of micro-interactions per second without impacting page load speed.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Background Tracker: No UI attached to this socket
+const trackingWs = new WebSocket('wss://analytics.marketing.com/ingest');
+
+// Listen to the user's physical mouse clicks on the webpage
+document.addEventListener('click', (mouseEvent) =&gt; {
+  
+  // CRITICAL: We must ensure the socket is actually open before sending!
+  // If we try to send data while it's still "CONNECTING" (ReadyState 0), it throws a fatal JS error.
+  if (trackingWs.readyState === WebSocket.OPEN) {
+    
+    // Package the interaction metadata
+    const payload = {
+      eventType: 'USER_CLICK',
+      targetTag: mouseEvent.target.tagName,
+      coordinates: { x: mouseEvent.clientX, y: mouseEvent.clientY },
+      timestamp: Date.now()
+    };
+    
+    // Fire and forget via the open TCP tunnel
+    trackingWs.send(JSON.stringify(payload));
+  }
+});</code></pre>
+        </div>
       </div>
     </div>
   </div>

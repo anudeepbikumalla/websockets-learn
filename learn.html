@@ -15,20 +15,20 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --bg: #0a0d16;
-      --card: #111827;
-      --card2: #1a2235;
-      --border: #1f2d45;
-      --text: #e2e8f0;
+        :root {
+      --bg: #ffffff;
+      --card: #f8fafc;
+      --card2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
       --muted: #64748b;
-      --dim: #94a3b8;
-      --green: #22c55e;
-      --blue: #38bdf8;
-      --purple: #a78bfa;
-      --yellow: #fbbf24;
-      --red: #f87171;
-      --orange: #fb923c;
+      --dim: #475569;
+      --green: #16a34a;
+      --blue: #0284c7;
+      --purple: #7c3aed;
+      --yellow: #ca8a04;
+      --red: #dc2626;
+      --orange: #ea580c;
     }
 
     body {
@@ -253,24 +253,24 @@
     .code-snippet {
       font-family: 'Fira Code', monospace;
       font-size: .8rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 12px 14px;
-      color: #94a3b8;
+      color: #334155;
       overflow-x: auto;
     }
 
     .code-snippet .kw {
-      color: #7dd3fc;
+      color: #0284c7;
     }
 
     .code-snippet .fn {
-      color: #86efac;
+      color: #16a34a;
     }
 
     .code-snippet .str {
-      color: #fca5a5;
+      color: #dc2626;
     }
 
     .code-snippet .cm {
@@ -279,7 +279,7 @@
     }
 
     .code-snippet .ev {
-      color: #fde68a;
+      color: #ca8a04;
     }
 
     /* ── LIVE DEMO ── */
@@ -516,7 +516,7 @@
 
     /* Event log */
     .log-area {
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
@@ -592,11 +592,11 @@
 
     .log-entry.sys .log-badge {
       background: rgba(100, 116, 139, .2);
-      color: #94a3b8;
+      color: #334155;
     }
 
     .log-entry.sys .log-text {
-      color: #94a3b8;
+      color: #334155;
     }
 
     .log-entry.sent {
@@ -1545,38 +1545,114 @@ ws.addEventListener('error', () => {
 
   </div>
 
-  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Live Crypto Ticker</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const ws = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum');
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: Live Crypto Ticker (Binance / Coinbase)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Users trading cryptocurrency need split-second price updates. If they rely on refreshing the page (or standard HTTP polling every 5 seconds), they might miss a sudden 10% market crash and lose money. The data is highly volatile and entirely one-way (Server → Client).<br><br>**The End-to-End Flow:** When the user opens the trading dashboard, their browser immediately opens a single, persistent WebSocket connection to the exchange's public API. The exchange's backend (which is hooked into the actual trading engine) pushes a tiny JSON payload down the pipe the exact millisecond a trade executes. The browser receives this event, parses the JSON, and instantly updates the DOM element showing the Bitcoin price — flashing it green or red based on the change.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client-Side: Connecting to a public Crypto WebSocket API
+const ws = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum');
+
+// The browser listens patiently for the server to 'push' data
 ws.addEventListener('message', (event) =&gt; {
+  // 1. A split-second trade happened! The server pushed a JSON string.
   const prices = JSON.parse(event.data);
+  
+  // 2. We extract the Bitcoin price from the payload
   if (prices.bitcoin) {
-    document.getElementById('btc-price').textContent = `$${prices.bitcoin}`;
+    const priceDisplay = document.getElementById('btc-price');
+    priceDisplay.textContent = `$${prices.bitcoin}`;
+    
+    // UI Polish: Flash the background green to indicate a live update
+    priceDisplay.classList.add('flash-update');
+    setTimeout(() =&gt; priceDisplay.classList.remove('flash-update'), 300);
   }
 });</code></pre>
+        </div>
       </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Real-Time Server Health Monitor</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const ws = new WebSocket('wss://api.myserver.com/health');
-ws.addEventListener('message', (event) =&gt; {
-  const stats = JSON.parse(event.data);
-  updateCpuGraph(stats.cpuUsage);
-  updateMemoryGauge(stats.ramUsage);
-});
-ws.addEventListener('error', () =&gt; showAlert("Server Unreachable!"));</code></pre>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Real-Time Server Health Monitor (Datadog)</span>
       </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Simple Chat Receiver</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>const ws = new WebSocket('wss://chat.example.com');
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A DevOps engineer is monitoring a cluster of 50 database servers during a massive Black Friday traffic spike. They need a dashboard that shows CPU and RAM usage updating live every second. If a server's CPU hits 100%, the dashboard must instantly turn red and trigger an alarm so the engineer can restart it.<br><br>**The End-to-End Flow:** A lightweight Node.js agent runs on each database server, reading the system's `top` command every second. This agent acts as a WebSocket client, streaming the CPU metric string directly up to a centralized Dashboard Server. The DevOps engineer's browser is connected to that Dashboard Server. When the metric arrives, the browser intercepts the integer, updates a charting library (like Chart.js), and evaluates if it crosses the 90% threshold for an alert.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client-Side: Connecting to our centralized monitoring server
+const ws = new WebSocket('wss://api.myserver.com/health-stream');
+
 ws.addEventListener('message', (event) =&gt; {
-  const chatBox = document.getElementById('chat');
-  chatBox.innerHTML += `&lt;div&gt;${event.data}&lt;/div&gt;`;
-  chatBox.scrollTop = chatBox.scrollHeight;
+  // Parse the incoming server metrics
+  const stats = JSON.parse(event.data); // e.g. { cpu: 95, ram: "12GB" }
+  
+  // Update visual graphs on the dashboard
+  updateCpuGraph(stats.cpu);
+  updateMemoryGauge(stats.ram);
+  
+  // Business Logic: Trigger critical alert if CPU is melting
+  if (stats.cpu &gt;= 90) {
+    document.getElementById('dashboard-panel').classList.add('alert-red');
+    playSirenAudio(); // Wake up the DevOps engineer!
+  }
 });</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 3: One-Way Notification Feed (Facebook / LinkedIn)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When someone likes your photo, you shouldn't have to manually refresh the page to see the red '1' badge appear over the bell icon. However, building a full two-way chat system for simple notifications is overkill and wastes server resources.<br><br>**The End-to-End Flow:** The web app establishes a 'listening-only' WebSocket connection when the user logs in. The backend ties this connection to their User ID in a Redis cache. When a friend clicks 'Like' on a photo, a backend worker completely separate from the WebSocket server drops a message into a queue. The WebSocket server reads that queue, finds the specific TCP socket for your User ID, and pushes a simple `NOTIFICATION_NEW` string. The browser intercepts it and increments the little red badge in the top right corner by 1.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// View-Layer: The user logs in and the app connects silently in the background
+const ws = new WebSocket('wss://api.socialnetwork.com/notifications');
+
+// We don't use ws.send() at all in this scenario. We strictly listen.
+ws.addEventListener('message', (event) =&gt; {
+  const notification = JSON.parse(event.data);
+  
+  // The server pushed an event indicating someone interacted with our content
+  if (notification.type === 'NEW_LIKE') {
+    const badgeElement = document.getElementById('notification-badge');
+    
+    // Parse the current number (e.g., "3") and add 1
+    let currentCount = parseInt(badgeElement.innerText || 0);
+    badgeElement.innerText = currentCount + 1;
+    
+    // Show a small toast popup in the bottom left
+    showToast(`${notification.friendName} liked your photo!`);
+  }
+});</code></pre>
+        </div>
       </div>
     </div>
   </div>

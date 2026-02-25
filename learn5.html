@@ -15,21 +15,20 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --bg: #0a0d16;
-      --card: #111827;
-      --card2: #1a2235;
-      --card3: #0d1525;
-      --border: #1f2d45;
-      --text: #e2e8f0;
+            :root {
+      --bg: #ffffff;
+      --card: #f8fafc;
+      --card2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
       --muted: #64748b;
-      --dim: #94a3b8;
-      --green: #22c55e;
-      --blue: #38bdf8;
-      --purple: #a78bfa;
-      --yellow: #fbbf24;
-      --red: #f87171;
-      --orange: #fb923c;
+      --dim: #475569;
+      --green: #16a34a;
+      --blue: #0284c7;
+      --purple: #7c3aed;
+      --yellow: #ca8a04;
+      --red: #dc2626;
+      --orange: #ea580c;
     }
 
     body {
@@ -308,25 +307,25 @@
     .code {
       font-family: 'Fira Code', monospace;
       font-size: .77rem;
-      background: #0d1117;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 14px;
-      color: #94a3b8;
+      color: #334155;
       overflow-x: auto;
       line-height: 1.9;
     }
 
     .kw {
-      color: #7dd3fc;
+      color: #0284c7;
     }
 
     .fn {
-      color: #86efac;
+      color: #16a34a;
     }
 
     .str {
-      color: #fca5a5;
+      color: #dc2626;
     }
 
     .cm {
@@ -335,7 +334,7 @@
     }
 
     .num {
-      color: #fca5a5;
+      color: #dc2626;
     }
 
     /* BACKOFF VISUALIZER */
@@ -1184,51 +1183,80 @@ log('Total wait: ' +
 
   </div>
 
-  <!-- 🏗️ SCENARIO IMPLEMENTATIONS (BULK) -->
+  
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="font-weight:700;font-size:1.1rem;color:var(--text);margin-bottom:16px">🏗️ Scenario Implementations</div>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">GPS Fleet Tracker (Backoff with Jitter)</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>let retryCount = 0;
-function connect() {
-  const ws = new WebSocket('wss://fleet.tracker');
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 1: GPS Fleet Tracker & The Thundering Herd (Uber)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Imagine 10,000 Uber drivers are parked near a stadium after a concert. The cell tower gets overwhelmed and abruptly drops all 10,000 TCP connections. If the Uber app is hardcoded to `reconnect() -> delay 1000ms`, then exactly 1 second later, 10,000 phones will blast the backend servers simultaneously, creating a self-inflicted DDOS attack that will crush the infrastructure.<br><br>**The End-to-End Flow:** To solve this 'Thundering Herd' problem, architects use **Exponential Backoff with Jitter**. When the driver's phone loses connection, it waits 1 second. If that fails, it waits 2 seconds, then 4s, 8s, up to 30s. Crucially, the app adds 'Jitter' (a random delay between 0 and 1000ms) to the backoff. Driver A waits 2.4s, Driver B waits 2.1s, Driver C waits 2.9s. This mathematically spreads out the 10,000 reconnect attempts into a smooth trickle that the load-balancers can handle easily.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>let retryCount = 0;
+
+function connectToDispatch() {
+  const ws = new WebSocket('wss://driver-api.uber.com/tracker');
+  
+  // Successful connection? Reset the counter!
   ws.onopen = () =&gt; { retryCount = 0; };
+  
   ws.onclose = () =&gt; {
-    // Keep doubling delay: 1s, 2s, 4s, 8s... capped at 30s
-    let base = Math.min(1000 * Math.pow(2, retryCount), 30000);
-    let jitter = Math.random() * 500; // Prevent Thundering Herd
+    // 1. Exponential Backoff: Double the delay each time (capped at 30s)
+    let baseDelay = Math.min(1000 * Math.pow(2, retryCount), 30000);
+    
+    // 2. Jitter: Add up to 500ms of pure randomness
+    let jitter = Math.random() * 500; 
+    
+    console.log(`Connection dropped. Retrying in ${(baseDelay+jitter)/1000}s`);
     
     setTimeout(() =&gt; {
       retryCount++;
-      connect();
-    }, base + jitter);
+      connectToDispatch(); // Recursive attempt
+    }, baseDelay + jitter);
   };
 }</code></pre>
+        </div>
       </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Video Stream Quality Degrader</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>ws.onclose = (event) =&gt; {
-  // 1011 = Internal Server Error (Server is overwhelmed)
+    </div>
+  </div>
+
+  <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
+  <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+        <span>🏗️</span>
+        <span>Scenario 2: Video Stream Quality Downgrader (Netflix)</span>
+      </div>
+      <div style="padding:20px">
+        <div style="margin-bottom:22px">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** During peak evening hours, a CDN edge server might hit 99% CPU utilization. It cannot parse WebSocket ping/pong frames fast enough, causing thousands of connections to lag. The server must proactively shed load without breaking the user experience entirely by kicking them to the login screen.<br><br>**The End-to-End Flow:** The server explicitly severs connections to the heaviest users (those streaming 4K), but it doesn't just cut the wire; it sends a formal WebSocket Close Frame with a specific code: **1011 (Internal Server Error)**. The browser's Javascript catches this exact code in the `onclose` event. Knowing the server is drowning, the client logic purposefully lowers its video quality request to 480p, waits 5 seconds, and then attempts reconnecting to a *different* backup server URL.</div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
+          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>ws.onclose = (event) =&gt; {
+  // Code 1011: The server explicitly told us it is dying
   if (event.code === 1011) {
-    console.warn("Server under load. Dropping video quality to 480p.");
-    videoPlayer.setQuality('480p');
-    // Try reconnecting to a backup edge server
-    connectToBackupCDN();
+    console.warn("Primary server overloaded! Degrading gracefully.");
+    
+    videoPlayer.setResolution('480p'); // Save bandwidth
+    
+    setTimeout(() =&gt; {
+      // Connect to a known-good backup cluster
+      connectToStream('wss://backup-edge-server.cdn.com');
+    }, 5000);
+  } else {
+    // Standard Wi-Fi drop? Just do normal exponential backoff
+    standardReconnect();
   }
 };</code></pre>
-      </div>
-      <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:600;font-size:.9rem;color:var(--text)">Authentication Re-Prompting</div>
-        <pre style="margin:0;padding:16px;background:rgba(0,0,0,0.15);font-family:'Fira Code',monospace;font-size:.78rem;color:#cbd5e1;overflow-x:auto;line-height:1.7;border:none"><code>ws.onclose = (event) =&gt; {
-  // 4001: Custom code for "Token Expired"
-  if (event.code === 4001) {
-    showLoginModal("Your session expired. Please log in again.");
-    return; // Don't auto-reconnect, wait for user input
-  }
-  // Otherwise, attempt normal reconnect
-  autoReconnect();
-};</code></pre>
+        </div>
       </div>
     </div>
   </div>
