@@ -367,7 +367,162 @@ wss.on('connection', (ws, req) => {
 | `learn6.html` | Lesson 6 — Broadcasting |
 | `learn7.html` | Lesson 7 — Rooms & Channels |
 | `learn8.html` | Lesson 8 — Authentication |
+| `learn9.html` | Lesson 9 — Heartbeat & Ping-Pong |
+| `learn10.html` | Lesson 10 — Binary Data |
+| `learn11.html` | Lesson 11 — Scaling WebSockets |
+| `learn12.html` | Lesson 12 — WS vs SSE vs Long Polling |
 | `client.html` | Advanced demo — all 4 patterns |
 | `server.js` | Node.js WebSocket server |
 
 **Local path:** `C:\Users\Anudeep\Desktop\project-backend\`
+
+---
+
+## Lesson 9 — Heartbeat & Ping-Pong
+
+**Why:** Load balancers (AWS ALB=60s), NAT routers (5min), mobile networks all kill idle connections silently.
+
+### Production pattern
+```js
+let pingTimer, pongTimer;
+
+function startHeartbeat() {
+  pingTimer = setInterval(() => {
+    ws.send('ping');
+    pongTimer = setTimeout(() => ws.close(), 10000); // 10s timeout
+  }, 30000); // ping every 30s
+}
+
+ws.addEventListener('message', (e) => {
+  if (e.data === 'pong') clearTimeout(pongTimer);
+});
+
+ws.addEventListener('close', () => {
+  clearInterval(pingTimer); clearTimeout(pongTimer);
+});
+```
+
+### Timing guide
+| Environment | Ping Interval | Pong Timeout |
+|---|---|---|
+| Default | 30s | 10s |
+| Mobile | 15s | 5s |
+| Behind AWS ALB | 55s | 10s |
+
+### Rules
+1. Always clear timers on close (prevent ghost timers)
+2. Combine with Lesson 5 reconnect: failed pong → `ws.close()` → auto-reconnect
+3. Don't log ping/pong in production
+
+---
+
+## Lesson 10 — Binary Data
+
+**What:** WebSocket can send raw bytes (ArrayBuffer / Blob), not just JSON strings.
+
+```js
+// Set BEFORE connecting
+ws.binaryType = 'arraybuffer'; // or 'blob'
+
+// Send a file
+const buffer = await file.arrayBuffer();
+ws.send(JSON.stringify({ type:'file-meta', name:file.name, size:file.size })); // metadata first!
+ws.send(buffer); // then raw bytes
+
+// Receive binary
+ws.addEventListener('message', (e) => {
+  if (e.data instanceof ArrayBuffer) {
+    const view = new Uint8Array(e.data);
+  }
+});
+```
+
+### ArrayBuffer vs Blob
+| | ArrayBuffer | Blob |
+|---|---|---|
+| Use when | Processing bytes directly | Showing images / saving files |
+| Access | `new Uint8Array(buf)` | `URL.createObjectURL(blob)` |
+
+### Rules
+1. Send metadata JSON before the binary chunk
+2. Chunk large files (64KB chunks) — don't send 100MB in one call
+3. Validate file type/size server-side
+
+---
+
+## Lesson 11 — Scaling WebSockets
+
+**Problem:** 1 server = ~10–50k connections. But Alice is on Server A and Bob is on Server B — they can't see each other's messages.
+
+**Solution: Redis Pub/Sub**
+```js
+const pub = new Redis();
+const sub = new Redis();
+sub.subscribe('messages');
+
+// When Redis delivers → forward to all local WS clients
+sub.on('message', (ch, data) => {
+  wss.clients.forEach(c => { if (c.readyState === WebSocket.OPEN) c.send(data); });
+});
+
+// When WS client sends → publish to Redis (all servers receive it)
+ws.on('message', raw => pub.publish('messages', raw.toString()));
+```
+
+### Architecture
+```
+Load Balancer
+  ↙         ↘
+Server A   Server B
+  ↘         ↙
+   Redis Pub/Sub
+```
+
+### Rules
+1. Use Redis Pub/Sub (not sticky sessions) for true horizontal scaling
+2. Never store room state in JS memory — use Redis
+3. Socket.io handles this automatically if you don't want to DIY
+
+---
+
+## Lesson 12 — WebSocket vs SSE vs Long Polling
+
+| Feature | WebSocket | SSE | Long Polling |
+|---|---|---|---|
+| Bidirectional | ✅ Yes | ❌ Server→Client only | ⚠️ Sort of |
+| Auto-reconnect | ❌ Manual | ✅ Built-in | Manual |
+| Binary support | ✅ Yes | ❌ Text only | Via base64 |
+| Proxy friendly | Sometimes blocked | ✅ Always | ✅ Always |
+| Complexity | Medium | Low | High |
+
+### Decision tree
+- **Need two-way?** → WebSocket
+- **Server→client only (AI streaming, live feed)?** → SSE (EventSource)
+- **Enterprise proxy/firewall?** → SSE
+- **Binary data / games?** → WebSocket
+- **Old browsers?** → Long Polling (last resort)
+
+### SSE code
+```js
+// Client
+const source = new EventSource('/events');
+source.addEventListener('message', e => console.log(e.data));
+// Auto-reconnects on error!
+
+// Server (Node.js)
+res.setHeader('Content-Type', 'text/event-stream');
+res.setHeader('Cache-Control', 'no-cache');
+setInterval(() => res.write(`data: ${JSON.stringify({t:Date.now()})}\n\n`), 1000);
+```
+
+### Real-world examples
+| App | Technology | Why |
+|---|---|---|
+| Slack | WebSocket | Two-way messages |
+| ChatGPT | SSE | Token streaming, server-only |
+| Robinhood | WebSocket | Low-latency stock ticks |
+| YouTube viewer count | Long Polling | Legacy |
+
+---
+
+*Lessons complete: 1–12. All notes saved.*
