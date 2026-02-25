@@ -24,8 +24,17 @@ function getWsUrl(defaultPort = 8080) {
     return url;
   }
 
-  // 2. 기본값: 로컬호스트 (개발 용도)
-  return `ws://localhost:${defaultPort}`;
+  // 2. 기본값 결정
+  // 로컬 호스트일 경우 개발 서버 사용, 그렇지 않으면 실제 배포된 Render 서버 사용
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  if (isLocal) {
+    return `ws://localhost:${defaultPort}`;
+  } else {
+    // 실제 배포된 Render 백엔드 주소
+    const prodBase = 'wss://websockets-learn-backend.onrender.com';
+    return defaultPort === 8081 ? `${prodBase}/p2` : prodBase;
+  }
 }
 
 // 전역 변수로 노출 (모든 learn*.html에서 사용 가능하게)
