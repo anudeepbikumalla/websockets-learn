@@ -44,46 +44,8 @@
       padding: 64px 24px 48px;
       background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(56, 189, 248, .1), transparent);
       border-bottom: 1px solid var(--border);
-      position: relative;
     }
 
-    .status-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--border);
-      overflow: hidden;
-    }
-
-    .status-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--blue);
-      transition: width 0.3s, background 0.3s;
-    }
-
-    .status-label {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--muted);
-    }
 
     .hero-badge {
       display: inline-flex;
@@ -1000,7 +962,7 @@
 
       <div class="input-group">
         <label>WebSocket Server URL</label>
-        <input type="text" id="ws-input" placeholder="e.g. wss://my-app.render.com" />
+        <input type="text" id="ws-input" placeholder="e.g. ws://localhost:8080" />
       </div>
 
       <div class="modal-btns">

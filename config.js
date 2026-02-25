@@ -1,19 +1,18 @@
 /**
- * 중앙화된 WebSocket 설정 (config.js)
- * 로컬 개발과 실제 배포 환경 간의 연결 전환을 담당합니다.
+ * Centralized WebSocket Configuration (config.js)
+ * Handles WebSocket URL resolution for local development.
  */
 
 function getWsUrl(defaultPort = 8080) {
-  // 1. localStorage에 저장된 사용자 정의 URL이 있는지 확인
+  // 1. Check for user-defined URL in localStorage
   const customUrl = localStorage.getItem('ws_server_url');
   if (customUrl) {
-    // 사용자가 'wss://my-server.render.com' 처럼 입력했을 경우
     let url = customUrl.trim();
     if (!url.startsWith('ws://') && !url.startsWith('wss://')) {
       url = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + url;
     }
 
-    // 만약 Pattern 2(8081)를 요청하는 경우, 단일 포트 서버의 /p2 경로로 유도
+    // If Pattern 2 (8081) is requested, route to /p2 path
     if (defaultPort === 8081) {
       const parsed = new URL(url);
       if (parsed.pathname === '/' || parsed.pathname === '') {
@@ -24,20 +23,9 @@ function getWsUrl(defaultPort = 8080) {
     return url;
   }
 
-  // 2. 기본값 결정
-  // 로컬 호스트이거나 파일 직접 실행(file://)일 경우 개발 서버 사용, 그렇지 않으면 실제 배포된 Render 서버 사용
-  const isLocal = window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.hostname === '';
-
-  if (isLocal) {
-    return `ws://localhost:${defaultPort}`;
-  } else {
-    // 실제 배포된 Render 백엔드 주소
-    const prodBase = 'wss://websockets-learn-backend.onrender.com';
-    return defaultPort === 8081 ? `${prodBase}/p2` : prodBase;
-  }
+  // 2. Default: always use localhost for development
+  return `ws://localhost:${defaultPort}`;
 }
 
-// 전역 변수로 노출 (모든 learn*.html에서 사용 가능하게)
+// Expose globally for all learn*.html files
 window.getWsUrl = getWsUrl;

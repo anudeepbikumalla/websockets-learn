@@ -1,17 +1,17 @@
 # 📡 WebSocket Learning Hub
-### 🚀 [Launch Live Demo](https://anudeepbikumalla.github.io/websockets-learn/)
 
-An interactive, premium lesson-by-lesson WebSocket course built for modern developers. 
-Master real-time communication from basics to advanced production patterns — no install (for UI), no build step, just open and learn.
+An interactive, lesson-by-lesson WebSocket course built in plain HTML/JS.
+Open `index.html` to start — no build step needed, just open in a browser.
+
+> **Server required for live demos:** `node server.js`
 
 ---
 
 ## ✨ Features
 - **28 Interactive Lessons**: From lifecycle basics to Redis scaling and WebRTC.
-- **Live Backend Integration**: Automatically connects to a production-ready Render.com backend.
-- **Backend Status Monitoring**: Visual health indicator shows if the server is "Online" or "Sleeping".
-- **Zero Configuration**: Ready to use immediately on GitHub Pages or locally.
 - **Premium UI**: Modern, dark-themed aesthetics with rich interactive simulators.
+- **Zero Build Step**: Plain HTML/CSS/JS — works in any browser.
+- **Customizable Backend**: Connect to any WebSocket server via the Settings modal.
 
 ---
 
@@ -59,44 +59,34 @@ Master real-time communication from basics to advanced production patterns — n
 
 ---
 
-## 🌎 Live Deployment
-
-### 1. Hosted UI (GitHub Pages)
-The UI is automatically deployed via GitHub Actions.
-URL: `https://anudeepbikumalla.github.io/websockets-learn/`
-
-### 2. Hosted Backend (Render.com)
-The Node.js backend runs on Render's free tier.
-URL: `https://websockets-learn-backend.onrender.com/health`
-
-### 🔌 Intelligent Connection
-- **Automatic**: The Hub detects its environment. On GitHub Pages, it defaults to the **Render Backend**.
-- **Cold Starts**: If the server has been idle, it might take **30-50 seconds** to wake up. Watch the **Backend Status Bar** at the top of the hub!
-- **Settings**: Click the ⚙️ icon in the bottom right to manually change the Backend URL if needed.
-
----
-
-## 🚀 Local Development
+## 🚀 Quick Start
 
 ```bash
 # 1. Install dependencies
 npm install ws
 
-# 2. Start the local server
+# 2. Start the WebSocket server
 node server.js
 
 # 3. Open index.html in your browser
 ```
 
+---
+
 ## 📁 Project Structure
-- `index.html`: The Hub & Curriculum.
-- `learn*.html`: 28 Interactive Lessons.
-- `client.html`: Advanced 4-Pattern Demo.
-- `server.js`: Universal WebSocket Server.
-- `config.js`: Dynamic URL Resolution Logic.
-- `WEBSOCKET_STUDY_NOTES.md`: Comprehensive reference guide.
+
+```
+project-backend/
+├── index.html                   ← Hub page (start here)
+├── learn.html → learn28.html    ← All 28 interactive lessons
+├── client.html                  ← Advanced 4-pattern demo
+├── server.js                    ← Node.js WebSocket server
+├── config.js                    ← WebSocket URL configuration
+└── WEBSOCKET_STUDY_NOTES.md     ← Comprehensive reference notes
+```
 
 ---
 
 ## 🔗 Repository
+
 [github.com/anudeepbikumalla/websockets-learn](https://github.com/anudeepbikumalla/websockets-learn)
