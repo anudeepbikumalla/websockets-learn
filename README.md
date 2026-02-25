@@ -106,12 +106,39 @@ project-backend/
 
 ## 🗺️ What to Learn Next
 
-Congratulations on finishing all 28 lessons! Here is your roadmap forward:
+Congratulations on finishing all 28 lessons! Here is your detailed roadmap forward:
 
-1. **Master the Backend:** Dive deeper into **Express.js** or **NestJS** to build robust APIs around your real-time services.
-2. **Data Persistence:** Learn **PostgreSQL** (relational) and **Redis** (caching/PubSub) to handle large-scale message storage.
-3. **Frontend Mastery:** Learn **React** or **Next.js** to build professional UIs for your WebSocket apps.
-4. **System Design:** Study the **CAP Theorem** and **Message Queues** (Kafka/RabbitMQ) for building massive-scale distributed systems.
+### 1. 🔧 Master the Backend
+You've used `ws` directly — now learn production-grade frameworks:
+- **Express.js** — REST APIs + middleware + routing alongside WebSockets
+- **NestJS** — TypeScript-first framework with built-in WebSocket gateways
+- **Fastify** — Ultra-fast HTTP framework with WS plugin support
+- **📌 Project Idea:** Build a REST + WebSocket hybrid API (e.g., a task manager where REST handles CRUD and WS handles live updates)
+
+### 2. 💾 Data Persistence
+Store and retrieve messages beyond in-memory arrays:
+- **PostgreSQL** — Relational database for structured data (users, rooms, message history)
+- **MongoDB** — Document database for flexible schemas (chat logs, event streams)
+- **Redis** — In-memory data store for caching, Pub/Sub, and session management
+- **Prisma / Drizzle** — Modern ORMs for type-safe database access
+- **📌 Project Idea:** Add persistent chat history to your Lesson 4 chat app using PostgreSQL + Redis for real-time presence
+
+### 3. 🎨 Frontend Mastery
+Build professional UIs that consume your WebSocket backends:
+- **React** — Component-based UI library (use your Lesson 19 `useWebSocket` hook!)
+- **Next.js** — Full-stack React framework with SSR, API routes, and deployment
+- **Tailwind CSS** — Utility-first CSS for rapid, beautiful styling
+- **State Management** — Zustand or Redux for managing real-time data flows
+- **📌 Project Idea:** Rebuild the Learning Hub as a Next.js app with authentication, progress tracking, and live collaborative features
+
+### 4. 🏗️ System Design & Architecture
+Scale your real-time systems to handle millions of connections:
+- **CAP Theorem** — Understand consistency vs availability trade-offs
+- **Message Queues** — Kafka, RabbitMQ, or AWS SQS for decoupling services
+- **Microservices** — Split your monolithic server into separate, scalable services
+- **Load Balancing** — Nginx, HAProxy, and sticky sessions for WebSocket routing
+- **Containerization** — Docker + Kubernetes for deployment at scale
+- **📌 Project Idea:** Design a Discord-like system with separate services for auth, messaging, presence, and notifications — all connected via Redis Pub/Sub and message queues
 
 ---
 
