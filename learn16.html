@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 16 — Typing Indicators</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --purple: #a78bfa
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167, 139, 250, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(167, 139, 250, .1);
+      color: var(--purple);
+      border: 1px solid rgba(167, 139, 250, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .76rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    /* chat demo */
+    .chat-demo {
+      background: var(--card);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 16px;
+      overflow: hidden
+    }
+
+    .chat-top {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .chat-msgs {
+      height: 160px;
+      overflow-y: auto;
+      padding: 12px 16px;
+      background: var(--card3);
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .chat-bubble {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: .82rem;
+      max-width: 70%
+    }
+
+    .chat-bubble.alice {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple);
+      align-self: flex-start
+    }
+
+    .chat-bubble.bob {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+      align-self: flex-end
+    }
+
+    .typing-row {
+      height: 24px;
+      padding: 0 16px;
+      background: var(--card3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .74rem;
+      color: var(--muted)
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 3px
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 1.2s infinite
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: .2s
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: .4s
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-5px);
+        background: var(--purple)
+      }
+    }
+
+    .chat-input-row {
+      padding: 10px 12px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      outline: none
+    }
+
+    .chat-input:focus {
+      border-color: var(--purple)
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s
+    }
+
+    .btn:hover {
+      opacity: .85
+    }
+
+    .btn-purple {
+      background: var(--purple);
+      color: #1a0a2e
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border)
+    }
+
+    .golden {
+      background: rgba(167, 139, 250, .05);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--purple);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--purple);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--purple);
+      color: #1a0a2e;
+      border-color: var(--purple)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 16</div>
+    <h1>Typing Indicators ⌨️</h1>
+    <p>"Alice is typing…" — one of the most recognizable real-time UX patterns. Learn how to implement it correctly with
+      debouncing to avoid message spam.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">1</div>
+        <div>
+          <div class="sec-title">The naive approach — and why it's wrong ❌</div>
+          <div class="sec-sub">Sending a typing event on every keypress floods the server</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--red)">❌ Bad — fires on every keypress</div>
+        <div class="box-body">
+          <div class="code">
+            input.<span class="fn">addEventListener</span>(<span class="str">'keydown'</span>, () =&gt; {<br>
+            &nbsp;&nbsp;<span class="cm">// 100WPM typist = ~10 events/sec 🔥</span><br>
+            &nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({ type: <span
+              class="str">'typing'</span> }));<br>
+            });
+          </div>
+          <p class="note-sm" style="color:var(--red)">A fast typist sends 600 events/minute. The server broadcasts all
+            of them. This is wasteful and gets rate-limited.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">The right way — debounced typing + stop timer ✅</div>
+          <div class="sec-sub">Send "typing" once, then "stopped" after 2s of inactivity</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; client.js — debounced typing</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">let</span> typingTimer = <span class="kw">null</span>;<br>
+            <span class="kw">let</span> isTyping = <span class="kw">false</span>;<br><br>
+            input.<span class="fn">addEventListener</span>(<span class="str">'input'</span>, () =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (!isTyping) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;isTyping = <span class="kw">true</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({ type: <span
+              class="str">'typing'</span>, username }));<br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;<span class="cm">// Reset the stop timer on every keystroke</span><br>
+            &nbsp;&nbsp;<span class="fn">clearTimeout</span>(typingTimer);<br>
+            &nbsp;&nbsp;typingTimer = <span class="fn">setTimeout</span>(() =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;isTyping = <span class="kw">false</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({ type: <span
+              class="str">'stopped'</span>, username }));<br>
+            &nbsp;&nbsp;}, <span class="ev">2000</span>); <span class="cm">// stop after 2s inactivity</span><br>
+            });
+          </div>
+        </div>
+      </div>
+      <div class="box" style="margin-top:14px">
+        <div class="box-head" style="color:var(--blue)">&lt;/&gt; server.js — broadcast typing events</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> typing = <span class="kw">new</span> <span class="fn">Set</span>(); <span
+              class="cm">// set of usernames currently typing</span><br><br>
+            ws.<span class="fn">on</span>(<span class="str">'message'</span>, (raw) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> { type, username } = <span class="fn">JSON.parse</span>(raw);<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (type === <span class="str">'typing'</span>) typing.<span
+              class="fn">add</span>(username);<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (type === <span class="str">'stopped'</span>) typing.<span
+              class="fn">delete</span>(username);<br>
+            &nbsp;&nbsp;<span class="fn">broadcast</span>({ type: <span class="str">'typing_update'</span>, users:
+            [...typing] });<br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">▶️ Typing Indicator Demo</div>
+          <div class="sec-sub">Type in the boxes below — see live typing indicators</div>
+        </div>
+      </div>
+      <div class="chat-demo">
+        <div class="chat-top">💬 Chat Demo — two simulated users</div>
+        <div class="chat-msgs" id="chatMsgs">
+          <div class="chat-bubble alice">Hey, type something below! 👋</div>
+        </div>
+        <div class="typing-row" id="typingRow" style="display:none">
+          <div class="typing-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span id="typingText"></span>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="aliceInput" placeholder="Alice types here…"
+            oninput="handleTyping('Alice','alice')" onkeydown="sendMsg(event,'Alice','alice')" />
+          <button class="btn btn-purple" onclick="sendMsg({key:'Enter'},'Alice','alice')">Send</button>
+        </div>
+        <div class="chat-input-row" style="background:rgba(56,189,248,.05);border-top:none">
+          <input class="chat-input" id="bobInput" placeholder="Bob types here…" oninput="handleTyping('Bob','bob')"
+            onkeydown="sendMsg(event,'Bob','bob')" style="border-color:rgba(56,189,248,.2)" />
+          <button class="btn btn-blue" onclick="sendMsg({key:'Enter'},'Bob','bob')">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Typing Indicator Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">⏳</div>
+            <div class="rule-text"><strong>Always debounce</strong> — send "typing" once per session, not per keystroke.
+              Use a 2s stop timer.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📤</div>
+            <div class="rule-text"><strong>Send "stopped" on message send</strong> — when the user hits Enter and sends
+              a message, immediately broadcast <code class="mono">stopped</code> without waiting for the 2s timer.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">👥</div>
+            <div class="rule-text"><strong>Handle multiple typers</strong> — use a Set on the server. UI should show
+              "Alice and Bob are typing…" when both are active.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">💤</div>
+            <div class="rule-text"><strong>Clear timers on disconnect</strong> — if a user disconnects while typing,
+              remove them from the typing Set and broadcast the update.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn15.html" class="nav-btn">← Lesson 15</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn17.html" class="nav-btn primary">Lesson 17: History →</a>
+  </div>
+
+  <script>
+    const timers = {};
+    const typing = new Set();
+
+    function handleTyping(name, cls) {
+      const inputId = cls + 'Input';
+      if (!typing.has(name)) {
+        typing.add(name);
+        updateTypingUI();
+      }
+      clearTimeout(timers[name]);
+      timers[name] = setTimeout(() => {
+        typing.delete(name);
+        updateTypingUI();
+      }, 2000);
+    }
+
+    function updateTypingUI() {
+      const row = document.getElementById('typingRow');
+      const txt = document.getElementById('typingText');
+      if (typing.size === 0) { row.style.display = 'none'; return; }
+      row.style.display = 'flex';
+      const list = [...typing];
+      txt.textContent = list.join(' & ') + (list.length > 1 ? ' are typing…' : ' is typing…');
+    }
+
+    function sendMsg(e, name, cls) {
+      if (e.key !== 'Enter') return;
+      const input = document.getElementById(cls + 'Input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      typing.delete(name);
+      clearTimeout(timers[name]);
+      updateTypingUI();
+      const el = document.getElementById('chatMsgs');
+      const d = document.createElement('div');
+      d.className = `chat-bubble ${cls}`;
+      d.textContent = text;
+      el.appendChild(d);
+      el.scrollTop = el.scrollHeight;
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 28 — Deployment</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --purple: #a78bfa
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34, 197, 94, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(34, 197, 94, .1);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .2);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* completion banner */
+    .completion {
+      background: linear-gradient(135deg, rgba(34, 197, 94, .1), rgba(56, 189, 248, .08));
+      border: 1px solid rgba(34, 197, 94, .3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center
+    }
+
+    .comp-icon {
+      font-size: 3.5rem;
+      margin-bottom: 12px
+    }
+
+    .comp-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 8px
+    }
+
+    .comp-sub {
+      color: var(--dim);
+      font-size: .9rem;
+      margin-bottom: 20px
+    }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 16px 0;
+      font-size: .75rem
+    }
+
+    @media(max-width:600px) {
+      .comp-grid {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    .comp-item {
+      background: rgba(34, 197, 94, .08);
+      border: 1px solid rgba(34, 197, 94, .15);
+      border-radius: 8px;
+      padding: 8px;
+      color: var(--green);
+      font-weight: 600
+    }
+
+    .golden {
+      background: rgba(34, 197, 94, .05);
+      border: 1px solid rgba(34, 197, 94, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--green);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--green);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--green);
+      color: #052e16;
+      border-color: var(--green)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 28 — Final Lesson</div>
+    <h1>Deployment 🚀</h1>
+    <p>Take your WebSocket server from <code style="font-family:monospace">localhost</code> to production. Docker,
+      nginx, AWS ALB, and environment config — the production checklist.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">1</div>
+        <div>
+          <div class="sec-title">Dockerfile for WebSocket Server 🐳</div>
+          <div class="sec-sub">Containerize your Node.js WebSocket server</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">📄 Dockerfile</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">FROM</span> node:<span class="ev">20</span>-alpine<br><br>
+            <span class="kw">WORKDIR</span> /app<br>
+            <span class="kw">COPY</span> package*.json ./<br>
+            <span class="kw">RUN</span> npm ci --production <span class="cm"># only prod deps</span><br>
+            <span class="kw">COPY</span> . .<br><br>
+            <span class="cm"># Expose non-root port (required on many PaaS)</span><br>
+            <span class="kw">EXPOSE</span> <span class="ev">3000</span><br><br>
+            <span class="cm"># Graceful shutdown support</span><br>
+            <span class="kw">CMD</span> [<span class="str">"node"</span>, <span class="str">"server.js"</span>]
+          </div>
+          <p class="note-sm">Build: <code class="mono">docker build -t ws-server .</code> | Run: <code
+              class="mono">docker run -p 3000:3000 ws-server</code></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">2</div>
+        <div>
+          <div class="sec-title">nginx — WebSocket reverse proxy 🔄</div>
+          <div class="sec-sub">nginx must be configured to pass Upgrade headers</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--blue)">📄 /etc/nginx/sites-available/wsapp.conf</div>
+        <div class="box-body">
+          <div class="code">
+            server {<br>
+            &nbsp;&nbsp;listen <span class="ev">443</span> ssl;<br>
+            &nbsp;&nbsp;server_name api.myapp.com;<br><br>
+            &nbsp;&nbsp;<span class="cm"># SSL certs (managed by Certbot / ACM)</span><br>
+            &nbsp;&nbsp;ssl_certificate /etc/ssl/cert.pem;<br>
+            &nbsp;&nbsp;ssl_certificate_key /etc/ssl/key.pem;<br><br>
+            &nbsp;&nbsp;location / {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_pass http://localhost:3000;<br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># WebSocket upgrade headers — CRITICAL</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_http_version <span class="ev">1.1</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Upgrade $http_upgrade;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Connection <span class="str">"Upgrade"</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Host $host;<br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Extend timeout (default 60s kills idle WS connections)</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_read_timeout <span class="ev">3600</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_send_timeout <span class="ev">3600</span>;<br>
+            &nbsp;&nbsp;}<br>
+            }
+          </div>
+          <p class="note-sm" style="color:var(--red)">⚠️ Without the <code class="mono">Upgrade: websocket</code> and
+            <code class="mono">Connection: Upgrade</code> headers, nginx strips them and the WebSocket handshake fails
+            with 502.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">AWS ALB — sticky sessions + WS support ☁️</div>
+          <div class="sec-sub">AWS Application Load Balancer natively supports WebSocket</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head" style="color:var(--yellow)">✅ ALB supports WebSocket natively</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm"># No special config needed!</span><br>
+              <span class="cm"># ALB auto-detects WS upgrade and</span><br>
+              <span class="cm"># routes all frames to the same target</span><br><span
+                class="str">"TargetGroupStickinessConfig"</span>:<br>
+              &nbsp;&nbsp;Enabled: <span class="kw">true</span><br>
+              &nbsp;&nbsp;DurationSeconds: <span class="ev">86400</span>
+            </div>
+            <p class="note-sm">Enable sticky sessions so each client always hits the same EC2 instance — needed if
+              you're not using Redis Pub/Sub (Lesson 11).</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--blue)">⚠️ AWS ALB timeout = 60 seconds</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm"># ALB closes idle WS after 60s!</span><br>
+              <span class="cm"># Fix: set idle timeout to 3600s</span><br>
+              aws elbv2 modify-load-balancer-attributes<br>
+              &nbsp;&nbsp;--attributes Key=idle_timeout.timeout_seconds,Value=3600<br>
+              <span class="cm"># Also see Lesson 9 — Heartbeat</span>
+            </div>
+            <p class="note-sm">Or use the Lesson 9 heartbeat (ping every 55s) to keep connections alive within the 60s
+              window.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">4</div>
+        <div>
+          <div class="sec-title">Graceful Shutdown 🔇</div>
+          <div class="sec-sub">Don't drop active connections on deploy/restart</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--purple)">&lt;/&gt; server.js — graceful shutdown</div>
+        <div class="box-body">
+          <div class="code">
+            process.<span class="fn">on</span>(<span class="str">'SIGTERM'</span>, () =&gt; {<br>
+            &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'SIGTERM received
+              — shutting down'</span>);<br>
+            &nbsp;&nbsp;<span class="cm">// Stop accepting new connections</span><br>
+            &nbsp;&nbsp;wss.<span class="fn">close</span>(() =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Notify existing clients</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;wss.clients.<span class="fn">forEach</span>(c =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c.<span class="fn">close</span>(<span class="ev">1001</span>, <span
+              class="str">'Server restarting'</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;server.<span class="fn">close</span>(() =&gt; process.<span
+              class="fn">exit</span>(<span class="ev">0</span>));<br>
+            &nbsp;&nbsp;});<br>
+            });
+          </div>
+          <p class="note-sm">Close code 1001 = "Going Away" — clients that implement auto-reconnect (Lesson 5) will
+            automatically reconnect to the new server instance.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPLETION BANNER -->
+    <section>
+      <div class="completion">
+        <div class="comp-icon">🏆</div>
+        <div class="comp-title">You've mastered WebSockets! All 28 Lessons Complete!</div>
+        <div class="comp-sub">From the basics of ws.send() to production deployment on AWS — you now know everything
+          needed to build real-time applications.</div>
+        <div class="comp-grid">
+          <div class="comp-item">✅ L1–4: Basics & Events</div>
+          <div class="comp-item">✅ L5–8: Error Handling & Auth</div>
+          <div class="comp-item">✅ L9–12: Heartbeat & Scaling</div>
+          <div class="comp-item">✅ L13–16: Rate Limiting & UX</div>
+          <div class="comp-item">✅ L17–20: History & Frameworks</div>
+          <div class="comp-item">✅ L21–24: Security & Advanced</div>
+          <div class="comp-item">✅ L25–28: Testing & Production</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Deployment Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🐳</div>
+            <div class="rule-text"><strong>Containerize with Docker</strong> — Node 20 alpine is ~50MB. Use multi-stage
+              builds for even smaller images.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔄</div>
+            <div class="rule-text"><strong>Configure nginx Upgrade headers</strong> — <code
+                class="mono">proxy_set_header Upgrade $http_upgrade</code> is required. Forget it and WebSocket won't
+              work behind nginx.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">⏱️</div>
+            <div class="rule-text"><strong>Increase proxy timeouts</strong> — nginx default is 60s, AWS ALB default is
+              60s. Set to at least 3600s or use heartbeats (Lesson 9).</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔇</div>
+            <div class="rule-text"><strong>Handle SIGTERM gracefully</strong> — Kubernetes and ECS send SIGTERM before
+              killing pods. Close connections cleanly so clients auto-reconnect.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🌡️</div>
+            <div class="rule-text"><strong>Set up health checks</strong> — expose <code class="mono">GET /health</code>
+              returning 200. Load balancers use it to route traffic. Don't route to unhealthy instances.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn27.html" class="nav-btn">← Lesson 27</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="index.html" class="nav-btn primary">🏠 Back to Hub</a>
+  </div>
+</body>
+
+</html>

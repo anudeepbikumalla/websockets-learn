@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 26 — Monitoring & Logging</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, .1);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    /* dashboard demo */
+    .dash {
+      background: var(--card);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 16px;
+      overflow: hidden
+    }
+
+    .dash-top {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      padding: 1px
+    }
+
+    @media(max-width:600px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    .metric-card {
+      background: var(--card3);
+      padding: 14px;
+      text-align: center
+    }
+
+    .metric-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 2px
+    }
+
+    .metric-label {
+      font-size: .68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .log-stream {
+      height: 120px;
+      overflow-y: auto;
+      padding: 8px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      background: var(--card3);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px
+    }
+
+    .log-row {
+      display: flex;
+      gap: 8px
+    }
+
+    .log-t {
+      color: var(--muted);
+      flex-shrink: 0
+    }
+
+    .log-row.conn .log-m {
+      color: var(--green)
+    }
+
+    .log-row.disc .log-m {
+      color: var(--red)
+    }
+
+    .log-row.msg .log-m {
+      color: var(--blue)
+    }
+
+    .log-row.warn .log-m {
+      color: var(--yellow)
+    }
+
+    .dash-controls {
+      padding: 10px 16px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s
+    }
+
+    .btn:hover {
+      opacity: .85
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #082f49
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border)
+    }
+
+    .golden {
+      background: rgba(56, 189, 248, .05);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--blue);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--blue);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--blue);
+      color: #082f49;
+      border-color: var(--blue)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 26</div>
+    <h1>Monitoring & Logging 📊</h1>
+    <p>You can't fix what you can't see. Track connection counts, message rates, and error rates to catch issues before
+      users do.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">1</div>
+        <div>
+          <div class="sec-title">Key Metrics to Track 📈</div>
+          <div class="sec-sub">The minimal production monitoring setup</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--blue)">&lt;/&gt; server.js — metrics collection</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> metrics = {<br>
+            &nbsp;&nbsp;connections: <span class="ev">0</span>,&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// current
+              active connections</span><br>
+            &nbsp;&nbsp;totalConn: <span class="ev">0</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// lifetime
+              total connections</span><br>
+            &nbsp;&nbsp;messages: <span class="ev">0</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// total
+              messages received</span><br>
+            &nbsp;&nbsp;errors: <span class="ev">0</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">//
+              total errors</span><br>
+            &nbsp;&nbsp;bytes: <span class="ev">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+              class="cm">// total bytes received</span><br>
+            };<br><br>
+            wss.<span class="fn">on</span>(<span class="str">'connection'</span>, (ws) =&gt; {<br>
+            &nbsp;&nbsp;metrics.connections++; metrics.totalConn++;<br>
+            &nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span
+              class="fn">JSON.stringify</span>({ event: <span class="str">'connect'</span>, connections:
+            metrics.connections }));<br><br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'message'</span>, (msg) =&gt; {
+            metrics.messages++; metrics.bytes += msg.length; });<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'error'</span>, () =&gt; metrics.errors++);<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'close'</span>, () =&gt; {
+            metrics.connections--; <span class="fn">console</span>.<span class="fn">log</span>(<span
+              class="fn">JSON.stringify</span>({ event: <span class="str">'disconnect'</span>, connections:
+            metrics.connections })); });<br>
+            });<br><br>
+            <span class="cm">// Expose via HTTP endpoint (for Prometheus, Datadog, etc.)</span><br>
+            app.<span class="fn">get</span>(<span class="str">'/metrics'</span>, (req, res) =&gt; res.<span
+              class="fn">json</span>(metrics));
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">▶️ Live Metrics Dashboard</div>
+          <div class="sec-sub">Simulate connections and messages — watch metrics update</div>
+        </div>
+      </div>
+      <div class="dash">
+        <div class="dash-top">📊 WebSocket Metrics Dashboard</div>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-val" id="m-conn" style="color:var(--green)">0</div>
+            <div class="metric-label">Active Conns</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="m-msgs" style="color:var(--blue)">0</div>
+            <div class="metric-label">Messages</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="m-errs" style="color:var(--red)">0</div>
+            <div class="metric-label">Errors</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="m-kb" style="color:var(--yellow)">0</div>
+            <div class="metric-label">KB Received</div>
+          </div>
+        </div>
+        <div class="log-stream" id="logStream">
+          <div class="log-row" style="color:var(--muted)"><span>—&nbsp;</span><span>Click buttons to simulate server
+              events</span></div>
+        </div>
+        <div class="dash-controls">
+          <button class="btn btn-blue" onclick="simConn()">🔌 Connect</button>
+          <button class="btn btn-blue" onclick="simDisc()">❌ Disconnect</button>
+          <button class="btn btn-blue" onclick="simMsg()">💬 Receive Message</button>
+          <button class="btn" onclick="simErr()" style="background:var(--red);color:#fff">⚠️ Error</button>
+          <button class="btn btn-ghost" onclick="resetDash()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Monitoring Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">📝</div>
+            <div class="rule-text"><strong>Log as JSON</strong> — structured logs (JSON) can be parsed by Datadog,
+              Grafana, CloudWatch. Human-readable logs can't be queried.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🚨</div>
+            <div class="rule-text"><strong>Alert on connection drops</strong> — set up an alert if active connections
+              drop by &gt;20% in 1 minute. Could be a server crash or deploy issue.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📡</div>
+            <div class="rule-text"><strong>Expose a /metrics endpoint</strong> — Prometheus scrapes it. Grafana
+              visualizes it. This is the industry standard for production monitoring.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔇</div>
+            <div class="rule-text"><strong>Don't log ping/pong</strong> — they fire every 30 seconds and will flood your
+              logs. Filter them out in your logging middleware.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn25.html" class="nav-btn">← Lesson 25</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn27.html" class="nav-btn primary">Lesson 27: Load Testing →</a>
+  </div>
+
+  <script>
+    let conns = 0, msgs = 0, errs = 0, kb = 0;
+    function now() { return new Date().toLocaleTimeString('en-US', { hour12: false }) }
+    function addLog(cls, msg) {
+      const el = document.getElementById('logStream');
+      const d = document.createElement('div'); d.className = `log-row ${cls}`;
+      d.innerHTML = `<span class="log-t">${now()}</span><span class="log-m">${msg}</span>`;
+      el.appendChild(d); el.scrollTop = el.scrollHeight;
+    }
+    function updateMetrics() {
+      document.getElementById('m-conn').textContent = conns;
+      document.getElementById('m-msgs').textContent = msgs;
+      document.getElementById('m-errs').textContent = errs;
+      document.getElementById('m-kb').textContent = (kb / 1024).toFixed(1);
+    }
+    function simConn() { conns++; addLog('conn', `✅ Client connected — active: ${conns}`); updateMetrics(); }
+    function simDisc() { if (!conns) return; conns--; addLog('disc', `❌ Client disconnected — active: ${conns}`); updateMetrics(); }
+    function simMsg() { msgs++; const b = Math.round(50 + Math.random() * 200); kb += b; addLog('msg', `💬 Message received (${b} bytes) — total: ${msgs}`); updateMetrics(); }
+    function simErr() { errs++; addLog('warn', `⚠️ WebSocket error — total errors: ${errs}`); updateMetrics(); }
+    function resetDash() { conns = 0; msgs = 0; errs = 0; kb = 0; document.getElementById('logStream').innerHTML = '<div class="log-row" style="color:var(--muted)"><span>—&nbsp;</span><span>Reset</span></div>'; updateMetrics(); }
+  </script>
+</body>
+
+</html>

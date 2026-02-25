@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 14 — Shared Express + WS Server</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, .1);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .76rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--card2);
+      border-radius: 8px;
+      padding: 10px 14px
+    }
+
+    .flow-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px
+    }
+
+    .flow-text {
+      font-size: .83rem;
+      color: var(--dim);
+      line-height: 1.5
+    }
+
+    .flow-text strong {
+      color: var(--text)
+    }
+
+    .golden {
+      background: rgba(56, 189, 248, .05);
+      border: 1px solid rgba(56, 189, 248, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--blue);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--blue);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--blue);
+      color: #082f49;
+      border-color: var(--blue)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 14</div>
+    <h1>Shared Express + WS Server ⚡</h1>
+    <p>In real apps, WebSocket and HTTP live on the <em>same port</em>. Learn how to mount a WebSocket server on an
+      existing Express app — sharing port 3000 for both REST and real-time.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">1</div>
+        <div>
+          <div class="sec-title">The Problem — two separate servers</div>
+          <div class="sec-sub">Real apps share one port for HTTP and WebSocket</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head" style="color:var(--red)">❌ Separate servers (tutorial style)</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// HTTP on :3000, WS on :8080 — TWO ports</span><br>
+              app.<span class="fn">listen</span>(<span class="ev">3000</span>);<br>
+              <span class="kw">new</span> <span class="fn">WebSocketServer</span>({ port: <span class="ev">8080</span>
+              });
+            </div>
+            <p class="note-sm" style="color:var(--red)">Two ports = two firewall rules, two SSL certs. Don't do this.
+            </p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--green)">✅ Shared server (production style)</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Both on :3000 — ONE port</span><br>
+              <span class="kw">const</span> server = http.<span class="fn">createServer</span>(app);<br>
+              <span class="kw">const</span> wss = <span class="kw">new</span> <span class="fn">WebSocketServer</span>({
+              server });<br>
+              server.<span class="fn">listen</span>(<span class="ev">3000</span>);
+            </div>
+            <p class="note-sm" style="color:var(--green)">One port, one SSL cert, professional.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Full Setup — complete server.js 💻</div>
+          <div class="sec-sub">Express REST API + WebSocket on the same port 3000</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; server.js — complete shared server</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> express = <span class="fn">require</span>(<span
+              class="str">'express'</span>);<br>
+            <span class="kw">const</span> http = <span class="fn">require</span>(<span class="str">'http'</span>);<br>
+            <span class="kw">const</span> { WebSocketServer } = <span class="fn">require</span>(<span
+              class="str">'ws'</span>);<br><br>
+            <span class="kw">const</span> app = <span class="fn">express</span>();<br>
+            app.<span class="fn">use</span>(express.<span class="fn">json</span>());<br><br>
+            <span class="cm">// REST routes (HTTP)</span><br>
+            app.<span class="fn">get</span>(<span class="str">'/api/status'</span>, (req, res) =&gt; {<br>
+            &nbsp;&nbsp;res.<span class="fn">json</span>({ clients: wss.clients.size });<br>
+            });<br>
+            app.<span class="fn">post</span>(<span class="str">'/api/broadcast'</span>, (req, res) =&gt; {<br>
+            &nbsp;&nbsp;wss.clients.<span class="fn">forEach</span>(c =&gt; c.readyState === <span class="ev">1</span>
+            &amp;&amp; c.<span class="fn">send</span>(req.body.msg));<br>
+            &nbsp;&nbsp;res.<span class="fn">json</span>({ sent: wss.clients.size });<br>
+            });<br><br>
+            <span class="cm">// Shared HTTP server</span><br>
+            <span class="kw">const</span> server = http.<span class="fn">createServer</span>(app);<br>
+            <span class="kw">const</span> wss = <span class="kw">new</span> <span class="fn">WebSocketServer</span>({
+            server });<br><br>
+            wss.<span class="fn">on</span>(<span class="str">'connection'</span>, (ws, req) =&gt; {<br>
+            &nbsp;&nbsp;<span class="cm">// req.socket, req.headers, cookies — all available!</span><br>
+            &nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({ type: <span
+              class="str">'welcome'</span> }));<br>
+            });<br><br>
+            server.<span class="fn">listen</span>(<span class="ev">3000</span>, () =&gt; <span
+              class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Port 3000'</span>));
+          </div>
+          <div class="hl green">
+            <strong style="color:var(--green)">Key:</strong> Pass the HTTP <code class="mono">server</code> object into
+            <code class="mono">WebSocketServer</code>, not a port number. Call <code class="mono">server.listen()</code>
+            once — it handles both HTTP and WS.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">Path-based WS routing 🔀</div>
+          <div class="sec-sub">Multiple WebSocket endpoints on the same port</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--yellow)">&lt;/&gt; Route /ws and /admin separately</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> wss = <span class="kw">new</span> <span class="fn">WebSocketServer</span>({
+            noServer: <span class="kw">true</span> });<br>
+            <span class="kw">const</span> admin = <span class="kw">new</span> <span class="fn">WebSocketServer</span>({
+            noServer: <span class="kw">true</span> });<br><br>
+            server.<span class="fn">on</span>(<span class="str">'upgrade'</span>, (req, socket, head) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (req.url === <span class="str">'/ws'</span>)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;wss.<span class="fn">handleUpgrade</span>(req, socket, head, ws =&gt; wss.<span
+              class="fn">emit</span>(<span class="str">'connection'</span>, ws, req));<br>
+            &nbsp;&nbsp;<span class="kw">else if</span> (req.url === <span class="str">'/admin'</span>)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;admin.<span class="fn">handleUpgrade</span>(req, socket, head, ws =&gt; admin.<span
+              class="fn">emit</span>(<span class="str">'connection'</span>, ws, req));<br>
+            &nbsp;&nbsp;<span class="kw">else</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;socket.<span class="fn">destroy</span>(); <span class="cm">// reject unknown
+              paths</span><br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">4</div>
+        <div>
+          <div class="sec-title">Request flow diagram 🔁</div>
+          <div class="sec-sub">What happens when a client connects</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--blue)">📋 Step-by-step</div>
+        <div class="box-body">
+          <div class="flow">
+            <div class="flow-step">
+              <div class="flow-num">1</div>
+              <div class="flow-text">Client sends HTTP GET with <strong>Upgrade: websocket</strong> header</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num">2</div>
+              <div class="flow-text">Node.js HTTP server sees Upgrade header, emits <strong>'upgrade'</strong> event
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num">3</div>
+              <div class="flow-text"><code class="mono">ws</code> library intercepts, returns <strong>101 Switching
+                  Protocols</strong></div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num">4</div>
+              <div class="flow-text"><strong>Express never sees this request</strong> — WS bypasses all Express
+                middleware</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num">5</div>
+              <div class="flow-text">Regular HTTP requests go through Express as normal on the same port</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Shared Server Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔗</div>
+            <div class="rule-text"><strong>Use <code class="mono">http.createServer(app)</code></strong> — never call
+              <code class="mono">app.listen()</code> when sharing with WebSocket.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🛣️</div>
+            <div class="rule-text"><strong>Use <code class="mono">noServer: true</code></strong> + the <code
+                class="mono">upgrade</code> event for path-based routing between multiple WS endpoints.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🍪</div>
+            <div class="rule-text"><strong>Auth in the upgrade handler</strong> — <code
+                class="mono">req.headers.cookie</code> is available. Reject bad requests with <code
+                class="mono">socket.destroy()</code>.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn13.html" class="nav-btn">← Lesson 13</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn15.html" class="nav-btn primary">Lesson 15: Presence →</a>
+  </div>
+</body>
+
+</html>

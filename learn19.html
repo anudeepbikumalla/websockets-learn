@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 19 — WebSocket with React</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --cyan: #06b6d4
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6, 182, 212, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(6, 182, 212, .1);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-cyan {
+      background: rgba(6, 182, 212, .15);
+      color: var(--cyan)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .golden {
+      background: rgba(6, 182, 212, .05);
+      border: 1px solid rgba(6, 182, 212, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--cyan);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--cyan);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--cyan);
+      color: #042f2e;
+      border-color: var(--cyan)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px
+    }
+
+    .hl.cyan {
+      border-color: var(--cyan);
+      background: rgba(6, 182, 212, .05);
+      color: var(--dim)
+    }
+
+    .hl.red {
+      border-color: var(--red);
+      background: rgba(248, 113, 113, .05);
+      color: var(--dim)
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 19</div>
+    <h1>WebSocket with React ⚛️</h1>
+    <p>The hardest part isn't the WebSocket — it's managing it correctly inside React's lifecycle. Learn the <code
+        style="font-family:monospace">useWebSocket</code> custom hook pattern used in production apps.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-cyan">1</div>
+        <div>
+          <div class="sec-title">The common mistakes in React + WS ❌</div>
+          <div class="sec-sub">Creating WS in the wrong place creates memory leaks</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head" style="color:var(--red)">❌ Wrong — creates new WS on every render</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="kw">function</span> <span class="fn">ChatComponent</span>() {<br>
+              &nbsp;&nbsp;<span class="cm">// 💀 Runs on EVERY render!</span><br>
+              &nbsp;&nbsp;<span class="kw">const</span> ws = <span class="kw">new</span> <span
+                class="fn">WebSocket</span>(<span class="str">'ws://...'</span>);<br>
+              &nbsp;&nbsp;<span class="cm">// Old connections are never closed!</span><br>
+              }
+            </div>
+            <p class="note-sm" style="color:var(--red)">Every state change = new WebSocket = memory leak.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--red)">❌ Also wrong — no cleanup</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="fn">useEffect</span>(() =&gt; {<br>
+              &nbsp;&nbsp;<span class="kw">const</span> ws = <span class="kw">new</span> <span
+                class="fn">WebSocket</span>(<span class="str">'ws://...'</span>);<br>
+              &nbsp;&nbsp;<span class="cm">// 💀 No return cleanup!</span><br>
+              &nbsp;&nbsp;<span class="cm">// Component unmount → ws never closed</span><br>
+              }, []);
+            </div>
+            <p class="note-sm" style="color:var(--red)">Navigating away leaves ghost connections open.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">useWebSocket — the correct custom hook ✅</div>
+          <div class="sec-sub">Create once, cleanup on unmount, reconnect on close</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; hooks/useWebSocket.js</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">import</span> { useEffect, useRef, useState, useCallback } <span class="kw">from</span>
+            <span class="str">'react'</span>;<br><br>
+            <span class="kw">export function</span> <span class="fn">useWebSocket</span>(url) {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> wsRef = <span class="fn">useRef</span>(<span
+              class="kw">null</span>);<br>
+            &nbsp;&nbsp;<span class="kw">const</span> [status, setStatus] = <span class="fn">useState</span>(<span
+              class="str">'connecting'</span>);<br>
+            &nbsp;&nbsp;<span class="kw">const</span> [lastMessage, setLastMessage] = <span
+              class="fn">useState</span>(<span class="kw">null</span>);<br><br>
+            &nbsp;&nbsp;<span class="fn">useEffect</span>(() =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">let</span> active = <span class="kw">true</span>; <span
+              class="cm">// prevents state update after unmount</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> ws = <span class="kw">new</span> <span
+              class="fn">WebSocket</span>(url);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;wsRef.current = ws;<br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, ()
+            =&gt; active &amp;&amp; <span class="fn">setStatus</span>(<span class="str">'open'</span>));<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, ()
+            =&gt; active &amp;&amp; <span class="fn">setStatus</span>(<span class="str">'closed'</span>));<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (e)
+            =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (active) <span
+              class="fn">setLastMessage</span>(<span class="fn">JSON.parse</span>(e.data));<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// ✅ Cleanup on unmount — always close!</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> () =&gt; { active = <span class="kw">false</span>;
+            ws.<span class="fn">close</span>(); };<br>
+            &nbsp;&nbsp;}, [url]);<br><br>
+            &nbsp;&nbsp;<span class="kw">const</span> send = <span class="fn">useCallback</span>((data) =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (wsRef.current?.readyState === WebSocket.<span
+              class="ev">OPEN</span>)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wsRef.current.<span class="fn">send</span>(<span
+              class="fn">JSON.stringify</span>(data));<br>
+            &nbsp;&nbsp;}, []);<br><br>
+            &nbsp;&nbsp;<span class="kw">return</span> { status, lastMessage, send };<br>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">Using the hook in a component 💻</div>
+          <div class="sec-sub">Clean, readable React code</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--yellow)">&lt;/&gt; ChatRoom.jsx</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">function</span> <span class="fn">ChatRoom</span>() {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> { status, lastMessage, send } = <span
+              class="fn">useWebSocket</span>(<span class="str">'ws://localhost:8080'</span>);<br>
+            &nbsp;&nbsp;<span class="kw">const</span> [messages, setMessages] = <span
+              class="fn">useState</span>([]);<br><br>
+            &nbsp;&nbsp;<span class="cm">// React to new messages</span><br>
+            &nbsp;&nbsp;<span class="fn">useEffect</span>(() =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (lastMessage) <span class="fn">setMessages</span>(prev
+            =&gt; [...prev, lastMessage]);<br>
+            &nbsp;&nbsp;}, [lastMessage]);<br><br>
+            &nbsp;&nbsp;<span class="kw">return</span> (<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="fn">div</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="fn">p</span>&gt;Status: {status}&lt;/<span
+              class="fn">p</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{messages.<span class="fn">map</span>(m =&gt; &lt;<span
+              class="fn">p</span> key={m.id}&gt;{m.text}&lt;/<span class="fn">p</span>&gt;)}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="fn">button</span> onClick={() =&gt; <span
+              class="fn">send</span>({ text: <span class="str">'Hello!'</span> })}&gt;Send&lt;/<span
+              class="fn">button</span>&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="fn">div</span>&gt;<br>
+            &nbsp;&nbsp;);<br>
+            }
+          </div>
+          <div class="hl cyan">
+            <strong style="color:var(--cyan)">Key pattern:</strong> The hook returns <code
+              class="mono">lastMessage</code> as state. A <code class="mono">useEffect</code> watches it and appends to
+            the messages array. This keeps the WebSocket logic completely separate from the UI logic.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ React + WebSocket Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🪝</div>
+            <div class="rule-text"><strong>Always use a custom hook</strong> — never create WebSocket inside the
+              component body or without useEffect.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🧹</div>
+            <div class="rule-text"><strong>Always return a cleanup function</strong> from useEffect that calls <code
+                class="mono">ws.close()</code>. Without this, navigating away leaks the connection.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🏃</div>
+            <div class="rule-text"><strong>Use an <code class="mono">active</code> flag</strong> — set to false in
+              cleanup to prevent <code class="mono">setState</code> calls after unmount, which cause React warnings.
+            </div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📦</div>
+            <div class="rule-text"><strong>Use react-use-websocket</strong> for production — it's a battle-tested
+              library that handles reconnect, filtering, and memoization.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn18.html" class="nav-btn">← Lesson 18</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn20.html" class="nav-btn primary">Lesson 20: Socket.io →</a>
+  </div>
+</body>
+
+</html>

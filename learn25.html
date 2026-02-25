@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 25 — Testing WebSockets</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34, 197, 94, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(34, 197, 94, .1);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .golden {
+      background: rgba(34, 197, 94, .05);
+      border: 1px solid rgba(34, 197, 94, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--green);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--green);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--green);
+      color: #052e16;
+      border-color: var(--green)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 25</div>
+    <h1>Testing WebSockets 🧪</h1>
+    <p>WebSockets are stateful and async — testing them requires a different approach. Learn unit tests with mocks and
+      integration tests with a real <code style="font-family:monospace">ws</code> client.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">1</div>
+        <div>
+          <div class="sec-title">Integration Test — real server + real client 🔌</div>
+          <div class="sec-sub">Spin up a real WS server in Jest, connect a real ws client</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; server.test.js — Jest integration test</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> { WebSocketServer } = <span class="fn">require</span>(<span
+              class="str">'ws'</span>);<br>
+            <span class="kw">const</span> WebSocket = <span class="fn">require</span>(<span
+              class="str">'ws'</span>);<br><br>
+            <span class="kw">let</span> wss, port;<br><br>
+            <span class="fn">beforeEach</span>(<span class="kw">async</span> () =&gt; {<br>
+            &nbsp;&nbsp;wss = <span class="kw">new</span> <span class="fn">WebSocketServer</span>({ port: <span
+              class="ev">0</span> }); <span class="cm">// port 0 = OS picks one</span><br>
+            &nbsp;&nbsp;port = wss.address().port;<br>
+            &nbsp;&nbsp;wss.<span class="fn">on</span>(<span class="str">'connection'</span>, (ws) =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'message'</span>, (msg) =&gt;
+            ws.<span class="fn">send</span>(<span class="str">'echo: '</span> + msg));<br>
+            &nbsp;&nbsp;});<br>
+            });<br><br>
+            <span class="fn">afterEach</span>(() =&gt; wss.<span class="fn">close</span>());<br><br>
+            <span class="fn">test</span>(<span class="str">'echoes messages'</span>, () =&gt; <span
+              class="kw">new</span> <span class="ev">Promise</span>((resolve, reject) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> ws = <span class="kw">new</span> <span
+              class="fn">WebSocket</span>(<span class="str">`ws://localhost:${port}`</span>);<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'open'</span>, () =&gt; ws.<span
+              class="fn">send</span>(<span class="str">'Hello'</span>));<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'message'</span>, (msg) =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">expect</span>(msg.<span class="fn">toString</span>()).<span
+              class="fn">toBe</span>(<span class="str">'echo: Hello'</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">close</span>(); <span class="fn">resolve</span>();<br>
+            &nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'error'</span>, reject);<br>
+            }));
+          </div>
+          <div class="hl green"><strong style="color:var(--green)">Tip:</strong> Use <code class="mono">port: 0</code>
+            to let the OS assign a random free port. This prevents port conflicts when running tests in parallel.</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">2</div>
+        <div>
+          <div class="sec-title">Unit Test — mock the WebSocket 🃏</div>
+          <div class="sec-sub">Test message handlers without a real server</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--yellow)">&lt;/&gt; handler.test.js — unit test with mock</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// The function to test</span><br>
+            <span class="kw">function</span> <span class="fn">handleMessage</span>(ws, raw) {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> msg = <span class="fn">JSON.parse</span>(raw);<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (msg.type === <span class="str">'ping'</span>) ws.<span
+              class="fn">send</span>(<span class="str">'pong'</span>);<br>
+            }<br><br>
+            <span class="fn">test</span>(<span class="str">'responds to ping with pong'</span>, () =&gt; {<br>
+            &nbsp;&nbsp;<span class="cm">// Mock WebSocket object</span><br>
+            &nbsp;&nbsp;<span class="kw">const</span> mockWs = { send: jest.<span class="fn">fn</span>(), readyState:
+            <span class="ev">1</span> };<br><br>
+            &nbsp;&nbsp;<span class="fn">handleMessage</span>(mockWs, <span class="fn">JSON.stringify</span>({ type:
+            <span class="str">'ping'</span> }));<br><br>
+            &nbsp;&nbsp;<span class="fn">expect</span>(mockWs.send).<span class="fn">toHaveBeenCalledWith</span>(<span
+              class="str">'pong'</span>);<br>
+            &nbsp;&nbsp;<span class="fn">expect</span>(mockWs.send).<span class="fn">toHaveBeenCalledTimes</span>(<span
+              class="ev">1</span>);<br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">3</div>
+        <div>
+          <div class="sec-title">Testing Disconnect & Error Scenarios 💥</div>
+          <div class="sec-sub">Simulate close, error, and timeout events</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--blue)">&lt;/&gt; Test timeout and disconnect</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="fn">test</span>(<span class="str">'server removes user on disconnect'</span>, () =&gt; <span
+              class="kw">new</span> <span class="ev">Promise</span>((resolve) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> ws = <span class="kw">new</span> <span
+              class="fn">WebSocket</span>(<span class="str">`ws://localhost:${port}`</span>);<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'open'</span>, () =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">expect</span>(wss.clients.size).<span class="fn">toBe</span>(<span
+              class="ev">1</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">close</span>(); <span class="cm">// Simulate client
+              disconnect</span><br>
+            &nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'close'</span>, () =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">setTimeout</span>(() =&gt; { <span class="cm">// Wait for server to
+              process close</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">expect</span>(wss.clients.size).<span
+              class="fn">toBe</span>(<span class="ev">0</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">resolve</span>();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}, <span class="ev">100</span>);<br>
+            &nbsp;&nbsp;});<br>
+            }));
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Testing Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔌</div>
+            <div class="rule-text"><strong>Use port: 0 for tests</strong> — OS assigns a random free port. Never
+              hardcode test ports; they'll conflict in CI.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🧹</div>
+            <div class="rule-text"><strong>Always close server in afterEach</strong> — unclosed servers cause Jest to
+              hang and timeout. Use <code class="mono">wss.close()</code> in cleanup.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">⏱️</div>
+            <div class="rule-text"><strong>Use Promises, not done() callbacks</strong> — returning a Promise from a Jest
+              test is cleaner and gives better error messages on timeout.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🃏</div>
+            <div class="rule-text"><strong>Unit test handlers independently</strong> — extract message handlers into
+              separate functions and test them with <code class="mono">jest.fn()</code> mock ws objects.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn24.html" class="nav-btn">← Lesson 24</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn26.html" class="nav-btn primary">Lesson 26: Monitoring →</a>
+  </div>
+</body>
+
+</html>

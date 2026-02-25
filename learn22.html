@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 22 — TypeScript + WebSocket</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #3178c6;
+      --yellow: #fbbf24;
+      --red: #f87171
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(49, 120, 198, .1), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(49, 120, 198, .15);
+      color: var(--blue);
+      border: 1px solid rgba(49, 120, 198, .3);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-blue {
+      background: rgba(49, 120, 198, .15);
+      color: var(--blue)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .ty {
+      color: #a78bfa
+    }
+
+    .golden {
+      background: rgba(49, 120, 198, .05);
+      border: 1px solid rgba(49, 120, 198, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--blue);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--blue);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px
+    }
+
+    .hl.blue {
+      border-color: var(--blue);
+      background: rgba(49, 120, 198, .05);
+      color: var(--dim)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 22</div>
+    <h1>TypeScript + WebSocket 🟦</h1>
+    <p>Raw WebSocket messages are strings. TypeScript can't know what's inside. Learn how to use <strong>discriminated
+        unions</strong> and <strong>Zod validation</strong> to make your WS messages fully type-safe.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">1</div>
+        <div>
+          <div class="sec-title">The type-safety problem 🔍</div>
+          <div class="sec-sub">JSON.parse returns any — TypeScript loses track of the type</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--red)">❌ No type safety — the problem</div>
+        <div class="box-body">
+          <div class="code">
+            ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (e) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> data = <span class="fn">JSON.parse</span>(e.data); <span
+              class="cm">// type: any 😱</span><br>
+            &nbsp;&nbsp;data.tex.toUpperCase(); <span class="cm">// typo! No TS error → runtime crash</span><br>
+            &nbsp;&nbsp;<span class="kw">if</span> (data.type === <span class="str">'mssg'</span>) { ... } <span
+              class="cm">// typo! No error</span><br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Solution 1 — Discriminated Unions ✅</div>
+          <div class="sec-sub">Define all message shapes as a union type</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; types/messages.ts</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// Define every possible message type</span><br>
+            <span class="kw">type</span> <span class="ty">ChatMessage</span> = { type: <span class="str">'chat'</span>;
+            text: <span class="kw">string</span>; user: <span class="kw">string</span> };<br>
+            <span class="kw">type</span> <span class="ty">JoinMessage</span> = { type: <span class="str">'join'</span>;
+            userId: <span class="kw">string</span>; room: <span class="kw">string</span> };<br>
+            <span class="kw">type</span> <span class="ty">LeaveMessage</span>= { type: <span class="str">'leave'</span>;
+            userId: <span class="kw">string</span> };<br>
+            <span class="kw">type</span> <span class="ty">TypingMessage</span>= { type: <span
+              class="str">'typing'</span>; username: <span class="kw">string</span> };<br><br>
+            <span class="kw">export type</span> <span class="ty">WSMessage</span> = <span class="ty">ChatMessage</span>
+            | <span class="ty">JoinMessage</span> | <span class="ty">LeaveMessage</span> | <span
+              class="ty">TypingMessage</span>;<br><br>
+            <span class="cm">// Type-safe parse function</span><br>
+            <span class="kw">export function</span> <span class="fn">parseMessage</span>(raw: <span
+              class="kw">string</span>): <span class="ty">WSMessage</span> | <span class="kw">null</span> {<br>
+            &nbsp;&nbsp;<span class="kw">try</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> data = <span class="fn">JSON.parse</span>(raw);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> ([<span class="str">'chat'</span>,<span
+              class="str">'join'</span>,<span class="str">'leave'</span>,<span class="str">'typing'</span>].<span
+              class="fn">includes</span>(data?.type)) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> data <span class="kw">as</span> <span
+              class="ty">WSMessage</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;} <span class="kw">catch</span> {}<br>
+            &nbsp;&nbsp;<span class="kw">return</span> <span class="kw">null</span>;<br>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="box" style="margin-top:14px">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; Using the union — fully type-safe</div>
+        <div class="box-body">
+          <div class="code">
+            ws.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (e) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> msg = <span class="fn">parseMessage</span>(e.data);<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (!msg) <span class="kw">return</span>;<br><br>
+            &nbsp;&nbsp;<span class="kw">switch</span> (msg.type) { <span class="cm">// TypeScript narrows the
+              type!</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">case</span> <span class="str">'chat'</span>: <span
+              class="fn">handleChat</span>(msg.text, msg.user); <span class="kw">break</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">case</span> <span class="str">'join'</span>: <span
+              class="fn">handleJoin</span>(msg.userId, msg.room); <span class="kw">break</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">case</span> <span class="str">'typing'</span>: <span
+              class="fn">handleTyping</span>(msg.username); <span class="kw">break</span>;<br>
+            &nbsp;&nbsp;} <span class="cm">// msg.tex → TypeScript error! ✅</span><br>
+            });
+          </div>
+          <div class="hl blue">TypeScript narrows the type in each <code class="mono">case</code> block — you get full
+            autocomplete and type checking for every message shape.</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">Solution 2 — Zod for runtime validation 🛡️</div>
+          <div class="sec-sub">Validate the actual data at runtime, not just TypeScript types</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--yellow)">&lt;/&gt; With Zod — catch bad data at runtime</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">import</span> { z } <span class="kw">from</span> <span class="str">'zod'</span>;<br><br>
+            <span class="kw">const</span> ChatSchema = z.<span class="fn">object</span>({<br>
+            &nbsp;&nbsp;type: z.<span class="fn">literal</span>(<span class="str">'chat'</span>),<br>
+            &nbsp;&nbsp;text: z.<span class="fn">string</span>().<span class="fn">max</span>(<span
+              class="ev">1000</span>),<br>
+            &nbsp;&nbsp;user: z.<span class="fn">string</span>().<span class="fn">min</span>(<span
+              class="ev">1</span>).<span class="fn">max</span>(<span class="ev">50</span>)<br>
+            });<br><br>
+            ws.<span class="fn">on</span>(<span class="str">'message'</span>, (raw) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> result = ChatSchema.<span class="fn">safeParse</span>(<span
+              class="fn">JSON.parse</span>(raw.<span class="fn">toString</span>()));<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (!result.success) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">close</span>(<span class="ev">4002</span>, <span
+              class="str">'Invalid message format'</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>;<br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;<span class="kw">const</span> msg = result.data; <span class="cm">// fully typed AND
+              validated!</span><br>
+            &nbsp;&nbsp;<span class="fn">broadcast</span>(msg);<br>
+            });
+          </div>
+          <p class="note-sm">Zod is runtime validation — it catches real bad data <em>from actual clients</em>, not just
+            TypeScript compile-time errors. Use both together.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ TypeScript Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🟦</div>
+            <div class="rule-text"><strong>Use discriminated unions</strong> — define all message shapes with a <code
+                class="mono">type</code> field. TypeScript narrows the type automatically in switch/case.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🛡️</div>
+            <div class="rule-text"><strong>Use Zod for runtime validation</strong> — TypeScript types disappear at
+              runtime. Zod validates real data from real (potentially malicious) clients.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📦</div>
+            <div class="rule-text"><strong>Share types between client and server</strong> — put your <code
+                class="mono">WSMessage</code> type in a shared <code class="mono">packages/types</code> package in a
+              monorepo.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🚀</div>
+            <div class="rule-text"><strong>Never use <code class="mono">as any</code></strong> — if you're casting to
+              <code class="mono">any</code>, you've lost all type safety. Use <code class="mono">safeParse</code>
+              instead.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn21.html" class="nav-btn">← Lesson 21</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn23.html" class="nav-btn primary">Lesson 23: Collab Editing →</a>
+  </div>
+</body>
+
+</html>

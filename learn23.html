@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 23 — Collaborative Editing</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --purple: #a78bfa
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167, 139, 250, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(167, 139, 250, .1);
+      color: var(--purple);
+      border: 1px solid rgba(167, 139, 250, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-purple {
+      background: rgba(167, 139, 250, .15);
+      color: var(--purple)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    /* collab demo */
+    .collab-demo {
+      background: var(--card);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 16px;
+      overflow: hidden
+    }
+
+    .collab-top {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .collab-editors {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: var(--card3)
+    }
+
+    @media(max-width:620px) {
+      .collab-editors {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .editor-pane {
+      padding: 12px
+    }
+
+    .editor-label {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .color-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%
+    }
+
+    .editor-ta {
+      width: 100%;
+      height: 90px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: .8rem;
+      resize: none;
+      outline: none;
+      line-height: 1.6
+    }
+
+    .editor-ta:focus {
+      border-color: var(--purple)
+    }
+
+    .doc-pane {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      background: var(--card3)
+    }
+
+    .doc-label {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .doc-content {
+      min-height: 40px;
+      background: var(--card2);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: .8rem;
+      color: var(--text);
+      line-height: 1.6;
+      word-break: break-word
+    }
+
+    .op-log {
+      height: 80px;
+      overflow-y: auto;
+      padding: 8px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px
+    }
+
+    .ol-row {
+      display: flex;
+      gap: 8px
+    }
+
+    .ol-t {
+      color: var(--muted);
+      flex-shrink: 0
+    }
+
+    .ol-row.a .ol-m {
+      color: #a78bfa
+    }
+
+    .ol-row.b .ol-m {
+      color: #38bdf8
+    }
+
+    .ol-row.sys .ol-m {
+      color: var(--dim)
+    }
+
+    .collab-info {
+      padding: 10px 14px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      font-size: .76rem;
+      color: var(--muted);
+      text-align: center
+    }
+
+    .golden {
+      background: rgba(167, 139, 250, .05);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--purple);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--purple);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--purple);
+      color: #1a0a2e;
+      border-color: var(--purple)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 23</div>
+    <h1>Collaborative Editing 📝</h1>
+    <p>Google Docs, Figma, Notion — all use collaborative real-time editing. Learn Operational Transformation (OT)
+      basics and how WebSocket enables multi-user document sync.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-purple">1</div>
+        <div>
+          <div class="sec-title">The Core Challenge — Conflict Resolution 🔀</div>
+          <div class="sec-sub">Two users type at the same time. Whose changes win?</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head">The conflict problem</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// Document: "Hello"</span><br>
+            <span class="cm">// Alice inserts " World" at position 5 → "Hello World"</span><br>
+            <span class="cm">// Bob inserts "!" at position 5 (simultaneously) → "Hello!World"?</span><br><br>
+            <span class="cm">// Problem: Alice and Bob's operations based on position 5</span><br>
+            <span class="cm">// but the document state changed between their edits</span><br>
+            <span class="cm">// Solution: transform Bob's position AFTER accounting for Alice's insert</span><br>
+            <span class="cm">// Bob's "!" should now go to position 11 → "Hello World!"</span>
+          </div>
+          <p class="note-sm">This is what Operational Transformation (OT) solves — transforming operations to account
+            for concurrent edits.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Simple OT — Insert/Delete Operations 💻</div>
+          <div class="sec-sub">The minimal OT operations: insert and delete</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; ot.js — basic OT transform</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// Operation: { type, pos, char, revision }</span><br>
+            <span class="kw">function</span> <span class="fn">transform</span>(op, against) {<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (op.type === <span class="str">'insert'</span> &amp;&amp;
+            against.type === <span class="str">'insert'</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (against.pos &lt;= op.pos) op.pos++; <span class="cm">//
+              shift right</span><br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (op.type === <span class="str">'insert'</span> &amp;&amp;
+            against.type === <span class="str">'delete'</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (against.pos &lt; op.pos) op.pos--; <span class="cm">//
+              shift left</span><br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;<span class="kw">return</span> op;<br>
+            }<br><br>
+            <span class="cm">// Server: maintain revision history, transform against missed ops</span><br>
+            <span class="kw">function</span> <span class="fn">applyOp</span>(doc, op) {<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (op.type === <span class="str">'insert'</span>)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> doc.<span class="fn">slice</span>(<span
+              class="ev">0</span>, op.pos) + op.char + doc.<span class="fn">slice</span>(op.pos);<br>
+            &nbsp;&nbsp;<span class="kw">if</span> (op.type === <span class="str">'delete'</span>)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> doc.<span class="fn">slice</span>(<span
+              class="ev">0</span>, op.pos) + doc.<span class="fn">slice</span>(op.pos + <span class="ev">1</span>);<br>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">▶️ Collaborative Editor Demo</div>
+          <div class="sec-sub">Two editors, one shared document — type in either pane</div>
+        </div>
+      </div>
+      <div class="collab-demo">
+        <div class="collab-top">📝 Shared Document Editor</div>
+        <div class="collab-editors">
+          <div class="editor-pane" style="border-right:1px solid var(--border)">
+            <div class="editor-label">
+              <div class="color-dot" style="background:#a78bfa"></div>Alice's editor
+            </div>
+            <textarea class="editor-ta" id="aliceEditor" placeholder="Alice types here…"
+              oninput="syncEditors('alice')"></textarea>
+          </div>
+          <div class="editor-pane">
+            <div class="editor-label">
+              <div class="color-dot" style="background:#38bdf8"></div>Bob's editor
+            </div>
+            <textarea class="editor-ta" id="bobEditor" placeholder="Bob types here…"
+              oninput="syncEditors('bob')"></textarea>
+          </div>
+        </div>
+        <div class="doc-pane">
+          <div class="doc-label">📄 Merged Document (last-write-wins merge)</div>
+          <div class="doc-content" id="mergedDoc">Start typing in either editor…</div>
+        </div>
+        <div class="op-log" id="opLog">
+          <div class="ol-row sys"><span class="ol-t">—</span><span class="ol-m">OT operations will appear here</span>
+          </div>
+        </div>
+        <div class="collab-info">In production: use <strong>Yjs</strong> or <strong>Automerge</strong> — they handle
+          full CRDT-based conflict resolution.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Collaborative Editing Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔢</div>
+            <div class="rule-text"><strong>Track revision numbers</strong> — every operation includes the revision it
+              was based on. The server transforms it against any operations applied since that revision.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📦</div>
+            <div class="rule-text"><strong>Use Yjs or Automerge</strong> — don't implement OT from scratch for
+              production. Yjs (CRDT-based) works offline and is used by Slate, Quill, and CodeMirror.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔌</div>
+            <div class="rule-text"><strong>Yjs + WebSocket = 3 lines</strong> — <code class="mono">y-websocket</code> is
+              Yjs's official WebSocket provider. Awareness (presence + cursors) is built-in.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">💾</div>
+            <div class="rule-text"><strong>Persist the document state</strong> — store the Yjs document update in Redis
+              or a database so it survives server restarts.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn22.html" class="nav-btn">← Lesson 22</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn24.html" class="nav-btn primary">Lesson 24: WebRTC →</a>
+  </div>
+
+  <script>
+    let lastAlice = '', lastBob = '';
+    function now() { return new Date().toLocaleTimeString('en-US', { hour12: false }) }
+    function addLog(cls, msg) {
+      const el = document.getElementById('opLog');
+      const d = document.createElement('div'); d.className = `ol-row ${cls}`;
+      d.innerHTML = `<span class="ol-t">${now()}</span><span class="ol-m">${msg}</span>`;
+      el.appendChild(d); el.scrollTop = el.scrollHeight;
+    }
+    function syncEditors(who) {
+      const alice = document.getElementById('aliceEditor').value;
+      const bob = document.getElementById('bobEditor').value;
+      const merged = who === 'alice' ? alice + (bob ? '\n[Bob]: ' + bob : '') : bob + (alice ? '\n[Alice]: ' + alice : '');
+      document.getElementById('mergedDoc').textContent = alice || bob ? `[Alice]: ${alice}\n[Bob]: ${bob}` : 'Start typing…';
+      if (who === 'alice' && alice !== lastAlice) {
+        const diff = alice.length - lastAlice.length;
+        addLog('a', diff > 0 ? `Alice: INSERT "${alice.slice(-diff)}" at pos ${lastAlice.length}` : `Alice: DELETE at pos ${alice.length}`);
+        lastAlice = alice;
+      } else if (who === 'bob' && bob !== lastBob) {
+        const diff = bob.length - lastBob.length;
+        addLog('b', diff > 0 ? `Bob: INSERT "${bob.slice(-diff)}" at pos ${lastBob.length}` : `Bob: DELETE at pos ${bob.length}`);
+        lastBob = bob;
+      }
+    }
+  </script>
+</body>
+
+</html>

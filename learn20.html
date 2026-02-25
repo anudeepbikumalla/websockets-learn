@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 20 — Socket.io</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --white: #f8fafc
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(248, 250, 252, .04), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(248, 250, 252, .08);
+      color: var(--white);
+      border: 1px solid rgba(248, 250, 252, .15);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-white {
+      background: rgba(248, 250, 252, .1);
+      color: var(--white)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .81rem
+    }
+
+    .compare-table th {
+      padding: 9px 13px;
+      background: var(--card2);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .72rem;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      text-align: left
+    }
+
+    .compare-table td {
+      padding: 9px 13px;
+      border-bottom: 1px solid var(--border);
+      color: var(--dim);
+      vertical-align: top
+    }
+
+    .compare-table td:first-child {
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px
+    }
+
+    .tag.yes {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .tag.no {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red)
+    }
+
+    .golden {
+      background: rgba(248, 250, 252, .03);
+      border: 1px solid rgba(248, 250, 252, .1);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--white);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--white);
+      color: #0a0d16;
+      border-color: var(--white)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim)
+    }
+
+    .hl.yellow {
+      border-color: var(--yellow);
+      background: rgba(251, 191, 36, .05);
+      color: var(--dim)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 20</div>
+    <h1>Socket.io ⚡</h1>
+    <p>Socket.io is the world's most popular real-time library. It wraps WebSocket with automatic reconnect, rooms,
+      namespaces, and fallbacks. Learn what it does — and when to use raw <code style="font-family:monospace">ws</code>
+      instead.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-white">1</div>
+        <div>
+          <div class="sec-title">Socket.io vs raw ws — what's the difference? 🔍</div>
+          <div class="sec-sub">Socket.io is NOT just WebSocket — it's a higher-level protocol</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-body" style="padding:0">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Raw ws library</th>
+                <th>Socket.io</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Auto-reconnect</td>
+                <td><span class="tag no">Manual (Lesson 5)</span></td>
+                <td><span class="tag yes">Built-in</span></td>
+              </tr>
+              <tr>
+                <td>Rooms</td>
+                <td><span class="tag no">Manual (Lesson 7)</span></td>
+                <td><span class="tag yes">socket.join('room')</span></td>
+              </tr>
+              <tr>
+                <td>Namespaces</td>
+                <td><span class="tag no">Manual routing</span></td>
+                <td><span class="tag yes">io.of('/chat')</span></td>
+              </tr>
+              <tr>
+                <td>Redis scaling</td>
+                <td><span class="tag no">Manual (Lesson 11)</span></td>
+                <td><span class="tag yes">@socket.io/redis-adapter</span></td>
+              </tr>
+              <tr>
+                <td>Fallback (HTTP)</td>
+                <td><span class="tag no">No</span></td>
+                <td><span class="tag yes">Long-polling fallback</span></td>
+              </tr>
+              <tr>
+                <td>Bundle size</td>
+                <td><span class="tag yes">Tiny (~14KB)</span></td>
+                <td>Larger (~60KB)</td>
+              </tr>
+              <tr>
+                <td>Binary</td>
+                <td><span class="tag yes">Native</span></td>
+                <td>Slower (encoded)</td>
+              </tr>
+              <tr>
+                <td>Browser compatibility</td>
+                <td>Native WS API</td>
+                <td><span class="tag yes">Works everywhere</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Socket.io in code — how simple it is 💻</div>
+          <div class="sec-sub">Compare raw ws vs Socket.io for the same features</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head" style="color:var(--muted)">📦 Raw ws — rooms (Lesson 7)</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// 40 lines of code…</span><br>
+              <span class="kw">const</span> rooms = <span class="kw">new</span> <span class="fn">Map</span>();<br>
+              <span class="cm">// Manual join/leave logic</span><br>
+              <span class="cm">// Manual broadcast loop</span><br>
+              <span class="cm">// Manual cleanup on disconnect</span>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--green)">⚡ Socket.io — rooms (2 lines!)</div>
+          <div class="box-body">
+            <div class="code">
+              socket.<span class="fn">join</span>(<span class="str">'room-1'</span>);<br>
+              io.to(<span class="str">'room-1'</span>).<span class="fn">emit</span>(<span class="str">'msg'</span>,
+              data);<br>
+              <span class="cm">// That's it! 🎉</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box" style="margin-top:14px">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; Complete Socket.io server + client</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// ─── Server (server.js) ─────────────────</span><br>
+            <span class="kw">const</span> { Server } = <span class="fn">require</span>(<span
+              class="str">'socket.io'</span>);<br>
+            <span class="kw">const</span> io = <span class="kw">new</span> <span class="fn">Server</span>(httpServer, {
+            cors: { origin: <span class="str">'*'</span> } });<br><br>
+            io.<span class="fn">on</span>(<span class="str">'connection'</span>, (socket) =&gt; {<br>
+            &nbsp;&nbsp;socket.<span class="fn">on</span>(<span class="str">'join-room'</span>, (room) =&gt;
+            socket.<span class="fn">join</span>(room));<br>
+            &nbsp;&nbsp;socket.<span class="fn">on</span>(<span class="str">'message'</span>, ({ room, text }) =&gt;
+            {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;io.to(room).<span class="fn">emit</span>(<span class="str">'message'</span>, { text,
+            from: socket.id });<br>
+            &nbsp;&nbsp;});<br>
+            });<br><br>
+            <span class="cm">// ─── Client (browser) ───────────────────</span><br>
+            <span class="kw">const</span> socket = <span class="fn">io</span>(<span
+              class="str">'http://localhost:3000'</span>);<br>
+            socket.<span class="fn">emit</span>(<span class="str">'join-room'</span>, <span
+              class="str">'general'</span>);<br>
+            socket.<span class="fn">on</span>(<span class="str">'message'</span>, (data) =&gt; <span
+              class="fn">console</span>.<span class="fn">log</span>(data));<br>
+            socket.<span class="fn">emit</span>(<span class="str">'message'</span>, { room: <span
+              class="str">'general'</span>, text: <span class="str">'Hello!'</span> });
+          </div>
+          <div class="hl green">Rooms, broadcasting, disconnect cleanup — all handled automatically by Socket.io.</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">When to use Socket.io vs raw ws 🤔</div>
+          <div class="sec-sub">The honest answer</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head" style="color:var(--white)">✅ Use Socket.io when</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="ev">✅</span> Building a chat app or collaboration tool<br>
+              <span class="ev">✅</span> Need rooms, namespaces, reconnect<br>
+              <span class="ev">✅</span> Team speed matters more than bundle size<br>
+              <span class="ev">✅</span> Need long-polling fallback<br>
+              <span class="ev">✅</span> Integration with Redis adapter
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--yellow)">⚡ Use raw ws when</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="ev">⚡</span> Performance is critical (games, finance)<br>
+              <span class="ev">⚡</span> Binary data (ArrayBuffer, Blob)<br>
+              <span class="ev">⚡</span> Custom binary protocol<br>
+              <span class="ev">⚡</span> Minimal bundle size<br>
+              <span class="ev">⚡</span> You want full control
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Socket.io Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔌</div>
+            <div class="rule-text"><strong>Socket.io is NOT WebSocket</strong> — it has its own protocol. A raw
+              WebSocket client CANNOT connect to a Socket.io server and vice versa.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🚀</div>
+            <div class="rule-text"><strong>Use the Redis adapter for scaling</strong> — <code
+                class="mono">@socket.io/redis-adapter</code> replaces the manual Redis Pub/Sub from Lesson 11 with one
+              line of config.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📦</div>
+            <div class="rule-text"><strong>Use namespaces, not multiple servers</strong> — <code
+                class="mono">io.of('/chat')</code> and <code class="mono">io.of('/admin')</code> instead of separate
+              Socket.io servers.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn19.html" class="nav-btn">← Lesson 19</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn21.html" class="nav-btn primary">Lesson 21: Security →</a>
+  </div>
+</body>
+
+</html>

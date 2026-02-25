@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 13 — Rate Limiting & Throttling</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a78bfa;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(248, 113, 113, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(248, 113, 113, .1);
+      color: var(--red);
+      border: 1px solid rgba(248, 113, 113, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .76rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    /* demo */
+    .rl-demo {
+      background: var(--card);
+      border: 1px solid rgba(248, 113, 113, .2);
+      border-radius: 16px;
+      overflow: hidden
+    }
+
+    .rl-top {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .bucket-vis {
+      padding: 16px 20px;
+      background: var(--card3);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap
+    }
+
+    .bucket {
+      width: 100px;
+      height: 80px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0
+    }
+
+    .bucket-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(0deg, rgba(34, 197, 94, .4), rgba(34, 197, 94, .1));
+      transition: height .4s;
+      height: 100%
+    }
+
+    .bucket-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      font-weight: 700;
+      z-index: 1;
+      color: var(--text)
+    }
+
+    .bucket-title {
+      font-size: .72rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-align: center;
+      margin-top: 4px
+    }
+
+    .stats-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      min-width: 140px
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .78rem
+    }
+
+    .stat-val {
+      font-family: 'Fira Code', monospace;
+      font-weight: 700
+    }
+
+    .stat-val.ok {
+      color: var(--green)
+    }
+
+    .stat-val.warn {
+      color: var(--yellow)
+    }
+
+    .stat-val.bad {
+      color: var(--red)
+    }
+
+    .rl-log {
+      height: 110px;
+      overflow-y: auto;
+      padding: 10px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .7rem;
+      background: var(--card3);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px
+    }
+
+    .lg {
+      display: flex;
+      gap: 8px
+    }
+
+    .lg-t {
+      color: var(--muted);
+      flex-shrink: 0
+    }
+
+    .lg.ok .lg-m {
+      color: var(--green)
+    }
+
+    .lg.bad .lg-m {
+      color: var(--red)
+    }
+
+    .lg.sys .lg-m {
+      color: var(--dim)
+    }
+
+    .rl-controls {
+      padding: 12px 18px;
+      background: var(--card2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: .85
+    }
+
+    .btn:disabled {
+      opacity: .3;
+      cursor: not-allowed
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: #0a0d16
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--dim);
+      border: 1px solid var(--border)
+    }
+
+    .golden {
+      background: rgba(248, 113, 113, .05);
+      border: 1px solid rgba(248, 113, 113, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--red);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--red);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px
+    }
+
+    .hl.red {
+      border-color: var(--red);
+      background: rgba(248, 113, 113, .05);
+      color: var(--dim)
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 13</div>
+    <h1>Rate Limiting & Throttling 🛡️</h1>
+    <p>A single bad client can flood your server with thousands of messages per second. Learn the <strong>Token
+        Bucket</strong> algorithm to protect your WebSocket server.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">1</div>
+        <div>
+          <div class="sec-title">Why you need rate limiting 🚨</div>
+          <div class="sec-sub">Without it, one client can bring your server down</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head" style="color:var(--red)">❌ No rate limiting — dangerous</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Attacker sends 10,000 messages/sec</span><br>
+              ws.<span class="fn">on</span>(<span class="str">'message'</span>, (msg) => {<br>
+              &nbsp;&nbsp;<span class="cm">// 💀 CPU spikes to 100%, server crashes</span><br>
+              &nbsp;&nbsp;<span class="fn">handleMessage</span>(msg);<br>
+              });
+            </div>
+            <p class="note-sm" style="color:var(--red)">No limit = anyone can DoS your server with a simple for loop.
+            </p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--green)">✅ With Token Bucket rate limiting</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Each client gets 10 tokens/sec</span><br>
+              ws.<span class="fn">on</span>(<span class="str">'message'</span>, (msg) => {<br>
+              &nbsp;&nbsp;<span class="kw">if</span> (!<span class="fn">consume</span>(ws)) {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">close</span>(<span class="ev">4029</span>, <span
+                class="str">'Rate limit exceeded'</span>);<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>;<br>
+              &nbsp;&nbsp;}<br>
+              &nbsp;&nbsp;<span class="fn">handleMessage</span>(msg);<br>
+              });
+            </div>
+            <p class="note-sm" style="color:var(--green)">Burst is allowed, sustained spam is blocked.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">2</div>
+        <div>
+          <div class="sec-title">Token Bucket Algorithm 🪣</div>
+          <div class="sec-sub">The industry-standard rate limiting algorithm</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--yellow)">&lt;/&gt; server.js — Token Bucket per client</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// Each client gets their own bucket</span><br>
+            <span class="kw">function</span> <span class="fn">createBucket</span>(capacity = <span class="ev">10</span>,
+            refillRate = <span class="ev">10</span>) {<br>
+            &nbsp;&nbsp;<span class="kw">return</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;tokens: capacity,&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// starts full</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;capacity,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;refillRate,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// tokens
+              added per second</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;lastRefill: Date.<span class="fn">now</span>()<br>
+            &nbsp;&nbsp;};<br>
+            }<br><br>
+            <span class="kw">function</span> <span class="fn">consume</span>(bucket) {<br>
+            &nbsp;&nbsp;<span class="cm">// Refill tokens based on elapsed time</span><br>
+            &nbsp;&nbsp;<span class="kw">const</span> now = Date.<span class="fn">now</span>();<br>
+            &nbsp;&nbsp;<span class="kw">const</span> elapsed = (now - bucket.lastRefill) / <span
+              class="ev">1000</span>;<br>
+            &nbsp;&nbsp;bucket.tokens = <span class="fn">Math.min</span>(bucket.capacity, bucket.tokens + elapsed *
+            bucket.refillRate);<br>
+            &nbsp;&nbsp;bucket.lastRefill = now;<br><br>
+            &nbsp;&nbsp;<span class="kw">if</span> (bucket.tokens >= <span class="ev">1</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;bucket.tokens--;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="kw">true</span>;&nbsp;&nbsp;<span
+              class="cm">// ✅ allowed</span><br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;<span class="kw">return</span> <span class="kw">false</span>;&nbsp;&nbsp;<span class="cm">// ❌
+              rate limited</span><br>
+            }<br><br>
+            wss.<span class="fn">on</span>(<span class="str">'connection'</span>, (ws) => {<br>
+            &nbsp;&nbsp;ws.bucket = <span class="fn">createBucket</span>(<span class="ev">10</span>, <span
+              class="ev">10</span>); <span class="cm">// 10 tokens, refills 10/sec</span><br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'message'</span>, (msg) => {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (!<span class="fn">consume</span>(ws.bucket)) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ws.<span class="fn">send</span>(<span class="fn">JSON.stringify</span>({
+            type: <span class="str">'error'</span>, msg: <span class="str">'Rate limit exceeded'</span> }));<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">handleMessage</span>(msg);<br>
+            &nbsp;&nbsp;});<br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">3</div>
+        <div>
+          <div class="sec-title">▶️ Token Bucket Demo</div>
+          <div class="sec-sub">Spam messages — watch the bucket drain and refill</div>
+        </div>
+      </div>
+      <div class="rl-demo">
+        <div class="rl-top">🛡️ Rate Limit Simulator — 10 tokens, refills 2/sec</div>
+        <div class="bucket-vis">
+          <div>
+            <div class="bucket" id="bucketVis">
+              <div class="bucket-fill" id="bucketFill" style="height:100%"></div>
+              <div class="bucket-label" id="bucketLabel">10</div>
+            </div>
+            <div class="bucket-title">Token Bucket</div>
+          </div>
+          <div class="stats-col">
+            <div class="stat-row"><span>Tokens:</span><span class="stat-val ok" id="tokCount">10.0</span></div>
+            <div class="stat-row"><span>Allowed:</span><span class="stat-val ok" id="allowCount">0</span></div>
+            <div class="stat-row"><span>Blocked:</span><span class="stat-val bad" id="blockCount">0</span></div>
+            <div class="stat-row"><span>Status:</span><span class="stat-val" id="rlStatus"
+                style="color:var(--green)">Ready</span></div>
+          </div>
+        </div>
+        <div class="rl-log" id="rlLog">
+          <div class="lg sys"><span class="lg-t">—</span><span class="lg-m">Click "Send Message" or "Spam x10" to test
+              rate limiting</span></div>
+        </div>
+        <div class="rl-controls">
+          <button class="btn btn-yellow" onclick="sendOne()">📤 Send Message</button>
+          <button class="btn btn-red" onclick="spam()">💥 Spam ×10</button>
+          <button class="btn btn-ghost" onclick="resetRL()">Reset</button>
+          <span style="font-size:.74rem;color:var(--muted);margin-left:auto">Refills 2 tokens/sec</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">4</div>
+        <div>
+          <div class="sec-title">⚡ Rate Limiting Rules</div>
+          <div class="sec-sub">Production checklist</div>
+        </div>
+      </div>
+      <div class="golden">
+        <h3>✅ Rate Limiting Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🪣</div>
+            <div class="rule-text"><strong>Use Token Bucket</strong> — it allows short bursts (natural user behavior)
+              while blocking sustained spam.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">👤</div>
+            <div class="rule-text"><strong>Rate limit per client</strong> — attach a bucket to each WebSocket object
+              (<code class="mono">ws.bucket</code>). Never share buckets between clients.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📤</div>
+            <div class="rule-text"><strong>Send a warning first</strong> — on the first rate limit hit, send an error
+              message. Close the connection only on repeated/severe violations.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔢</div>
+            <div class="rule-text"><strong>Use custom close code 4029</strong> — the HTTP "429 Too Many Requests"
+              equivalent for WebSockets.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📏</div>
+            <div class="rule-text"><strong>Also limit message size</strong> — check <code class="mono">msg.length</code>
+              and drop oversized payloads (&gt;64KB for chat, more for file uploads).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn12.html" class="nav-btn">← Lesson 12</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn14.html" class="nav-btn primary">Lesson 14: Express+WS →</a>
+  </div>
+
+  <script>
+    let tokens = 10, cap = 10, refillRate = 2;
+    let allowed = 0, blocked = 0;
+    let lastRefill = Date.now();
+    let refillInterval = setInterval(refillTick, 500);
+
+    function refillTick() {
+      const now = Date.now();
+      const elapsed = (now - lastRefill) / 1000;
+      tokens = Math.min(cap, tokens + elapsed * refillRate);
+      lastRefill = now;
+      updateVis();
+    }
+
+    function updateVis() {
+      const pct = (tokens / cap) * 100;
+      document.getElementById('bucketFill').style.height = pct + '%';
+      document.getElementById('bucketFill').style.background =
+        pct > 50 ? 'linear-gradient(0deg,rgba(34,197,94,.4),rgba(34,197,94,.1))' :
+          pct > 20 ? 'linear-gradient(0deg,rgba(251,191,36,.4),rgba(251,191,36,.1))' :
+            'linear-gradient(0deg,rgba(248,113,113,.4),rgba(248,113,113,.1))';
+      document.getElementById('bucketLabel').textContent = tokens.toFixed(1);
+      document.getElementById('tokCount').textContent = tokens.toFixed(1);
+      document.getElementById('tokCount').className = 'stat-val ' + (tokens > 5 ? 'ok' : tokens > 2 ? 'warn' : 'bad');
+      document.getElementById('allowCount').textContent = allowed;
+      document.getElementById('blockCount').textContent = blocked;
+    }
+
+    function tryConsume() {
+      refillTick();
+      if (tokens >= 1) { tokens--; allowed++; return true; }
+      blocked++; return false;
+    }
+
+    function addLog(cls, msg) {
+      const el = document.getElementById('rlLog');
+      const d = document.createElement('div');
+      d.className = `lg ${cls}`;
+      const t = new Date().toLocaleTimeString('en-US', { hour12: false });
+      d.innerHTML = `<span class="lg-t">${t}</span><span class="lg-m">${msg}</span>`;
+      el.appendChild(d); el.scrollTop = el.scrollHeight;
+    }
+
+    function sendOne() {
+      if (tryConsume()) {
+        addLog('ok', `✅ Message allowed (tokens left: ${tokens.toFixed(1)})`);
+        document.getElementById('rlStatus').textContent = 'Allowed';
+        document.getElementById('rlStatus').style.color = 'var(--green)';
+      } else {
+        addLog('bad', `❌ BLOCKED — rate limit! (tokens: ${tokens.toFixed(1)})`);
+        document.getElementById('rlStatus').textContent = 'Rate Limited!';
+        document.getElementById('rlStatus').style.color = 'var(--red)';
+      }
+      updateVis();
+    }
+
+    function spam() {
+      addLog('sys', '💥 Spam attack: sending 10 messages instantly…');
+      for (let i = 0; i < 10; i++) setTimeout(sendOne, i * 30);
+    }
+
+    function resetRL() {
+      tokens = cap; allowed = 0; blocked = 0; lastRefill = Date.now();
+      document.getElementById('rlLog').innerHTML = '<div class="lg sys"><span class="lg-t">—</span><span class="lg-m">Reset — bucket full</span></div>';
+      document.getElementById('rlStatus').textContent = 'Ready';
+      document.getElementById('rlStatus').style.color = 'var(--green)';
+      updateVis();
+    }
+  </script>
+</body>
+
+</html>

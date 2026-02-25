@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 21 — WebSocket Security</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(248, 113, 113, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(248, 113, 113, .1);
+      color: var(--red);
+      border: 1px solid rgba(248, 113, 113, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-red {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    @media(max-width:680px) {
+      .two-col {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .threat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px
+    }
+
+    @media(max-width:640px) {
+      .threat-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .threat-card {
+      background: var(--card);
+      border: 1px solid rgba(248, 113, 113, .2);
+      border-radius: 10px;
+      padding: 14px
+    }
+
+    .threat-icon {
+      font-size: 1.5rem;
+      margin-bottom: 6px
+    }
+
+    .threat-name {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 4px
+    }
+
+    .threat-fix {
+      font-size: .76rem;
+      color: var(--green);
+      margin-top: 6px
+    }
+
+    .threat-desc {
+      font-size: .76rem;
+      color: var(--dim);
+      line-height: 1.5
+    }
+
+    .golden {
+      background: rgba(34, 197, 94, .05);
+      border: 1px solid rgba(34, 197, 94, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--green);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--red);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+
+    .hl {
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+      margin-top: 12px
+    }
+
+    .hl.green {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, .05);
+      color: var(--dim)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 21</div>
+    <h1>WebSocket Security 🔒</h1>
+    <p>WebSockets bypass many standard HTTP security mechanisms. An insecure WebSocket server is a wide-open attack
+      surface. Learn the threats and how to neutralize them.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-red">1</div>
+        <div>
+          <div class="sec-title">The 4 Main Threats 🚨</div>
+          <div class="sec-sub">Know your attack surface before you ship</div>
+        </div>
+      </div>
+      <div class="threat-grid">
+        <div class="threat-card">
+          <div class="threat-icon">🌐</div>
+          <div class="threat-name">Cross-Site WebSocket Hijacking</div>
+          <div class="threat-desc">A malicious website opens a WS connection to YOUR server using the victim's
+            cookies/session.</div>
+          <div class="threat-fix">✅ Fix: validate the Origin header on connect</div>
+        </div>
+        <div class="threat-card">
+          <div class="threat-icon">💥</div>
+          <div class="threat-name">DoS / Message Flooding</div>
+          <div class="threat-desc">Attacker sends millions of messages per second to exhaust CPU and memory.</div>
+          <div class="threat-fix">✅ Fix: rate limiting (Lesson 13) + message size limit</div>
+        </div>
+        <div class="threat-card">
+          <div class="threat-icon">📨</div>
+          <div class="threat-name">Message Injection / XSS</div>
+          <div class="threat-desc">Attacker sends a malicious message that gets rendered as HTML in other clients.</div>
+          <div class="threat-fix">✅ Fix: always sanitize/escape message content before rendering</div>
+        </div>
+        <div class="threat-card">
+          <div class="threat-icon">🔓</div>
+          <div class="threat-name">No Authentication</div>
+          <div class="threat-desc">Anyone who knows your WS URL connects and receives all messages.</div>
+          <div class="threat-fix">✅ Fix: token auth before handshake (Lesson 8)</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Fix #1 — Origin Header Validation 🌐</div>
+          <div class="sec-sub">Prevent cross-site WebSocket hijacking</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; server.js — validate Origin on upgrade</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> ALLOWED_ORIGINS = [<span class="str">'https://myapp.com'</span>, <span
+              class="str">'https://www.myapp.com'</span>];<br><br>
+            server.<span class="fn">on</span>(<span class="str">'upgrade'</span>, (req, socket, head) =&gt; {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> origin = req.headers.origin;<br><br>
+            &nbsp;&nbsp;<span class="kw">if</span> (!ALLOWED_ORIGINS.<span class="fn">includes</span>(origin)) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;socket.<span class="fn">write</span>(<span class="str">'HTTP/1.1 403
+              Forbidden\r\n\r\n'</span>);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;socket.<span class="fn">destroy</span>();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>;<br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;wss.<span class="fn">handleUpgrade</span>(req, socket, head, (ws) =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;wss.<span class="fn">emit</span>(<span class="str">'connection'</span>, ws,
+            req);<br>
+            &nbsp;&nbsp;});<br>
+            });
+          </div>
+          <div class="hl green">
+            <strong style="color:var(--green)">Important:</strong> The <code class="mono">Origin</code> header is set by
+            browsers automatically and cannot be spoofed by client-side JavaScript. Server-to-server requests don't send
+            it. So this is an effective browser CSRF protection.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">3</div>
+        <div>
+          <div class="sec-title">Fix #2 — Message Size + Content Validation 📏</div>
+          <div class="sec-sub">Prevent DoS and injection attacks</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--yellow)">&lt;/&gt; server.js — validate every message</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="cm">// 1. Limit WebSocket frame size</span><br>
+            <span class="kw">const</span> wss = <span class="kw">new</span> <span
+              class="fn">WebSocketServer</span>({<br>
+            &nbsp;&nbsp;server,<br>
+            &nbsp;&nbsp;maxPayload: <span class="ev">64 * 1024</span> <span class="cm">// 64KB max per
+              message</span><br>
+            });<br><br>
+            ws.<span class="fn">on</span>(<span class="str">'message'</span>, (raw) =&gt; {<br>
+            &nbsp;&nbsp;<span class="cm">// 2. Limit message string length</span><br>
+            &nbsp;&nbsp;<span class="kw">if</span> (raw.length &gt; <span class="ev">10000</span>) { ws.<span
+              class="fn">close</span>(<span class="ev">4001</span>); <span class="kw">return</span>; }<br><br>
+            &nbsp;&nbsp;<span class="cm">// 3. Parse JSON safely</span><br>
+            &nbsp;&nbsp;<span class="kw">let</span> msg;<br>
+            &nbsp;&nbsp;<span class="kw">try</span> { msg = <span class="fn">JSON.parse</span>(raw); }<br>
+            &nbsp;&nbsp;<span class="kw">catch</span> { ws.<span class="fn">close</span>(<span class="ev">4002</span>);
+            <span class="kw">return</span>; }<br><br>
+            &nbsp;&nbsp;<span class="cm">// 4. Validate types (avoid prototype pollution)</span><br>
+            &nbsp;&nbsp;<span class="kw">if</span> (<span class="kw">typeof</span> msg.text !== <span
+              class="str">'string'</span>) <span class="kw">return</span>;<br><br>
+            &nbsp;&nbsp;<span class="cm">// 5. Sanitize before re-sending to clients</span><br>
+            &nbsp;&nbsp;msg.text = <span class="fn">escapeHtml</span>(msg.text);<br>
+            &nbsp;&nbsp;<span class="fn">broadcast</span>(msg);<br>
+            });
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">4</div>
+        <div>
+          <div class="sec-title">Fix #3 — Always Use wss:// in Production 🔐</div>
+          <div class="sec-sub">Never ship ws:// in production — TLS is mandatory</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="box">
+          <div class="box-head" style="color:var(--red)">❌ ws:// — unencrypted</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// Anyone on the network sees</span><br>
+              <span class="cm">// all WS messages in plaintext!</span><br>
+              <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
+                class="str">'ws://api.myapp.com'</span>);
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-head" style="color:var(--green)">✅ wss:// — TLS encrypted</div>
+          <div class="box-body">
+            <div class="code">
+              <span class="cm">// encrypted with TLS — same as HTTPS</span><br>
+              <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
+                class="str">'wss://api.myapp.com'</span>);<br>
+              <span class="cm">// Handle TLS in nginx/ALB, not in Node</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Security Checklist</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🌐</div>
+            <div class="rule-text"><strong>Validate Origin header</strong> on the HTTP upgrade event. Destroy the socket
+              for unknown origins.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔑</div>
+            <div class="rule-text"><strong>Authenticate before handshake</strong> (Lesson 8) — verify the JWT in the
+              query string before the connection upgrades.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📏</div>
+            <div class="rule-text"><strong>Set maxPayload</strong> on <code class="mono">WebSocketServer</code> — this
+              is your first line of defense against large-payload DoS.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🧹</div>
+            <div class="rule-text"><strong>Sanitize user content</strong> — escape HTML before relaying user messages to
+              other clients to prevent XSS.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🔐</div>
+            <div class="rule-text"><strong>Always use wss://</strong> — handle TLS termination in your reverse proxy
+              (nginx, ALB). Never expose raw Node.js on port 443.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn20.html" class="nav-btn">← Lesson 20</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn22.html" class="nav-btn primary">Lesson 22: TypeScript →</a>
+  </div>
+</body>
+
+</html>

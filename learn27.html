@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Lesson 27 — Load Testing WebSockets</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #0a0d16;
+      --card: #111827;
+      --card2: #1a2235;
+      --card3: #0d1525;
+      --border: #1f2d45;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --dim: #94a3b8;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --yellow: #fbbf24;
+      --red: #f87171
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .hero {
+      text-align: center;
+      padding: 56px 24px 40px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(251, 191, 36, .07), transparent);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(251, 191, 36, .1);
+      color: var(--yellow);
+      border: 1px solid rgba(251, 191, 36, .25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--dim);
+      max-width: 580px;
+      margin: 0 auto
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px
+    }
+
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .sec-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .c-yellow {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .c-green {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .c-blue {
+      background: rgba(56, 189, 248, .15);
+      color: var(--blue)
+    }
+
+    .sec-title {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    .sec-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .box-head {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .box-body {
+      padding: 16px 18px
+    }
+
+    .code {
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.9
+    }
+
+    .kw {
+      color: #7dd3fc
+    }
+
+    .fn {
+      color: #86efac
+    }
+
+    .str {
+      color: #fca5a5
+    }
+
+    .cm {
+      color: #475569;
+      font-style: italic
+    }
+
+    .ev {
+      color: #fbbf24
+    }
+
+    .bench-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .81rem
+    }
+
+    .bench-table th {
+      padding: 9px 13px;
+      background: var(--card2);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .72rem;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      text-align: left
+    }
+
+    .bench-table td {
+      padding: 9px 13px;
+      border-bottom: 1px solid var(--border);
+      color: var(--dim)
+    }
+
+    .bench-table td:first-child {
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .bench-table tr:last-child td {
+      border-bottom: none
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px
+    }
+
+    .tag.ok {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green)
+    }
+
+    .tag.warn {
+      background: rgba(251, 191, 36, .15);
+      color: var(--yellow)
+    }
+
+    .tag.bad {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red)
+    }
+
+    .golden {
+      background: rgba(251, 191, 36, .05);
+      border: 1px solid rgba(251, 191, 36, .2);
+      border-radius: 14px;
+      padding: 20px 22px
+    }
+
+    .golden h3 {
+      font-size: 1rem;
+      color: var(--yellow);
+      margin-bottom: 12px
+    }
+
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .rule-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 12px 14px
+    }
+
+    .rule-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .rule-text {
+      font-size: .84rem;
+      color: var(--dim);
+      line-height: 1.6
+    }
+
+    .rule-text strong {
+      color: var(--text)
+    }
+
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--dim);
+      text-decoration: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .nav-btn:hover {
+      border-color: var(--yellow);
+      color: var(--text)
+    }
+
+    .nav-btn.primary {
+      background: var(--yellow);
+      color: #0a0d16;
+      border-color: var(--yellow)
+    }
+
+    .nav-btn.home {
+      background: var(--card2)
+    }
+
+    code.mono {
+      font-family: monospace
+    }
+
+    .note-sm {
+      font-size: .82rem;
+      color: var(--dim);
+      margin-top: 10px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="badge">🎓 Lesson 27</div>
+    <h1>Load Testing WebSockets ⚡</h1>
+    <p>How many concurrent connections can your server handle? Find out before your users do — using
+      <strong>Artillery</strong> and <strong>autocannon</strong> to simulate thousands of WebSocket clients.</p>
+  </div>
+  <div class="page">
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-yellow">1</div>
+        <div>
+          <div class="sec-title">Load Testing with Artillery 🔫</div>
+          <div class="sec-sub">Artillery is the gold standard for WebSocket load tests</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--yellow)">📝 artillery-ws.yml — WebSocket load test config</div>
+        <div class="box-body">
+          <div class="code">
+            config:<br>
+            &nbsp;&nbsp;target: <span class="str">'ws://localhost:8080'</span><br>
+            &nbsp;&nbsp;phases:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;- duration: <span class="ev">60</span>&nbsp;&nbsp;&nbsp;<span class="cm"># 60 second
+              test</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrivalRate: <span class="ev">10</span> <span class="cm"># 10 new
+              connections/sec</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;- duration: <span class="ev">120</span>&nbsp;&nbsp;<span class="cm"># Ramp up
+              phase</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrivalRate: <span class="ev">50</span> <span class="cm"># 50 new
+              connections/sec</span><br>
+            scenarios:<br>
+            &nbsp;&nbsp;- engine: <span class="str">'ws'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;flow:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- send: <span
+              class="str">'{"type":"join","room":"load-test"}'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- think: <span
+              class="ev">5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Stay connected
+              5 seconds</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- send: <span class="str">'{"type":"message","text":"hello"}'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- think: <span class="ev">5</span>
+          </div>
+          <p class="note-sm">Run with: <code class="mono">npx artillery run artillery-ws.yml</code></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-green">2</div>
+        <div>
+          <div class="sec-title">Quick benchmark with ws-loadtest script 💻</div>
+          <div class="sec-sub">A simple Node.js script to create N simultaneous connections</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-head" style="color:var(--green)">&lt;/&gt; loadtest.js — quick &amp; dirty benchmark</div>
+        <div class="box-body">
+          <div class="code">
+            <span class="kw">const</span> WebSocket = <span class="fn">require</span>(<span
+              class="str">'ws'</span>);<br>
+            <span class="kw">const</span> N = <span class="ev">1000</span>; <span class="cm">// connections to
+              open</span><br>
+            <span class="kw">let</span> opened = <span class="ev">0</span>, failed = <span class="ev">0</span>;<br><br>
+            <span class="kw">for</span> (<span class="kw">let</span> i = <span class="ev">0</span>; i &lt; N; i++) {<br>
+            &nbsp;&nbsp;<span class="kw">const</span> ws = <span class="kw">new</span> <span
+              class="fn">WebSocket</span>(<span class="str">'ws://localhost:8080'</span>);<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'open'</span>, () =&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;opened++;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (opened + failed === N)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(<span
+              class="str">`✅ ${opened} opened, ❌ ${failed} failed`</span>);<br>
+            &nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'error'</span>, () =&gt; { failed++; });<br>
+            }
+          </div>
+          <p class="note-sm">This quickly tells you whether your server can handle N simultaneous connections before you
+            run a full Artillery test.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-label">
+        <div class="sec-num c-blue">3</div>
+        <div>
+          <div class="sec-title">Realistic Benchmarks — what to expect 📊</div>
+          <div class="sec-sub">Typical Node.js WebSocket server performance</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-body" style="padding:0">
+          <table class="bench-table">
+            <thead>
+              <tr>
+                <th>Setup</th>
+                <th>Max Connections</th>
+                <th>Messages/sec</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Single Node.js, 1GB RAM</td>
+                <td>~10,000</td>
+                <td><span class="tag ok">~50,000</span></td>
+                <td>Default ulimit</td>
+              </tr>
+              <tr>
+                <td>Single Node.js, tuned OS</td>
+                <td>~60,000</td>
+                <td><span class="tag ok">~200,000</span></td>
+                <td>Increase file descriptors</td>
+              </tr>
+              <tr>
+                <td>2 servers + Redis</td>
+                <td>~120,000</td>
+                <td><span class="tag warn">Depends on Redis</span></td>
+                <td>Lesson 11 pattern</td>
+              </tr>
+              <tr>
+                <td>Socket.io (overhead)</td>
+                <td>~25% less</td>
+                <td><span class="tag warn">25% less</span></td>
+                <td>Protocol overhead</td>
+              </tr>
+              <tr>
+                <td>Cloudflare Durable Objects</td>
+                <td>Millions</td>
+                <td><span class="tag ok">Edge scaling</span></td>
+                <td>Serverless WS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="golden">
+        <h3>✅ Load Testing Rules</h3>
+        <div class="rule-list">
+          <div class="rule-row">
+            <div class="rule-icon">🔢</div>
+            <div class="rule-text"><strong>Increase OS file descriptors</strong> — default is often 1024. Run <code
+                class="mono">ulimit -n 65535</code> before your server to allow more connections.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📈</div>
+            <div class="rule-text"><strong>Test gradual ramp-up</strong> — don't open 10,000 connections at once. Ramp
+              up gradually (100/sec) to find the breaking point, not crash it immediately.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">🎯</div>
+            <div class="rule-text"><strong>Test realistic message patterns</strong> — idle connections (no messages) are
+              cheap. Test with realistic message rates that match your production traffic.</div>
+          </div>
+          <div class="rule-row">
+            <div class="rule-icon">📊</div>
+            <div class="rule-text"><strong>Monitor latency, not just connections</strong> — 10k connections with 500ms
+              message latency is worse than 5k connections with 5ms latency.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <a href="index.html" class="nav-btn home">🏠 Home</a>
+    <a href="learn26.html" class="nav-btn">← Lesson 26</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
+    <a href="learn28.html" class="nav-btn primary">Lesson 28: Deployment →</a>
+  </div>
+</body>
+
+</html>
