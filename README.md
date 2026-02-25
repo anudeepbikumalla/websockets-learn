@@ -80,9 +80,10 @@ You can host this project online so anyone can learn WebSockets from their brows
 
 ### 3. Connect Everything
 1. Open your live GitHub Pages site.
-2. Click the **⚙️ Settings** icon in the bottom right.
-3. Paste your Render URL (change `https://` to `wss://`).
-4. **Done!** All 28 lessons will now use your live production backend.
+2. The Hub now **automatically connects** to the Render backend when it detects it's running online.
+3. Check the **Backend Status Bar** at the top of the hub — it will show "Online" or "Sleeping".
+4. If it's your first visit in a while, give it ~50s for the free-tier backend to wake up.
+5. You can still manually override the URL via the **⚙️ Settings** icon if needed.
 
 ---
 
