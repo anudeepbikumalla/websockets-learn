@@ -156,25 +156,122 @@ window.getWsUrl = getWsUrl;
   document.head.appendChild(styles);
 
   const KB = {
-    addEventListener: "👌 Multiple listeners allowed. Remove each individually. Modular and best practice.",
-    onmessage: "⚠️ Single handler only. New assignment overwrites the old. Simple but limited.",
-    callback: "📞 Function param called on completion. Universal but leads to callback hell.",
-    async: "✨ Modern async/await with Promises. Clean, readable, try/catch errors.",
-    joinroom: "🏠 Map<roomName, Set<clients>>. Group clients by room for targeted messages.",
-    broadcast: "📢 Send to all in room. Always check readyState === OPEN first.",
-    reconnect: "🔄 Exponential backoff prevents server overload and improves UX.",
-    auth: "🔐 JWT tokens in URL. Always use wss:// in production to avoid leaking tokens.",
-    getwsurl: "🌐 Helper that detects page protocol and returns ws:// or wss:// automatically.",
-    map: "🗺️ Key-value storage. Better than objects for dynamic room names.",
-    set: "📋 Unique values only. Perfect for tracking unique client connections."
+    addEventListener: {
+      explanation: "addEventListener() allows you to attach multiple event listeners to the same element. Each listener is stored separately, so you can add and remove them independently without affecting others.",
+      pros: ["Multiple listeners per event", "Remove listeners individually with removeEventListener()", "Non-destructive - doesn't overwrite existing handlers", "Standard DOM pattern used everywhere"],
+      cons: ["More verbose syntax", "Must keep references to handlers if you want to remove them later"],
+      when: "Use this for production code, complex apps, and when you need fine control over event handling",
+      example: "element.addEventListener('click', handler1);\nelement.addEventListener('click', handler2);\n// Both handlers fire!"
+    },
+    onmessage: {
+      explanation: "onmessage is a direct property assignment. You set ws.onmessage = function() { }. Simple but limited - assigning a new function overwrites the previous one.",
+      pros: ["Very simple syntax", "Easy for quick demos and learning"],
+      cons: ["Only ONE handler allowed", "New assignment destroys old handler", "Not production-ready"],
+      when: "Use this for quick prototypes and learning. NOT for real applications.",
+      example: "ws.onmessage = (event) => console.log(event.data);"
+    },
+    callback: {
+      explanation: "Callbacks are functions passed as arguments to other functions. Called with (error, result) pattern. Traditional Node.js style but can lead to 'callback hell'.",
+      pros: ["Universal pattern", "Works everywhere", "Simple to understand initially"],
+      cons: ["Deeply nested callbacks become hard to read", "Error handling is manual", "Difficult to debug"],
+      when: "Used in legacy code and some APIs, but async/await is preferred now",
+      example: "function load(url, callback) {\n  // ...get data\n  callback(null, data);\n}"
+    },
+    async: {
+      explanation: "async/await is modern JavaScript for handling asynchronous operations with Promises. Reads like synchronous code but is actually async. Uses try/catch for errors.",
+      pros: ["Reads like regular code", "Try/catch error handling", "Much easier to chain operations", "Cleaner than callbacks and .then()"],
+      cons: ["Requires caller to be async too", "Slightly more overhead"],
+      when: "Use this for modern JavaScript. It's the current best practice.",
+      example: "async function load(url) {\n  try {\n    const data = await fetch(url);\n    return data;\n  } catch(e) { console.error(e); }\n}"
+    },
+    joinroom: {
+      explanation: "joinRoom is a pattern where you store clients in a Map<roomName, Set<WebSocket>>. When a client joins a room, you add their socket to that room's set.",
+      pros: ["Targeted broadcasts save bandwidth", "Flexible - clients can be in multiple rooms", "Simple to implement"],
+      cons: ["Need cleanup when clients disconnect", "Memory management for large rooms"],
+      when: "Use this in chat apps, online games, collaborative tools - anywhere you need group messaging",
+      example: "const rooms = new Map();\nfunction joinRoom(ws, roomName) {\n  if (!rooms.has(roomName)) rooms.set(roomName, new Set());\n  rooms.get(roomName).add(ws);\n}"
+    },
+    broadcast: {
+      explanation: "Broadcasting sends a message to all clients in a room. Loop through the room's Set and send to each socket if readyState is OPEN.",
+      pros: ["Simple implementation", "Works for announcements"],
+      cons: ["Inefficient if naive (sends to disconnected sockets)", "Can overload bandwidth"],
+      when: "Use after implementing rooms. Always check readyState before sending.",
+      example: "rooms.get(roomName).forEach(client => {\n  if (client.readyState === WebSocket.OPEN) {\n    client.send(JSON.stringify(msg));\n  }\n});"
+    },
+    reconnect: {
+      explanation: "Reconnection logic uses exponential backoff to retry connections. Starts with short delays, then increases to prevent server overload.",
+      pros: ["Prevents thundering herd problem", "Better UX with automatic recovery", "Configurable backoff strategy"],
+      cons: ["Complex with expiring auth tokens", "Must cap max retries"],
+      when: "Use when you need resilient connections that survive network hiccups",
+      example: "function reconnect(attempt = 0) {\n  const delay = Math.min(1000 * Math.pow(2, attempt), 30000);\n  setTimeout(() => { ws = new WebSocket(url); }, delay);\n}"
+    },
+    auth: {
+      explanation: "WebSocket auth passes a JWT token in the URL query string: ws://server.com?token=xyz. Always use wss:// (secure) in production because URLs leak in logs.",
+      pros: ["Works without HTTP headers", "Simple to implement"],
+      cons: ["Tokens visible in logs if not using wss://", "URL not meant for sensitive data", "Must use TLS in production"],
+      when: "Use for APIs that don't support header auth. Always use wss:// and short-lived tokens.",
+      example: "const token = getToken();\nconst ws = new WebSocket(`wss://server.com/ws?token=${token}`);"
+    },
+    getwsurl: {
+      explanation: "getWsUrl() is a helper that returns the correct WebSocket URL based on page protocol. Returns ws:// for HTTP, wss:// for HTTPS.",
+      pros: ["Centralizes URL logic", "Supports custom overrides via localStorage", "Works in all deployment scenarios"],
+      cons: ["If default wrong, all lessons fail", "Must sync with server port"],
+      when: "Use in all WebSocket clients to handle protocol detection automatically",
+      example: "function getWsUrl(port = 8082) {\n  const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';\n  return protocol + 'localhost:' + port;\n}"
+    },
+    map: {
+      explanation: "Map is a JavaScript data structure for key-value pairs. Unlike objects, maps preserve insertion order and allow any value as a key.",
+      pros: ["Better than plain objects for dynamic keys", "Built-in iteration", "Clear key-value semantics"],
+      cons: ["Slightly slower than objects", "Less compatible with old browsers"],
+      when: "Use Map for rooms, user sessions, or anything with dynamic string keys",
+      example: "const rooms = new Map();\nrooms.set('general', new Set());\nrooms.set('gaming', new Set());"
+    },
+    set: {
+      explanation: "Set is a collection of unique values. Perfect for storing unique WebSocket connections in a room.",
+      pros: ["Guaranteed uniqueness", "Fast add/has/delete operations", "Perfect for storing connections"],
+      cons: ["Unordered", "Can't index like arrays"],
+      when: "Use Set to store unique connections in each room",
+      example: "const generalRoom = new Set();\ngeneralRoom.add(ws1);\ngeneralRoom.add(ws2);"
+    }
   };
 
   function findAnswer(query) {
     const q = query.toLowerCase();
-    for (const [key, answer] of Object.entries(KB)) {
-      if (q.includes(key.toLowerCase())) return answer;
+    
+    // Find matching topic
+    let topic = null;
+    for (const [key, value] of Object.entries(KB)) {
+      if (q.includes(key.toLowerCase())) {
+        topic = { key, value };
+        break;
+      }
     }
-    return "😊 Try asking about: addEventListener, onmessage, callbacks, async, joinroom, broadcast, reconnect, auth, or getwsurl.";
+    
+    if (!topic) {
+      return "I'm not sure about that topic. Try asking about: addEventListener, onmessage, callbacks, async, joinroom, broadcast, reconnect, auth, getwsurl, map, or set.";
+    }
+    
+    const { key, value } = topic;
+    
+    // Detect what type of answer they want
+    if (q.includes('pro') || q.includes('advantage') || q.includes('benefit') || q.includes('good')) {
+      return `✅ **Pros of ${key}:**\n${value.pros.map(p => '• ' + p).join('\n')}`;
+    }
+    
+    if (q.includes('con') || q.includes('disadvantage') || q.includes('problem') || q.includes('bad') || q.includes('issue')) {
+      return `⚠️ **Cons of ${key}:**\n${value.cons.map(c => '• ' + c).join('\n')}`;
+    }
+    
+    if (q.includes('example') || q.includes('code') || q.includes('show')) {
+      return `📝 **Example of ${key}:**\n\`\`\`javascript\n${value.example}\n\`\`\``;
+    }
+    
+    if (q.includes('when') || q.includes('use') || q.includes('apply')) {
+      return `🎯 **When to use ${key}:**\n${value.when}`;
+    }
+    
+    // Default: return full answer
+    return `📖 **${key}:**\n${value.explanation}\n\n✅ **Pros:** ${value.pros.join(', ')}\n\n⚠️ **Cons:** ${value.cons.join(', ')}\n\n🎯 **When:** ${value.when}`;
   }
 
   function init() {
