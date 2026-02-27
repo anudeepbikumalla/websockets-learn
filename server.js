@@ -9,6 +9,7 @@
  * ╚══════════════════════════════════════════════════════════════════╝
  */
 
+require('dotenv').config();
 const WebSocket = require("ws");
 const http = require("http");
 
@@ -88,14 +89,15 @@ const httpServer = http.createServer(async (req, res) => {
           }));
         }
 
-        // Call Hugging Face API
-        const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions", {
+        // Call Hugging Face API with updated endpoint
+        const response = await fetch("https://router.huggingface.co/chat/completions", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${HF_API_TOKEN}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
+            model: "meta-llama/Llama-2-7b-chat-hf",
             messages: [
               {
                 role: "system",
