@@ -1162,13 +1162,6 @@ wss.on('connection', (ws) => {
     let connected = false;
     let msgCounter = 0;
 
-    // Helper to build WebSocket URL using current host
-    function getWsUrl(port) {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const hostname = window.location.hostname;
-      return `${protocol}//${hostname}:${port}`;
-    }
-
     function addMsg(idx, text, isBroadcast) {
       const el = document.getElementById(`msgs${idx}`);
       const d = document.createElement('div');
