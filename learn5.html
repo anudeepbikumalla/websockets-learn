@@ -1631,7 +1631,7 @@ const MAX_RETRIES = 8;  // Give up after 8 attempts
 let retryTimer = null;
 
 function connect() {
-  ws = new WebSocket(getWsUrl(8080));
+  ws = new WebSocket(getWsUrl(8082));
 
   ws.addEventListener('open', () => {
     console.log('✅ Connected!');
@@ -1763,8 +1763,8 @@ connect(); // Start the first connection</code></pre>
       hideRetry();
       if (ws && ws.readyState < 2) return;
       setDot('connecting', 'Connecting…');
-      addLog('sys', `⏳ Attempting connection to ${getWsUrl(8080)}…`);
-      ws = new WebSocket(getWsUrl(8080));
+      addLog('sys', `⏳ Attempting connection to ${getWsUrl(8082)}…`);
+      ws = new WebSocket(getWsUrl(8082));
 
       ws.addEventListener('open', () => {
         setDot('open', 'Connected ✅');

@@ -26,7 +26,7 @@
 
 ### Step 1 — Connect (you dial)
 ```js
-const ws = new WebSocket(getWsUrl(8080));
+const ws = new WebSocket(getWsUrl(8082));
 // This ONE line opens the connection
 ```
 
@@ -204,23 +204,23 @@ ws.addEventListener('close', (event) => {
   console.log(event.wasClean);  // true = intentional, false = crash
 });
 ```
-
-### Close Codes Cheatsheet
-
-| Code | Meaning | Reconnect? |
-|---|---|---|
-| 1000 | Normal / intentional | ❌ No |
-| 1001 | Going away (page nav) | ⚠️ Maybe |
-| 1006 | Abnormal (network drop) | ✅ Yes |
-| 1011 | Server internal error | ✅ Yes |
-| 4000–4999 | Custom app codes | Depends |
-
-### ✅ Production Auto-Reconnect Pattern
 ```js
-let ws, retries = 0, maxRetries = 8, retryTimer = null;
+ws.addEventListener('open', () => {
+  retries = 0;  // reset on success!
+});
 
-function connect() {
-  ws = new WebSocket(getWsUrl(8080));
+ws.addEventListener('close', (event) => {
+  if (event.code === 1000) return;  // intentional — don't reconnect
+  if (retries >= maxRetries) return; // gave up
+
+  const delay = Math.min(1000 * 2 ** retries, 30000); // exponential backoff
+  retries++;
+  retryTimer = setTimeout(connect, delay);
+});
+
+connect();
+```
+  ws = new WebSocket(getWsUrl(8082));
 
   ws.addEventListener('open', () => {
     retries = 0;  // reset on success!
@@ -321,7 +321,7 @@ ws.send(JSON.stringify({ type: 'message', room: 'general', text: 'Hello!' }));
 
 ```js
 // Client: pass JWT in query string
-const ws = new WebSocket(getWsUrl(8080) + `?token=${token}`);
+const ws = new WebSocket(getWsUrl(8082) + `?token=${token}`);
 
 // Server: read and verify
 wss.on('connection', (ws, req) => {

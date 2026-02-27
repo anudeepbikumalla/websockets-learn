@@ -951,7 +951,7 @@
             <div class="code-snippet">
               <span class="cm">// This ONE line opens the connection</span><br>
               <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
-                class="str">getWsUrl(8080)</span>);
+                class="str">getWsUrl(8082)</span>);
             </div>
           </div>
         </div>
@@ -1330,13 +1330,13 @@
       if (ws && ws.readyState < 2) ws.close();
 
       setStep(0);
-      const wsUrl = getWsUrl(8080); setStatus('connecting', 'Connecting...', 'Opening a WebSocket connection to ' + wsUrl);
-      log('sys', 'STEP 1', '📞 new WebSocket(getWsUrl(8080)) — dialing the server...');
+      const wsUrl = getWsUrl(8082); setStatus('connecting', 'Connecting...', 'Opening a WebSocket connection to ' + wsUrl);
+      log('sys', 'STEP 1', '📞 new WebSocket(getWsUrl(8082)) — dialing the server...');
       explain('<strong>Step 1 → Connecting:</strong> You just wrote <code style="font-family:monospace">new WebSocket(url)</code>. The browser is now trying to reach the server. This is like your phone ringing on the other end.');
 
       document.getElementById('btnConnect').disabled = true;
 
-      ws = new WebSocket(getWsUrl(8080));
+      ws = new WebSocket(getWsUrl(8082));
 
       // ── EVENT: open ──
       ws.addEventListener('open', () => {
@@ -1456,7 +1456,7 @@
       const defaultCode = `// Change this code and click "Run" to experiment!
 // Make sure your server is running: node server.js
 
-const ws = new WebSocket(getWsUrl(8080));
+const ws = new WebSocket(getWsUrl(8082));
 
 ws.addEventListener('open', () => {
   log('✅ Connected!');
@@ -2051,7 +2051,7 @@ ws.addEventListener('message', (event) =&gt; {
         💻 Minimal WebSocket client</div>
       <pre
         style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>// 1. Connect to the server (like dialing a phone number)
-const ws = new WebSocket(getWsUrl(8080));
+const ws = new WebSocket(getWsUrl(8082));
 
 // 2. When the call connects — say hello
 ws.addEventListener('open', () => {

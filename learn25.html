@@ -613,7 +613,7 @@ app.post('/api/purchase', async (req, res) =&gt; {
 // === SERVICE B: The WebSocket Gateway (Only handles pipes) ===
 const WebSocket = require('ws');
 const redisSub = require('redis').createClient();
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 8082 });
 
 // Listen to the central bus!
 redisSub.subscribe('live_feed');

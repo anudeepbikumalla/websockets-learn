@@ -371,7 +371,7 @@
         <div class="box-body">
           <div class="code">
             config:<br>
-            &nbsp;&nbsp;target: <span class="str">getWsUrl(8080)</span><br>
+            &nbsp;&nbsp;target: <span class="str">getWsUrl(8082)</span><br>
             &nbsp;&nbsp;phases:<br>
             &nbsp;&nbsp;&nbsp;&nbsp;- duration: <span class="ev">60</span>&nbsp;&nbsp;&nbsp;<span class="cm"># 60 second
               test</span><br>
@@ -416,7 +416,7 @@
             <span class="kw">let</span> opened = <span class="ev">0</span>, failed = <span class="ev">0</span>;<br><br>
             <span class="kw">for</span> (<span class="kw">let</span> i = <span class="ev">0</span>; i &lt; N; i++) {<br>
             &nbsp;&nbsp;<span class="kw">const</span> ws = <span class="kw">new</span> <span
-              class="fn">WebSocket</span>(<span class="str">getWsUrl(8080)</span>);<br>
+              class="fn">WebSocket</span>(<span class="str">getWsUrl(8082)</span>);<br>
             &nbsp;&nbsp;ws.<span class="fn">on</span>(<span class="str">'open'</span>, () =&gt; {<br>
             &nbsp;&nbsp;&nbsp;&nbsp;opened++;<br>
             &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (opened + failed === N)<br>

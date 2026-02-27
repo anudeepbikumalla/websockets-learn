@@ -800,7 +800,7 @@
             <div class="code-snip">
               <span class="cm">// Lesson 1 — The lifecycle</span><br>
               <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
-                class="str">getWsUrl(8080)</span>);<br>
+                class="str">getWsUrl(8082)</span>);<br>
               ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () => showMsg(<span
                 class="str">'Connected!'</span>));<br>
               ws.<span class="fn">addEventListener</span>(<span class="str">'close'</span>, () => showMsg(<span
@@ -943,7 +943,7 @@
       appendBubble('⏳ Opening WebSocket connection...', 'sys');
 
       // ── Lesson 1: new WebSocket ──
-      ws = new WebSocket(getWsUrl(8080));
+      ws = new WebSocket(getWsUrl(8082));
 
       // ── Lesson 2: addEventListener (not onmessage) ──
       ws.addEventListener('open', () => {
@@ -1040,7 +1040,7 @@
   <script>
     (function () {
       const defaultCode = `// Experiment with sending structured JSON messages!
-const ws = new WebSocket(getWsUrl(8080));
+const ws = new WebSocket(getWsUrl(8082));
 
 ws.addEventListener('open', () => {
   log('✅ Connected!');
@@ -1517,7 +1517,7 @@ setInterval(() =&gt; {
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">
         💻 Chat app core pattern</div>
       <pre
-        style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>const ws = new WebSocket(getWsUrl(8080));
+        style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>const ws = new WebSocket(getWsUrl(8082));
 
 // Show connection status to the user
 ws.addEventListener('open', () => {

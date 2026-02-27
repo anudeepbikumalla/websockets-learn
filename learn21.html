@@ -704,7 +704,7 @@
 
 test('UI properly executes 2x exponential backoff on drop', async () =&gt; {
   // 1. Boot up a Fake WebSocket Server that intercepts browser calls
-  const mockServer = new Server(getWsUrl(8080));
+  const mockServer = new Server(getWsUrl(8082));
   
   // 2. Initialize our App React Component which connects automatically
   render(&lt;App /&gt;); 

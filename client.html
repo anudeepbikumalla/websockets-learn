@@ -825,10 +825,10 @@
     const LESSONS = [
       {
         id: 1, color: "#22d3ee", colorBg: "rgba(34,211,238,.1)", colorBd: "rgba(34,211,238,.22)",
-        badge: "Pattern 1 → Port 8080",
+        badge: "Pattern 1 → Port 8082",
         title: "With .on() Event Handlers",
         short: "addEventListener / .on()",
-        port: 8080,
+        port: 8082,
         msgType: "echo",
         objective: "Learn to listen for WebSocket events using <code>addEventListener()</code> in the browser and <code>.on()</code> in Node.js — the most flexible, composable approach.",
         theory: {
@@ -840,7 +840,7 @@
         code: [
           { t: "<span class='cm'>// PATTERN 1: addEventListener / .on() style</span>" },
           { t: "" },
-          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>getWsUrl(8080)</span>);", ev: "connecting", note: "Opens TCP connection →" },
+          { t: "<span class='kw'>const</span> ws = <span class='kw'>new</span> <span class='fn'>WebSocket</span>(<span class='str'>getWsUrl(8082)</span>);", ev: "connecting", note: "Opens TCP connection →" },
           { t: "" },
           { t: "ws.<span class='fn'>addEventListener</span>(<span class='ev'>'open'</span>, () => {", ev: "open", note: "← fires on connect" },
           { t: "  <span class='fn'>console</span>.<span class='fn'>log</span>(<span class='str'>'Connected!'</span>);", ev: "open" },
@@ -862,7 +862,7 @@
         steps: [
           {
             label: "① Open Connection", desc: "new WebSocket(url)", action: "connect",
-            explain: "<strong>new WebSocket(getWsUrl(8080))</strong> initiates the TCP handshake. The browser cycles through states: <code>CONNECTING (0)</code> → <code>OPEN (1)</code>. Once open, the <code>addEventListener('open')</code> callback fires automatically on the highlighted lines above."
+            explain: "<strong>new WebSocket(getWsUrl(8082))</strong> initiates the TCP handshake. The browser cycles through states: <code>CONNECTING (0)</code> → <code>OPEN (1)</code>. Once open, the <code>addEventListener('open')</code> callback fires automatically on the highlighted lines above."
           },
           {
             label: "② Send a Message", desc: "ws.send(data)", action: "send", default: "Hello via addEventListener!",
@@ -929,10 +929,10 @@
       },
       {
         id: 3, color: "#34d399", colorBg: "rgba(52,211,153,.1)", colorBd: "rgba(52,211,153,.22)",
-        badge: "Pattern 3 → Port 8080",
+        badge: "Pattern 3 → Port 8082",
         title: "With Callbacks",
         short: "callback(err, result)",
-        port: 8080,
+        port: 8082,
         msgType: "callback-request",
         objective: "Understand the traditional <strong>Node.js callback pattern</strong> — passing a function as the last argument to be called when async work completes.",
         theory: {
@@ -959,8 +959,8 @@
         ],
         steps: [
           {
-            label: "① Connect", desc: "to Port 8080", action: "connect",
-            explain: "Connect to port 8080. This server handles <strong>callback-request</strong> messages using <code>processWithCallback(data, callback)</code>. The callback pattern is entirely on the <strong>server side</strong> — the client just sends a request and waits."
+            label: "① Connect", desc: "to Port 8082", action: "connect",
+            explain: "Connect to port 8082. This server handles <strong>callback-request</strong> messages using <code>processWithCallback(data, callback)</code>. The callback pattern is entirely on the <strong>server side</strong> — the client just sends a request and waits."
           },
           {
             label: "② Send Callback Request", desc: "server uses callback", action: "send", default: "Learn callbacks!",
@@ -975,10 +975,10 @@
       },
       {
         id: 4, color: "#a78bfa", colorBg: "rgba(167,139,250,.1)", colorBd: "rgba(167,139,250,.22)",
-        badge: "Pattern 4 → Port 8080",
+        badge: "Pattern 4 → Port 8082",
         title: "Without Callbacks — async/await",
         short: "await processWithPromise()",
-        port: 8080,
+        port: 8082,
         msgType: "async-request",
         objective: "Learn the modern <strong>async/await</strong> approach — write asynchronous code that reads like synchronous code, with powerful error handling via <code>try/catch</code>.",
         theory: {
@@ -1009,8 +1009,8 @@
         ],
         steps: [
           {
-            label: "① Connect", desc: "to Port 8080", action: "connect",
-            explain: "Connect to port 8080. This time the server handles <strong>async-request</strong> messages using <code>await processWithPromise(data)</code>. No callback parameter — the function <strong>returns a Promise</strong> instead."
+            label: "① Connect", desc: "to Port 8082", action: "connect",
+            explain: "Connect to port 8082. This time the server handles <strong>async-request</strong> messages using <code>await processWithPromise(data)</code>. No callback parameter — the function <strong>returns a Promise</strong> instead."
           },
           {
             label: "② Send Async Request", desc: "server uses await", action: "send", default: "Learn async/await!",
