@@ -155,7 +155,7 @@ wssWithoutOn.on("connection", (ws, req) => {
 });
 
 // ─── Start servers ────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8082;
 
 httpServer.on("upgrade", (request, socket, head) => {
   const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
