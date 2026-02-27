@@ -12,6 +12,13 @@ function getWsUrl(defaultPort = 8080) {
       url = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + url;
     }
 
+    // Ensure port is present if none specified (and no path)
+    const urlObj = new URL(url);
+    if (!urlObj.port && (urlObj.pathname === '/' || urlObj.pathname === '')) {
+      urlObj.port = defaultPort;
+      url = urlObj.toString();
+    }
+
     // If Pattern 2 (8081) is requested, route to /p2 path
     if (defaultPort === 8081) {
       const parsed = new URL(url);
