@@ -99,25 +99,55 @@ const httpServer = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({ response: "HF client not initialized" }));
         }
 
-        try {
-          const result = await hf.chat.completions.create({
+        const HF_API_URL = "https://router.huggingface.co/v1/chat/completions";
+
+        const payload = {
+          model: "meta-llama/Llama-2-7b-chat-hf",
+          messages: [
+            {
+              role: "system",
+              content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly."
+            },
+            {
+              role: "user",
+              content: question
+            }
+          ],
+          max_tokens: 300,
+          temperature: 0.7
+        };
+
+        const response = await fetch(HF_API_URL, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${HF_API_TOKEN}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
             model: "meta-llama/Llama-2-7b-chat-hf",
             messages: [
-              { role: "system", content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly." },
-              { role: "user", content: question }
+              {
+                role: "system",
+                content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly."
+              },
+              {
+                role: "user",
+                content: question
+              }
             ],
             max_tokens: 300,
             temperature: 0.7
-          });
-          const aiResponse = result.choices?.[0]?.message?.content || "No response";
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ response: aiResponse }));
-        } catch (err) {
-          console.error("HF client error:", err);
-          res.writeHead(500, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ response: "Error contacting HF API" }));
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HF API error: ${response.statusText}`);
         }
 
+        const result = await response.json();
+        const aiResponse = result.choices?.[0]?.message?.content || "No response";
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ response: aiResponse }));
       } catch (error) {
         console.error("Chat error:", error.message);
         res.writeHead(500, { "Content-Type": "application/json" });
