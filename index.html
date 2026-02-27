@@ -1029,13 +1029,32 @@
   <!-- SETTINGS MODAL -->
   <div id="settings-modal" onclick="if(event.target === this) toggleModal(false)">
     <div class="modal-box">
-      <h2>Server Settings ⚙️</h2>
-      <p>By default, lessons connect to <strong>localhost:8080</strong>. Enter your production backend URL here to use
-        it across all lessons.</p>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start">
+        <h2>Server Settings ⚙️</h2>
+        <button onclick="toggleModal(false)"
+          style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.2rem">&times;</button>
+      </div>
+
+      <p>By default, lessons connect to <strong>localhost:8080</strong>. To connect from a <strong>mobile phone</strong>
+        or another laptop, you must use your PC's <strong>Local IP Address</strong>.</p>
+
+      <div
+        style="background:rgba(2, 132, 199, 0.05); border:1px border dashed var(--blue); border-radius:8px; padding:12px; margin-bottom:18px">
+        <div style="font-size:.7rem; font-weight:700; color:var(--blue); text-transform:uppercase; margin-bottom:6px">💡
+          How to find your Local IP (Windows)</div>
+        <ol style="font-size:.75rem; color:var(--dim); padding-left:18px">
+          <li>Open <strong>PowerShell</strong> or CMD</li>
+          <li>Type <code
+              style="background:var(--card2); padding:2px 4px; border-radius:4px; font-family:monospace">ipconfig</code>
+            and press Enter</li>
+          <li>Look for <strong>IPv4 Address</strong> (e.g., 192.168.1.5)</li>
+          <li>Use it below: <code style="opacity:.7">ws://192.168.1.5:8080</code></li>
+        </ol>
+      </div>
 
       <div class="input-group">
         <label>WebSocket Server URL</label>
-        <input type="text" id="ws-input" placeholder="e.g. ws://localhost:8080" />
+        <input type="text" id="ws-input" placeholder="e.g. ws://192.168.x.x:8080" />
       </div>
 
       <div class="modal-btns">
@@ -1057,20 +1076,25 @@
     }
 
     function saveSettings() {
-      const val = input.value.trim();
+      let val = input.value.trim();
       if (val) {
+        // Validation: ensure it starts with ws:// or wss:// or fix it
+        if (!val.startsWith('ws://') && !val.startsWith('wss://')) {
+          val = 'ws://' + val;
+        }
         localStorage.setItem('ws_server_url', val);
-        alert('✅ Configuration saved! All lessons will now use this backend.');
+        alert('✅ Configuration saved!\nTarget: ' + val + '\n\nAll lessons will now use this backend.');
+        location.reload(); // Reload to apply changes immediately
       } else {
         localStorage.removeItem('ws_server_url');
+        toggleModal(false);
       }
-      toggleModal(false);
     }
 
     function clearSettings() {
       localStorage.removeItem('ws_server_url');
       alert('🔄 Reset to default (localhost:8080)');
-      toggleModal(false);
+      location.reload();
     }
   </script>
   </div>
@@ -1082,6 +1106,39 @@
       document.getElementById('progressLabel').textContent = stats.completed + ' / 28 lessons complete';
       document.getElementById('progressPercent').textContent = stats.percent + '%';
       document.getElementById('progressFill').style.width = stats.percent + '%';
+
+      // Backend Connection Check
+      const statusLabel = document.getElementById('statusLabel');
+      const statusDot = document.getElementById('statusDot');
+      const statusFill = document.getElementById('statusFill');
+      const targetUrl = window.getWsUrl();
+
+      function updateStatus(status) {
+        if (!statusLabel || !statusFill) return;
+        if (status === 'connecting') {
+          statusLabel.innerHTML = `<div class="status-dot" id="statusDot" style="background:var(--yellow)"></div> Connecting to ${targetUrl}...`;
+          statusFill.style.width = '30%';
+          statusFill.style.background = 'var(--yellow)';
+        } else if (status === 'connected') {
+          statusLabel.innerHTML = `<div class="status-dot" id="statusDot" style="background:var(--green)"></div> Backend: Connected to ${targetUrl}`;
+          statusFill.style.width = '100%';
+          statusFill.style.background = 'var(--green)';
+        } else {
+          statusLabel.innerHTML = `<div class="status-dot" id="statusDot" style="background:var(--red)"></div> Backend: Disconnected. Check your Settings.`;
+          statusFill.style.width = '10%';
+          statusFill.style.background = 'var(--red)';
+        }
+      }
+
+      updateStatus('connecting');
+      const checkSocket = new WebSocket(targetUrl);
+      checkSocket.onopen = () => {
+        updateStatus('connected');
+        checkSocket.close();
+      };
+      checkSocket.onerror = () => {
+        updateStatus('error');
+      };
 
       // Add checkmarks to lesson cards
       const completed = WSProgress.getCompleted();
