@@ -90,8 +90,14 @@ npm start
 # 3. Open index.html in your browser
 ```
 
-> **Note on Mobile/LAN Testing:**
-> Upon running `npm start`, your terminal will print a **Network URL** (e.g., `http://192.168.0.x:8082`). You can open this exact link on your phone, tablet, or another computer on the same Wi-Fi. The site will automatically configure the WebSockets to connect directly to your host machine without any manual changes!
+### 📱 Testing on Phone / Tablet / Laptop
+
+To run this application on your mobile device or another computer:
+1. Ensure both your host computer and your other device are connected to the **same Wi-Fi network**.
+2. Run `npm start` on your host computer.
+3. Look at your terminal output for the green **Network URL** (e.g., `http://192.168.0.x:8082`).
+4. Type that exact URL into the browser on your phone, tablet, or laptop.
+5. *Magic!* The page will load and the WebSockets will automatically configure to connect directly to your host machine. No manual IP setup required!
 
 ---
 
