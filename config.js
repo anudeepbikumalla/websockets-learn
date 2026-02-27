@@ -172,7 +172,7 @@ window.getWsUrl = getWsUrl;
   function findAnswer(query) {
     const q = query.toLowerCase();
     for (const [key, answer] of Object.entries(KB)) {
-      if (q.includes(key)) return answer;
+      if (q.includes(key.toLowerCase())) return answer;
     }
     return "😊 Try asking about: addEventListener, onmessage, callbacks, async, joinroom, broadcast, reconnect, auth, or getwsurl.";
   }
@@ -233,6 +233,7 @@ window.getWsUrl = getWsUrl;
       msgs.appendChild(userMsg);
 
       inputField.value = '';
+      msgs.scrollTop = msgs.scrollHeight;
 
       setTimeout(() => {
         const reply = findAnswer(text);
