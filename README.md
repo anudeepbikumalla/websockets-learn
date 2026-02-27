@@ -14,6 +14,8 @@ Open `index.html` to start — no build step needed, just open in a browser.
 - **Premium UI**: Modern, dark-themed aesthetics with rich interactive simulators.
 - **Zero Build Step**: Plain HTML/CSS/JS — works in any browser.
 - **Customizable Backend**: Connect to any WebSocket server via the Settings modal.
+- **Local Network Auto-Discovery**: Open the app on your phone/tablet directly; no manual IP configuration needed.
+- **Database Auto-Connection**: Seamlessly auto-allowlists your current IP in MongoDB Atlas on startup.
 
 ---
 
@@ -82,11 +84,30 @@ Browse all lessons online — no setup required:
 # 1. Install dependencies
 npm install ws
 
-# 2. Start the WebSocket server
-node server.js
+# 2. Start the WebSocket server and Auto-configure DB IP
+npm start
 
 # 3. Open index.html in your browser
 ```
+
+> **Note on Mobile/LAN Testing:**
+> Upon running `npm start`, your terminal will print a **Network URL** (e.g., `http://192.168.0.x:8082`). You can open this exact link on your phone, tablet, or another computer on the same Wi-Fi. The site will automatically configure the WebSockets to connect directly to your host machine without any manual changes!
+
+---
+
+## 🛠️ Troubleshooting
+
+### MongoDB Atlas Error: "You are not authorized for this resource"
+When you run `npm start`, the server automatically tries to whitelist your current IP address to your MongoDB Atlas database. If you see this error:
+`❌ Atlas API Error: You are not authorized for this resource`
+
+**How to Fix It:**
+Your API key is active, but it only has "Read Only" privileges. It needs the correct roles to edit the IP allowlist.
+1. Log into your **MongoDB Atlas** dashboard.
+2. Go to **Access Management** > **Project Access** (or Organization Access).
+3. Find the API Key you are using in your `.env` file.
+4. Edit its permissions and ensure it has the **Project Owner** role assigned.
+5. Save and run `npm start` again.
 
 ---
 
@@ -98,6 +119,7 @@ project-backend/
 ├── learn.html → learn28.html    ← All 28 interactive lessons
 ├── client.html                  ← Advanced 4-pattern demo
 ├── server.js                    ← Node.js WebSocket server
+├── atlas-connect.js             ← Automatic DB IP allowlist script
 ├── config.js                    ← WebSocket URL configuration
 └── WEBSOCKET_STUDY_NOTES.md     ← Comprehensive reference notes
 ```

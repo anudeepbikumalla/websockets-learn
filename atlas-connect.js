@@ -59,9 +59,26 @@ async function updateAtlasAllowlist(ip) {
     if (response.ok) {
       console.log('✅ Atlas Access List updated successfully!');
     } else {
-      console.error('❌ Atlas API Error:', data.detail || data.reason || response.statusText);
-      if (response.status === 403 || (data && typeof data.detail === 'string' && data.detail.includes('User cannot access this group'))) {
-        console.error('❌ Permission error: your API key does not have access to this project. Verify ATLAS_PUBLIC_KEY, ATLAS_PRIVATE_KEY, and that the key has Project Owner or Organization Owner role. Skipping update.');
+      const errorMsg = data.detail || data.reason || response.statusText;
+      console.error('❌ Atlas API Error:', errorMsg);
+
+      if (response.status === 403 || (typeof errorMsg === 'string' && errorMsg.includes('not authorized for this resource'))) {
+        console.log(`
+\x1b[31m\x1b[1m╭─────────────────────────────────────────────────────────────────╮
+│ 🛑 MONGODB ATLAS PERMISSION ERROR                               │
+╰─────────────────────────────────────────────────────────────────╯\x1b[0m
+\x1b[33mYour API key is active, but it DOES NOT have the correct role 
+to automatically add your IP address to the allowlist.
+
+\x1b[36m👉 HOW TO FIX THIS IN 30 SECONDS:\x1b[0m
+\x1b[37m1.\x1b[0m Log into your MongoDB Atlas dashboard.
+\x1b[37m2.\x1b[0m Go to Access Management > Project Access (or Organization Access).
+\x1b[37m3.\x1b[0m Find the API Key you are using in your .env file.
+\x1b[37m4.\x1b[0m Edit its permissions and assign it the \x1b[32m\x1b[1m"Project Owner"\x1b[0m role.
+\x1b[37m5.\x1b[0m Save and run \x1b[32mnpm start\x1b[0m again!
+
+\x1b[90m(The server will still boot up, but database requests from new IPs will fail)\x1b[0m
+`);
       }
       // Continue without exiting — user can still run the server locally
     }
