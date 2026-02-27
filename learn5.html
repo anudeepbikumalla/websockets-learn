@@ -1700,6 +1700,13 @@ connect(); // Start the first connection</code></pre>
     let ws = null, retries = 0, maxRetries = 6, retryTimer = null, countInterval = null;
     const log = document.getElementById('demoLog');
 
+    // Helper to build WebSocket URL using current host
+    function getWsUrl(port) {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const hostname = window.location.hostname;
+      return `${protocol}//${hostname}:${port}`;
+    }
+
     function now() { return new Date().toLocaleTimeString('en-US', { hour12: false }); }
 
     function addLog(type, msg) {

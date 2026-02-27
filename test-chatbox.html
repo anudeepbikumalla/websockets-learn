@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatbox Test</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .test { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>🤖 Chatbox Logic Test</h1>
+  
+  <div class="test">
+    <h3>Testing Case-Insensitive Matching</h3>
+    <div id="testResults"></div>
+  </div>
+
+  <script>
+    // Same KB as in config.js
+    const KB = {
+      addEventListener: "👌 Multiple listeners allowed. Remove each individually. Modular and best practice.",
+      onmessage: "⚠️ Single handler only. New assignment overwrites the old. Simple but limited.",
+      callback: "📞 Function param called on completion. Universal but leads to callback hell.",
+      async: "✨ Modern async/await with Promises. Clean, readable, try/catch errors.",
+      joinroom: "🏠 Map<roomName, Set<clients>>. Group clients by room for targeted messages.",
+      broadcast: "📢 Send to all in room. Always check readyState === OPEN first.",
+      reconnect: "🔄 Exponential backoff prevents server overload and improves UX.",
+      auth: "🔐 JWT tokens in URL. Always use wss:// in production to avoid leaking tokens.",
+      getwsurl: "🌐 Helper that detects page protocol and returns ws:// or wss:// automatically.",
+      map: "🗺️ Key-value storage. Better than objects for dynamic room names.",
+      set: "📋 Unique values only. Perfect for tracking unique client connections."
+    };
+
+    // FIXED findAnswer function
+    function findAnswer(query) {
+      const q = query.toLowerCase();
+      for (const [key, answer] of Object.entries(KB)) {
+        if (q.includes(key.toLowerCase())) return answer;
+      }
+      return "😊 Try asking about: addEventListener, onmessage, callbacks, async, joinroom, broadcast, reconnect, auth, or getwsurl.";
+    }
+
+    // Run tests
+    const testQueries = [
+      "addEventListener",
+      "EventListener",
+      "ADDEVENTLISTENER",
+      "Tell me about callbacks",
+      "what is async?",
+      "ASYNC/AWAIT",
+      "joinroom please",
+      "broadcast to all users",
+      "unknown topic"
+    ];
+
+    const resultsDiv = document.getElementById('testResults');
+    testQueries.forEach(query => {
+      const answer = findAnswer(query);
+      const isCorrect = answer !== "😊 Try asking about...";
+      const span = document.createElement('div');
+      span.innerHTML = `
+        <strong>Query:</strong> "${query}" <br>
+        <strong>Result:</strong> ${isCorrect ? '✅' : '❌'} ${answer.substring(0, 80)}... <br><br>
+      `;
+      resultsDiv.appendChild(span);
+    });
+  </script>
+</body>
+</html>

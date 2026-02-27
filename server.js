@@ -65,10 +65,30 @@ function processWithPromise(data) {
   });
 }
 
+// ─── WebSocket Knowledge Base (Fallback) ──────────────────────────────────────
+const wsKnowledgeBase = {
+  "websocket": "WebSocket is a two-way communication protocol that enables real-time bidirectional data exchange between client and server over a single, persistent TCP connection. Unlike HTTP, it stays open, allowing servers to push data to clients without polling.",
+  "pattern": "WebSocket patterns refer to different coding styles: Pattern 1 uses .on() event listeners, Pattern 2 accesses properties directly, Pattern 3 uses callbacks, and Pattern 4 uses async/await for modern, cleaner code.",
+  "event": "Events in WebSocket are triggered when connection opens, receives messages, encounters errors, or closes. You handle them with .on('open'), .on('message'), .on('error'), and .on('close') listeners.",
+  "async": "Async/await is modern JavaScript syntax for handling asynchronous operations cleanly without callbacks. Use 'await' before promises and wrap code in 'async' functions.",
+  "callback": "A callback is a function passed as an argument to another function, executed after an operation completes. Traditional Node.js callbacks follow the pattern: callback(err, result).",
+  "real-time": "Real-time communication means data flows instantly between client and server. WebSockets enable true real-time applications like chat, live updates, and collaborative tools.",
+  "javascript": "JavaScript is a programming language that runs in browsers and servers (Node.js). It's essential for WebSocket programming on both client and server sides.",
+  "transmission": "WebSocket message transmission involves sending data frames (text or binary) through the persistent connection. Messages are received via the 'message' event on both client and server."
+};
+
+function getKnowledgeBasedResponse(question) {
+  const lowerQ = question.toLowerCase();
+  for (const [key, answer] of Object.entries(wsKnowledgeBase)) {
+    if (lowerQ.includes(key)) {
+      return answer;
+    }
+  }
+  return "Great question! While I don't have a specific answer in my knowledge base, this is typically covered in WebSocket tutorials. Try asking about patterns, events, callbacks, or async/await for more detailed responses.";
+}
+
 // ═════════════════════════════════════════════════════════════════════════════
-// SERVER SETUP
-// Consolidated for Cloud Deployment (Single Port)
-// ═════════════════════════════════════════════════════════════════════════════
+
 const wssWithOn = new WebSocket.Server({ noServer: true });
 const wssWithoutOn = new WebSocket.Server({ noServer: true });
 
@@ -99,53 +119,31 @@ const httpServer = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({ response: "HF client not initialized" }));
         }
 
-        const HF_API_URL = "https://router.huggingface.co/v1/chat/completions";
+        // Use HfInference SDK for text generation (better model support)
+        const systemPrompt = "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly.";
+        const fullPrompt = `${systemPrompt}\n\nQuestion: ${question}\n\nAnswer:`;
 
-        const payload = {
-          model: "meta-llama/Llama-2-7b-chat-hf",
-          messages: [
-            {
-              role: "system",
-              content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly."
-            },
-            {
-              role: "user",
-              content: question
+        let aiResponse;
+        try {
+          const result = await hf.textGeneration({
+            model: "EleutherAI/gpt-neo-125M",
+            inputs: fullPrompt,
+            parameters: {
+              max_new_tokens: 150,
+              temperature: 0.7
             }
-          ],
-          max_tokens: 300,
-          temperature: 0.7
-        };
-
-        const response = await fetch(HF_API_URL, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${HF_API_TOKEN}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: "meta-llama/Llama-2-7b-chat-hf",
-            messages: [
-              {
-                role: "system",
-                content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly."
-              },
-              {
-                role: "user",
-                content: question
-              }
-            ],
-            max_tokens: 300,
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`HF API error: ${response.statusText}`);
+          });
+          aiResponse = result.generated_text?.split("Answer:")[1]?.trim() || result.generated_text || null;
+        } catch (apiError) {
+          console.log("HF API unavailable, using knowledge base fallback...");
+          aiResponse = null;
         }
 
-        const result = await response.json();
-        const aiResponse = result.choices?.[0]?.message?.content || "No response";
+        // Fall back to knowledge base if HF API fails
+        if (!aiResponse) {
+          aiResponse = getKnowledgeBasedResponse(question);
+        }
+
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ response: aiResponse }));
       } catch (error) {
