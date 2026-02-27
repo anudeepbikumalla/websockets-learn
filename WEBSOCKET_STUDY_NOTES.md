@@ -26,7 +26,7 @@
 
 ### Step 1 — Connect (you dial)
 ```js
-const ws = new WebSocket('ws://localhost:8080');
+const ws = new WebSocket(getWsUrl(8080));
 // This ONE line opens the connection
 ```
 
@@ -220,7 +220,7 @@ ws.addEventListener('close', (event) => {
 let ws, retries = 0, maxRetries = 8, retryTimer = null;
 
 function connect() {
-  ws = new WebSocket('ws://localhost:8080');
+  ws = new WebSocket(getWsUrl(8080));
 
   ws.addEventListener('open', () => {
     retries = 0;  // reset on success!
@@ -321,7 +321,7 @@ ws.send(JSON.stringify({ type: 'message', room: 'general', text: 'Hello!' }));
 
 ```js
 // Client: pass JWT in query string
-const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
+const ws = new WebSocket(getWsUrl(8080) + `?token=${token}`);
 
 // Server: read and verify
 wss.on('connection', (ws, req) => {

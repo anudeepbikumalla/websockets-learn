@@ -15,7 +15,7 @@
       box-sizing: border-box;
     }
 
-            :root {
+    :root {
       --bg: #ffffff;
       --card: #f8fafc;
       --card2: #f1f5f9;
@@ -480,28 +480,59 @@
       background: rgba(248, 113, 113, .05);
       color: var(--dim);
     }
-  
+
     /* ── MOBILE RESPONSIVE ── */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 1.6rem !important; }
-      .hero p { font-size: .88rem !important; }
-      .page { padding: 24px 16px !important; }
-      .two-col { grid-template-columns: 1fr !important; }
-      .stats { flex-wrap: wrap; gap: 12px; }
-      .code, pre { font-size: .7rem !important; }
-      .nav-bar, [style*="justify-content:center"][style*="padding:24px"] { 
-        flex-direction: column; align-items: center; 
+      .hero h1 {
+        font-size: 1.6rem !important;
+      }
+
+      .hero p {
+        font-size: .88rem !important;
+      }
+
+      .page {
+        padding: 24px 16px !important;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr !important;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .code,
+      pre {
+        font-size: .7rem !important;
+      }
+
+      .nav-bar,
+      [style*="justify-content:center"][style*="padding:24px"] {
+        flex-direction: column;
+        align-items: center;
       }
     }
+
     @media (max-width: 480px) {
-      .hero { padding: 40px 16px 32px !important; }
-      .hero h1 { font-size: 1.3rem !important; }
-      section { margin-bottom: 24px !important; }
+      .hero {
+        padding: 40px 16px 32px !important;
+      }
+
+      .hero h1 {
+        font-size: 1.3rem !important;
+      }
+
+      section {
+        margin-bottom: 24px !important;
+      }
     }
-</style>
+  </style>
   <script src="config.js"></script>
   <script src="progress.js"></script>
-  
+
 </head>
 
 <body>
@@ -726,41 +757,50 @@
 
   </div>
 
-  
 
-  
 
-  
-  
 
-  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Slack</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">When you sign in, Slack sends a token via the WebSocket URL. If the token expires, the connection closes with a custom code and the client refreshes the token.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏦</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Online Banking (Chase, HSBC)</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Real-time balance updates require authenticated WebSocket. The bank validates your session token on every connection attempt.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Steam</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Your gaming profile, friends list, and achievements sync over authenticated WebSocket. Stolen tokens are rejected within seconds.</div>
-          </div>
-        </div>
-      </div>
+
+
+
+
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Slack</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">When you sign in, Slack sends a token via the
+        WebSocket URL. If the token expires, the connection closes with a custom code and the client refreshes the
+        token.</div>
     </div>
   </div>
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏦</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Online Banking (Chase, HSBC)
+      </div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Real-time balance updates require authenticated
+        WebSocket. The bank validates your session token on every connection attempt.</div>
+    </div>
+  </div>
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Steam</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Your gaming profile, friends list, and achievements
+        sync over authenticated WebSocket. Stolen tokens are rejected within seconds.</div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
 
-<!-- ✅ MARK COMPLETE -->
+  <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()"
+      style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 8 as Complete</span>
     </button>
@@ -796,22 +836,39 @@
 
   </div>
 
-  
+
   <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+    <div
+      style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
         <span>🏗️</span>
         <span>Scenario 1: Secure Dashboard Authentication (JWT)</span>
       </div>
       <div style="padding:20px">
         <div style="margin-bottom:22px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
-          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A financial dashboard cannot allow unauthenticated users to open a WebSocket and stream live banking data. However, the native `new WebSocket()` API in the browser does not support custom HTTP headers (like `Authorization: Bearer <token>`). This breaks standard JWT authentication flows.<br><br>**The End-to-End Flow:** To bypass this browser limitation, the frontend attaches the JSON Web Token directly as a URL Query Parameter when initiating the handshake (`wss://api.com?token=xyz`). On the Node.js backend, instead of passing the raw socket to the WebSocket library immediately, the server intercepts the raw HTTP `upgrade` event. It extracts the token from the URL, cryptographically verifies the JWT, and only if valid, explicitly calls `handleUpgrade()`. If the token is fake or expired, the backend instantly destroys the TCP socket before the WebSocket protocol even starts, ensuring absolute security.</div>
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A financial dashboard
+            cannot allow unauthenticated users to open a WebSocket and stream live banking data. However, the native
+            `new WebSocket()` API in the browser does not support custom HTTP headers (like `Authorization: Bearer
+            <token>`). This breaks standard JWT authentication flows.<br><br>**The End-to-End Flow:** To bypass this
+              browser limitation, the frontend attaches the JSON Web Token directly as a URL Query Parameter when
+              initiating the handshake (`wss://api.com?token=xyz`). On the Node.js backend, instead of passing the raw
+              socket to the WebSocket library immediately, the server intercepts the raw HTTP `upgrade` event. It
+              extracts the token from the URL, cryptographically verifies the JWT, and only if valid, explicitly calls
+              `handleUpgrade()`. If the token is fake or expired, the backend instantly destroys the TCP socket before
+              the WebSocket protocol even starts, ensuring absolute security.
+          </div>
         </div>
         <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
-          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Server-side: Intercepting the raw HTTP Upgrade request
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            💻 Implementation Code</div>
+          <pre
+            style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Server-side: Intercepting the raw HTTP Upgrade request
 server.on('upgrade', async (request, socket, head) =&gt; {
   // 1. Parse the URL to find the appended token
   const url = new URL(request.url, 'http://localhost');
@@ -839,19 +896,34 @@ server.on('upgrade', async (request, socket, head) =&gt; {
 
   <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+    <div
+      style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
         <span>🏗️</span>
         <span>Scenario 2: The Initial 'Hello' Auth Payload</span>
       </div>
       <div style="padding:20px">
         <div style="margin-bottom:22px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
-          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Sometimes URL parameters are logged in plaintext by corporate proxies or AWS CloudTrail, making them a security risk for passing sensitive auth tokens. The application needs a way to authenticate *after* the connection opens, but *before* allowing the user to do anything else.<br><br>**The End-to-End Flow:** The server accepts all WebSocket connections blindly. However, it flags the connection state as `isAuthenticated = false`. It waits patiently. The client's very first message over the open pie must be a JSON payload containing `{ type: 'AUTH', token: '...' }`. If the client sends anything else (like a chat message), or if it takes longer than 5 seconds to send the Auth packet, the server executes `ws.close(4003)` to forcefully kick the client. Once authenticated, the server flips the boolean and allows normal traffic to flow.</div>
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Sometimes URL
+            parameters are logged in plaintext by corporate proxies or AWS CloudTrail, making them a security risk for
+            passing sensitive auth tokens. The application needs a way to authenticate *after* the connection opens, but
+            *before* allowing the user to do anything else.<br><br>**The End-to-End Flow:** The server accepts all
+            WebSocket connections blindly. However, it flags the connection state as `isAuthenticated = false`. It waits
+            patiently. The client's very first message over the open pie must be a JSON payload containing `{ type:
+            'AUTH', token: '...' }`. If the client sends anything else (like a chat message), or if it takes longer than
+            5 seconds to send the Auth packet, the server executes `ws.close(4003)` to forcefully kick the client. Once
+            authenticated, the server flips the boolean and allows normal traffic to flow.</div>
         </div>
         <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
-          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>wss.on('connection', (ws) =&gt; {
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            💻 Implementation Code</div>
+          <pre
+            style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>wss.on('connection', (ws) =&gt; {
   // Lock down this specific socket
   let isAuthenticated = false;
   
@@ -880,54 +952,100 @@ server.on('upgrade', async (request, socket, head) =&gt; {
       </div>
     </div>
   </div>
-<!-- 🧠 TEST YOURSELF QUIZ -->
+  <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
+      <div
+        style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/3 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. Why can't we send auth headers in the WebSocket handshake?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. Why can't we send auth
+            headers in the WebSocket handshake?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Security reasons</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. The WebSocket API doesn't support custom headers</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Headers are too slow</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only GET requests use headers</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Security
+              reasons</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. The
+              WebSocket API doesn't support custom headers</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Headers
+              are too slow</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Only GET
+              requests use headers</button>
           </div>
-          <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q0_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Where should you put the auth token?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Where should you put the
+            auth token?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. In the message body</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. In the URL query string</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. In a cookie only</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. In localStorage only</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. In the
+              message body</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. In the URL
+              query string</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. In a
+              cookie only</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. In
+              localStorage only</button>
           </div>
-          <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q1_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
         <div id="quiz_9817_q2" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. What close code should you use for unauthorized access?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. What close code should
+            you use for unauthorized access?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. 1000</button>
-            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. 1001</button>
-            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. 4001 (custom)</button>
-            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. 500</button>
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A.
+              1000</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B.
+              1001</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. 4001
+              (custom)</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D.
+              500</button>
           </div>
-          <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q2_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
       </div>
     </div>
   </div>
   <script>
-    (function() {
+    (function () {
       const answers = [1, 1, 2];
       const explains = ['The browser WebSocket API does not allow setting custom HTTP headers during the upgrade handshake.', 'The token goes in the URL query string: <code>ws://host?token=xxx</code>. The server reads it from the URL.', 'Codes 4000-4999 are reserved for custom application use. 4001 is commonly used for unauthorized.'];
       let answered = new Set();
       let correct = 0;
-      window.quiz_9817_check = function(qi, oi) {
+      window.quiz_9817_check = function (qi, oi) {
         if (answered.has(qi)) return;
         answered.add(qi);
         const isCorrect = oi === answers[qi];
@@ -946,9 +1064,9 @@ server.on('upgrade', async (request, socket, head) =&gt; {
           correctBtn.style.color = "#22c55e";
         }
         // Disable all options for this question
-        for(let j=0; j<4; j++) {
+        for (let j = 0; j < 4; j++) {
           const b = document.getElementById("quiz_9817_q" + qi + "_o" + j);
-          if(b) b.style.pointerEvents = "none";
+          if (b) b.style.pointerEvents = "none";
         }
         // Show explanation
         const exp = document.getElementById("quiz_9817_q" + qi + "_explain");
@@ -968,40 +1086,114 @@ server.on('upgrade', async (request, socket, head) =&gt; {
     })();
   </script>
 
-<!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — Authentication</div>
+    <div
+      style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">
+        📋 Quick Cheat Sheet — Authentication</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead>
+            <tr>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                Code</th>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                What it does</th>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                When</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>new WebSocket(url + '?token=xxx')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Send auth token in URL query</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Client connects with token</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>new URL(req.url, 'http://x').searchParams</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Extract token from URL on server</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server reads the token</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.close(4001, 'Unauthorized')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Reject connection with custom code</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If token is invalid</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>jwt.verify(token, secret)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Validate a JWT token</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server-side check</td></tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>new WebSocket(url + '?token=xxx')</code>
+              </td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Send auth token in URL
+                query</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Client
+                connects with token</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>new URL(req.url, 'http://x').searchParams</code>
+              </td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Extract token from URL on
+                server</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server reads
+                the token</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.close(4001, 'Unauthorized')</code>
+              </td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Reject connection with
+                custom code</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If token is
+                invalid</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>jwt.verify(token, secret)</code>
+              </td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Validate a JWT token</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Server-side
+                check</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>WebSockets can't send custom HTTP headers during the handshake — so we pass the <strong>token in the URL query string</strong>.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Always <strong>validate the token on the server</strong> immediately during the connection event. Reject bad tokens instantly.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Custom close codes 4000-4999 are yours to define — use <code>4001</code> for unauthorized, <code>4002</code> for expired token, etc.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>JWTs (JSON Web Tokens) are the most common auth method — they contain user data encoded inside the token itself.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Never trust the client — <strong>always verify server-side</strong>. A malicious user can send any token they want.</span></div>
+    <div
+      style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>WebSockets can't send custom HTTP headers during the
+          handshake — so we pass the <strong>token in the URL query string</strong>.</span>
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Always <strong>validate the token on the
+            server</strong> immediately during the connection event. Reject bad tokens instantly.</span>
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Custom close codes 4000-4999 are yours to define —
+          use <code>4001</code> for unauthorized, <code>4002</code> for expired token, etc.</span>
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>JWTs (JSON Web Tokens) are the most common auth
+          method — they contain user data encoded inside the token itself.</span>
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Never trust the client — <strong>always verify
+            server-side</strong>. A malicious user can send any token they want.</span>
+      </div>
     </div>
 
     <!-- 💻 Production Pattern -->
-    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 WebSocket authentication flow</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>// CLIENT — Connect with auth token in URL
+    <div
+      style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">
+        💻 WebSocket authentication flow</div>
+      <pre
+        style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>// CLIENT — Connect with auth token in URL
 const token = localStorage.getItem('auth_token');
-const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
+const ws = new WebSocket(getWsUrl(8080) + `?token=${token}`);
 
 // SERVER — Validate the token on connection
 wss.on('connection', (ws, req) => {
@@ -1027,7 +1219,7 @@ wss.on('connection', (ws, req) => {
     </div>
   </div>
 
-<div class="nav-bar">
+  <div class="nav-bar">
     <a href="index.html" class="nav-btn home">🏠 Home</a>
     <a href="learn7.html" class="nav-btn">← Lesson 7</a>
     <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
@@ -1049,7 +1241,7 @@ wss.on('connection', (ws, req) => {
     function tryConnect(forceToken) {
       const token = forceToken !== undefined ? forceToken : document.getElementById('tokenInput').value.trim();
       addLog('sys', `⏳ Connecting with token: "${token || '(empty)'}"`);
-      addLog('sys', `📡 WebSocket URL: ws://localhost:8080?token=${token}`);
+      addLog('sys', `📡 WebSocket URL: ${getWsUrl(8080)}?token=${token}`);
       setTimeout(() => {
         if (VALID.has(token)) {
           const user = names[token];

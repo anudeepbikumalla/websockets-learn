@@ -1245,10 +1245,10 @@
 
       setWsState("connecting");
       fireCodeLines("connecting");
-      addLog("sys", `⏳ Connecting to ws://localhost:${L.port}...`);
+      addLog("sys", `⏳ Connecting to ${getWsUrl(L.port)}...`);
       setStep(0);
 
-      ws = new WebSocket(`ws://localhost:${L.port}`);
+      ws = new WebSocket(getWsUrl(L.port));
 
       ws.addEventListener("open", () => {
         setWsState("open");

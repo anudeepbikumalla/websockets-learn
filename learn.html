@@ -15,7 +15,7 @@
       box-sizing: border-box;
     }
 
-        :root {
+    :root {
       --bg: #ffffff;
       --card: #f8fafc;
       --card2: #f1f5f9;
@@ -782,28 +782,59 @@
       border-radius: 14px;
       overflow: hidden;
     }
-  
+
     /* ── MOBILE RESPONSIVE ── */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 1.6rem !important; }
-      .hero p { font-size: .88rem !important; }
-      .page { padding: 24px 16px !important; }
-      .two-col { grid-template-columns: 1fr !important; }
-      .stats { flex-wrap: wrap; gap: 12px; }
-      .code, pre { font-size: .7rem !important; }
-      .nav-bar, [style*="justify-content:center"][style*="padding:24px"] { 
-        flex-direction: column; align-items: center; 
+      .hero h1 {
+        font-size: 1.6rem !important;
+      }
+
+      .hero p {
+        font-size: .88rem !important;
+      }
+
+      .page {
+        padding: 24px 16px !important;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr !important;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .code,
+      pre {
+        font-size: .7rem !important;
+      }
+
+      .nav-bar,
+      [style*="justify-content:center"][style*="padding:24px"] {
+        flex-direction: column;
+        align-items: center;
       }
     }
+
     @media (max-width: 480px) {
-      .hero { padding: 40px 16px 32px !important; }
-      .hero h1 { font-size: 1.3rem !important; }
-      section { margin-bottom: 24px !important; }
+      .hero {
+        padding: 40px 16px 32px !important;
+      }
+
+      .hero h1 {
+        font-size: 1.3rem !important;
+      }
+
+      section {
+        margin-bottom: 24px !important;
+      }
     }
-</style>
+  </style>
   <script src="config.js"></script>
   <script src="progress.js"></script>
-  
+
 </head>
 
 <body>
@@ -813,12 +844,16 @@
     <div class="hero-tag">🎓 Beginner Guide</div>
     <h1>WebSockets — From Zero</h1>
     <p>No jargon. No confusion. Just simple explanations with a live demo you can click and see.</p>
-  
-  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(255,255,255,.03);color:var(--dim);border:1px solid #22c55e30">🟢 Beginner</span>
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid rgba(255,255,255,0.06)">⏱️ ~8 min read</span>
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+      <span
+        style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:700;background:rgba(255,255,255,.03);color:var(--dim);border:1px solid #22c55e30">🟢
+        Beginner</span>
+      <span
+        style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:.76rem;font-weight:600;background:rgba(255,255,255,.03);color:var(--text);border:1px solid rgba(255,255,255,0.06)">⏱️
+        ~8 min read</span>
+    </div>
   </div>
-</div>
 
   <div class="page">
 
@@ -1112,7 +1147,8 @@
           <div class="concept-icon">⚡</div>
           <div class="concept-title">Instant (Real-Time)</div>
           <div class="concept-desc">There's no waiting for a request-response cycle. Messages arrive
-            <strong>instantly</strong> — that's why chat apps and games use WebSockets.</div>
+            <strong>instantly</strong> — that's why chat apps and games use WebSockets.
+          </div>
         </div>
         <div class="concept-card">
           <div class="concept-icon">🎯</div>
@@ -1382,35 +1418,45 @@
   </script>
 
 
-  
 
-  
 
-  
+
+
+
   <!-- ✏️ LIVE CODE PLAYGROUND -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
-      <div style="padding:12px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
+      <div
+        style="padding:12px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>✏️ Try It — Connect to a WebSocket Server</span>
         <div style="display:flex;gap:8px">
-          <button onclick="pg_89967_reset()" style="padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#94a3b8;font-size:.75rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">↺ Reset</button>
-          <button onclick="pg_89967_run()" style="padding:5px 16px;border-radius:6px;border:none;background:#22c55e;color:#052e16;font-size:.75rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">▶ Run</button>
+          <button onclick="pg_89967_reset()"
+            style="padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#94a3b8;font-size:.75rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">↺
+            Reset</button>
+          <button onclick="pg_89967_run()"
+            style="padding:5px 16px;border-radius:6px;border:none;background:#22c55e;color:#052e16;font-size:.75rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">▶
+            Run</button>
         </div>
       </div>
-      <textarea id="pg_89967_code" spellcheck="false" style="width:100%;min-height:200px;padding:14px 18px;font-family:'Fira Code',monospace;font-size:.78rem;background:rgba(0,0,0,0.15);color:var(--text);border:none;outline:none;resize:vertical;line-height:1.7;tab-size:2;box-sizing:border-box"></textarea>
-      <div style="padding:8px 18px;border-top:1px solid #1f2d45;background:rgba(0,0,0,0.15);font-size:.72rem;color:#64748b;display:flex;justify-content:space-between">
+      <textarea id="pg_89967_code" spellcheck="false"
+        style="width:100%;min-height:200px;padding:14px 18px;font-family:'Fira Code',monospace;font-size:.78rem;background:rgba(0,0,0,0.15);color:var(--text);border:none;outline:none;resize:vertical;line-height:1.7;tab-size:2;box-sizing:border-box"></textarea>
+      <div
+        style="padding:8px 18px;border-top:1px solid #1f2d45;background:rgba(0,0,0,0.15);font-size:.72rem;color:#64748b;display:flex;justify-content:space-between">
         <span>Console Output ↓</span>
-        <button onclick="document.getElementById('pg_89967_output').innerHTML=''" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:.72rem;font-family:Inter,sans-serif">Clear</button>
+        <button onclick="document.getElementById('pg_89967_output').innerHTML=''"
+          style="background:none;border:none;color:#64748b;cursor:pointer;font-size:.72rem;font-family:Inter,sans-serif">Clear</button>
       </div>
-      <div id="pg_89967_output" style="min-height:80px;max-height:200px;overflow-y:auto;padding:10px 18px;font-family:'Fira Code',monospace;font-size:.75rem;color:#94a3b8;background:#080d14;line-height:1.7"></div>
+      <div id="pg_89967_output"
+        style="min-height:80px;max-height:200px;overflow-y:auto;padding:10px 18px;font-family:'Fira Code',monospace;font-size:.75rem;color:#94a3b8;background:#080d14;line-height:1.7">
+      </div>
     </div>
   </div>
   <script>
-    (function() {
+    (function () {
       const defaultCode = `// Change this code and click "Run" to experiment!
 // Make sure your server is running: node server.js
 
-const ws = new WebSocket('ws://localhost:8080');
+const ws = new WebSocket(getWsUrl(8080));
 
 ws.addEventListener('open', () => {
   log('✅ Connected!');
@@ -1442,7 +1488,7 @@ ws.addEventListener('error', () => {
         }
       });
 
-      window.pg_89967_run = function() {
+      window.pg_89967_run = function () {
         outEl.innerHTML = '';
         const code = codeEl.value;
         // Create a sandboxed log function
@@ -1465,7 +1511,7 @@ ws.addEventListener('error', () => {
         }
       };
 
-      window.pg_89967_reset = function() {
+      window.pg_89967_reset = function () {
         codeEl.value = defaultCode;
         outEl.innerHTML = '';
       };
@@ -1473,43 +1519,52 @@ ws.addEventListener('error', () => {
   </script>
 
 
-  
 
-  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Fortnite / Valorant</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Every player's movement, shooting, and building action is sent over WebSocket to the game server, which broadcasts the updated world state to all players.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📈</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Robinhood / Coinbase</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Live stock and crypto prices stream to your screen via WebSocket. Without it, you'd have to refresh the page to see price changes.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🔔</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Facebook / Instagram</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Notification badges update instantly ("You have 3 new messages") because a WebSocket pushes changes the moment they happen.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🚗</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Uber / Lyft</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Your driver's location updates on the map every 1-2 seconds via WebSocket — that's dozens of messages per minute, per ride.</div>
-          </div>
-        </div>
-      </div>
+
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🎮</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Fortnite / Valorant</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Every player's movement, shooting, and building action
+        is sent over WebSocket to the game server, which broadcasts the updated world state to all players.</div>
     </div>
   </div>
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">📈</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Robinhood / Coinbase</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Live stock and crypto prices stream to your screen via
+        WebSocket. Without it, you'd have to refresh the page to see price changes.</div>
+    </div>
+  </div>
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🔔</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Facebook / Instagram</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Notification badges update instantly ("You have 3 new
+        messages") because a WebSocket pushes changes the moment they happen.</div>
+    </div>
+  </div>
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🚗</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Uber / Lyft</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Your driver's location updates on the map every 1-2
+        seconds via WebSocket — that's dozens of messages per minute, per ride.</div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
 
-<!-- ✅ MARK COMPLETE -->
+  <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()"
+      style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 1 as Complete</span>
     </button>
@@ -1545,22 +1600,37 @@ ws.addEventListener('error', () => {
 
   </div>
 
-  
+
   <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+    <div
+      style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
         <span>🏗️</span>
         <span>Scenario 1: Live Crypto Ticker (Binance / Coinbase)</span>
       </div>
       <div style="padding:20px">
         <div style="margin-bottom:22px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
-          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Users trading cryptocurrency need split-second price updates. If they rely on refreshing the page (or standard HTTP polling every 5 seconds), they might miss a sudden 10% market crash and lose money. The data is highly volatile and entirely one-way (Server → Client).<br><br>**The End-to-End Flow:** When the user opens the trading dashboard, their browser immediately opens a single, persistent WebSocket connection to the exchange's public API. The exchange's backend (which is hooked into the actual trading engine) pushes a tiny JSON payload down the pipe the exact millisecond a trade executes. The browser receives this event, parses the JSON, and instantly updates the DOM element showing the Bitcoin price — flashing it green or red based on the change.</div>
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">
+            📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** Users trading
+            cryptocurrency need split-second price updates. If they rely on refreshing the page (or standard HTTP
+            polling every 5 seconds), they might miss a sudden 10% market crash and lose money. The data is highly
+            volatile and entirely one-way (Server → Client).<br><br>**The End-to-End Flow:** When the user opens the
+            trading dashboard, their browser immediately opens a single, persistent WebSocket connection to the
+            exchange's public API. The exchange's backend (which is hooked into the actual trading engine) pushes a tiny
+            JSON payload down the pipe the exact millisecond a trade executes. The browser receives this event, parses
+            the JSON, and instantly updates the DOM element showing the Bitcoin price — flashing it green or red based
+            on the change.</div>
         </div>
         <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
-          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client-Side: Connecting to a public Crypto WebSocket API
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">
+            💻 Implementation Code</div>
+          <pre
+            style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client-Side: Connecting to a public Crypto WebSocket API
 const ws = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum');
 
 // The browser listens patiently for the server to 'push' data
@@ -1585,19 +1655,34 @@ ws.addEventListener('message', (event) =&gt; {
 
   <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+    <div
+      style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
         <span>🏗️</span>
         <span>Scenario 2: Real-Time Server Health Monitor (Datadog)</span>
       </div>
       <div style="padding:20px">
         <div style="margin-bottom:22px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
-          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A DevOps engineer is monitoring a cluster of 50 database servers during a massive Black Friday traffic spike. They need a dashboard that shows CPU and RAM usage updating live every second. If a server's CPU hits 100%, the dashboard must instantly turn red and trigger an alarm so the engineer can restart it.<br><br>**The End-to-End Flow:** A lightweight Node.js agent runs on each database server, reading the system's `top` command every second. This agent acts as a WebSocket client, streaming the CPU metric string directly up to a centralized Dashboard Server. The DevOps engineer's browser is connected to that Dashboard Server. When the metric arrives, the browser intercepts the integer, updates a charting library (like Chart.js), and evaluates if it crosses the 90% threshold for an alert.</div>
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">
+            📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** A DevOps engineer is
+            monitoring a cluster of 50 database servers during a massive Black Friday traffic spike. They need a
+            dashboard that shows CPU and RAM usage updating live every second. If a server's CPU hits 100%, the
+            dashboard must instantly turn red and trigger an alarm so the engineer can restart it.<br><br>**The
+            End-to-End Flow:** A lightweight Node.js agent runs on each database server, reading the system's `top`
+            command every second. This agent acts as a WebSocket client, streaming the CPU metric string directly up to
+            a centralized Dashboard Server. The DevOps engineer's browser is connected to that Dashboard Server. When
+            the metric arrives, the browser intercepts the integer, updates a charting library (like Chart.js), and
+            evaluates if it crosses the 90% threshold for an alert.</div>
         </div>
         <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
-          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client-Side: Connecting to our centralized monitoring server
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">
+            💻 Implementation Code</div>
+          <pre
+            style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// Client-Side: Connecting to our centralized monitoring server
 const ws = new WebSocket('wss://api.myserver.com/health-stream');
 
 ws.addEventListener('message', (event) =&gt; {
@@ -1621,19 +1706,34 @@ ws.addEventListener('message', (event) =&gt; {
 
   <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+    <div
+      style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
         <span>🏗️</span>
         <span>Scenario 3: One-Way Notification Feed (Facebook / LinkedIn)</span>
       </div>
       <div style="padding:20px">
         <div style="margin-bottom:22px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">📖 The End-to-End Story</div>
-          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When someone likes your photo, you shouldn't have to manually refresh the page to see the red '1' badge appear over the bell icon. However, building a full two-way chat system for simple notifications is overkill and wastes server resources.<br><br>**The End-to-End Flow:** The web app establishes a 'listening-only' WebSocket connection when the user logs in. The backend ties this connection to their User ID in a Redis cache. When a friend clicks 'Like' on a photo, a backend worker completely separate from the WebSocket server drops a message into a queue. The WebSocket server reads that queue, finds the specific TCP socket for your User ID, and pushes a simple `NOTIFICATION_NEW` string. The browser intercepts it and increments the little red badge in the top right corner by 1.</div>
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">
+            📖 The End-to-End Story</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** When someone likes
+            your photo, you shouldn't have to manually refresh the page to see the red '1' badge appear over the bell
+            icon. However, building a full two-way chat system for simple notifications is overkill and wastes server
+            resources.<br><br>**The End-to-End Flow:** The web app establishes a 'listening-only' WebSocket connection
+            when the user logs in. The backend ties this connection to their User ID in a Redis cache. When a friend
+            clicks 'Like' on a photo, a backend worker completely separate from the WebSocket server drops a message
+            into a queue. The WebSocket server reads that queue, finds the specific TCP socket for your User ID, and
+            pushes a simple `NOTIFICATION_NEW` string. The browser intercepts it and increments the little red badge in
+            the top right corner by 1.</div>
         </div>
         <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
-          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// View-Layer: The user logs in and the app connects silently in the background
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--blue);margin-bottom:8px">
+            💻 Implementation Code</div>
+          <pre
+            style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>// View-Layer: The user logs in and the app connects silently in the background
 const ws = new WebSocket('wss://api.socialnetwork.com/notifications');
 
 // We don't use ws.send() at all in this scenario. We strictly listen.
@@ -1656,64 +1756,125 @@ ws.addEventListener('message', (event) =&gt; {
       </div>
     </div>
   </div>
-<!-- 🧠 TEST YOURSELF QUIZ -->
+  <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
+      <div
+        style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/4 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What does <code>new WebSocket(url)</code> do?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What does
+            <code>new WebSocket(url)</code> do?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Sends a message to the server</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Opens a new connection to the server</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Closes the current connection</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Creates an HTML element</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Sends a
+              message to the server</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Opens a
+              new connection to the server</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Closes the
+              current connection</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Creates an
+              HTML element</button>
           </div>
-          <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q0_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Which event fires when the server sends you data?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Which event fires when
+            the server sends you data?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. open</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. close</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. message</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. error</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A.
+              open</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B.
+              close</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C.
+              message</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D.
+              error</button>
           </div>
-          <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q1_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
         <div id="quiz_9817_q2" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. What is <code>ws.readyState === 1</code>?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">3. What is
+            <code>ws.readyState === 1</code>?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. Connecting</button>
-            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Open (ready to send)</button>
-            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. Closing</button>
-            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Closed</button>
+            <button id="quiz_9817_q2_o0" onclick="quiz_9817_check(2,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A.
+              Connecting</button>
+            <button id="quiz_9817_q2_o1" onclick="quiz_9817_check(2,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Open
+              (ready to send)</button>
+            <button id="quiz_9817_q2_o2" onclick="quiz_9817_check(2,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C.
+              Closing</button>
+            <button id="quiz_9817_q2_o3" onclick="quiz_9817_check(2,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D.
+              Closed</button>
           </div>
-          <div id="quiz_9817_q2_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q2_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
         <div id="quiz_9817_q3" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">4. What happens if you call <code>ws.send()</code> before the connection is open?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">4. What happens if you call
+            <code>ws.send()</code> before the connection is open?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q3_o0" onclick="quiz_9817_check(3,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. It queues the message</button>
-            <button id="quiz_9817_q3_o1" onclick="quiz_9817_check(3,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. It throws an error</button>
-            <button id="quiz_9817_q3_o2" onclick="quiz_9817_check(3,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It sends normally</button>
-            <button id="quiz_9817_q3_o3" onclick="quiz_9817_check(3,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Nothing happens</button>
+            <button id="quiz_9817_q3_o0" onclick="quiz_9817_check(3,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. It queues
+              the message</button>
+            <button id="quiz_9817_q3_o1" onclick="quiz_9817_check(3,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. It throws
+              an error</button>
+            <button id="quiz_9817_q3_o2" onclick="quiz_9817_check(3,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. It sends
+              normally</button>
+            <button id="quiz_9817_q3_o3" onclick="quiz_9817_check(3,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Nothing
+              happens</button>
           </div>
-          <div id="quiz_9817_q3_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q3_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
       </div>
     </div>
   </div>
   <script>
-    (function() {
+    (function () {
       const answers = [1, 2, 1, 1];
       const explains = ['It initiates a WebSocket handshake and opens a persistent connection to the server.', 'The <code>message</code> event fires every time the server sends data to the client.', "readyState 0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED. Only send when it's 1!", "Sending before readyState is OPEN throws an error. Always check readyState or wait for the 'open' event."];
       let answered = new Set();
       let correct = 0;
-      window.quiz_9817_check = function(qi, oi) {
+      window.quiz_9817_check = function (qi, oi) {
         if (answered.has(qi)) return;
         answered.add(qi);
         const isCorrect = oi === answers[qi];
@@ -1732,9 +1893,9 @@ ws.addEventListener('message', (event) =&gt; {
           correctBtn.style.color = "#22c55e";
         }
         // Disable all options for this question
-        for(let j=0; j<4; j++) {
+        for (let j = 0; j < 4; j++) {
           const b = document.getElementById("quiz_9817_q" + qi + "_o" + j);
-          if(b) b.style.pointerEvents = "none";
+          if (b) b.style.pointerEvents = "none";
         }
         // Show explanation
         const exp = document.getElementById("quiz_9817_q" + qi + "_explain");
@@ -1754,43 +1915,143 @@ ws.addEventListener('message', (event) =&gt; {
     })();
   </script>
 
-<!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — WebSocket Basics</div>
+    <div
+      style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">
+        📋 Quick Cheat Sheet — WebSocket Basics</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead>
+            <tr>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                Code</th>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                What it does</th>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                When</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>new WebSocket(url)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Opens a connection to the server</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When YOU call it</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.addEventListener('open', fn)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function when connected</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Automatically when server accepts</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.send('hello')</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Sends a message to the server</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When YOU call it</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.addEventListener('message', fn)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function when server replies</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Every time server sends data</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.close()</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Ends the connection cleanly</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When YOU call it</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.addEventListener('close', fn)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function when disconnected</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">After connection ends</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.addEventListener('error', fn)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function if something fails</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If connection breaks</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>ws.readyState</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">0=Connecting, 1=Open, 2=Closing, 3=Closed</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Check anytime</td></tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>new WebSocket(url)</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Opens a connection to the
+                server</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When YOU call
+                it</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.addEventListener('open', fn)</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function when
+                connected</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Automatically
+                when server accepts</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.send('hello')</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Sends a message to the
+                server</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When YOU call
+                it</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.addEventListener('message', fn)</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function when
+                server replies</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Every time
+                server sends data</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.close()</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Ends the connection
+                cleanly</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">When YOU call
+                it</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.addEventListener('close', fn)</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function when
+                disconnected</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">After
+                connection ends</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.addEventListener('error', fn)</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Runs your function if
+                something fails</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">If connection
+                breaks</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>ws.readyState</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">0=Connecting, 1=Open,
+                2=Closing, 3=Closed</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Check anytime
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Think of WebSocket like a <strong>phone call</strong> — once connected, both sides can talk freely without hanging up and dialing again.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><code>new WebSocket(url)</code> is like pressing the <strong>call button</strong>. The browser dials the server.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Events (<code>open</code>, <code>message</code>, <code>close</code>, <code>error</code>) are like <strong>notifications on your phone</strong> — they fire automatically when something happens.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Always handle the <code>error</code> and <code>close</code> events — real connections <strong>will</strong> drop eventually.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Use <code>ws.readyState</code> to check the connection status before sending messages.</span></div>
+    <div
+      style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Think of WebSocket like a <strong>phone
+            call</strong> — once connected, both sides can talk freely without hanging up and dialing again.</span>
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span><code>new WebSocket(url)</code> is like pressing the
+          <strong>call button</strong>. The browser dials the server.</span></div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Events (<code>open</code>, <code>message</code>,
+          <code>close</code>, <code>error</code>) are like <strong>notifications on your phone</strong> — they fire
+          automatically when something happens.</span></div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Always handle the <code>error</code> and
+          <code>close</code> events — real connections <strong>will</strong> drop eventually.</span></div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Use <code>ws.readyState</code> to check the
+          connection status before sending messages.</span></div>
     </div>
 
     <!-- 💻 Production Pattern -->
-    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Minimal WebSocket client</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>// 1. Connect to the server (like dialing a phone number)
-const ws = new WebSocket('ws://localhost:8080');
+    <div
+      style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">
+        💻 Minimal WebSocket client</div>
+      <pre
+        style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>// 1. Connect to the server (like dialing a phone number)
+const ws = new WebSocket(getWsUrl(8080));
 
 // 2. When the call connects — say hello
 ws.addEventListener('open', () => {
@@ -1815,10 +2076,16 @@ ws.addEventListener('error', (err) => {
     </div>
   </div>
 
-<div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
-    <a href="index.html" style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:rgba(255,255,255,0.02);color:#94a3b8;text-decoration:none">&#127968; Home</a>
-    <a href="WEBSOCKET_STUDY_NOTES.md" style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:transparent;color:#94a3b8;text-decoration:none">&#128218; Notes</a>
-    <a href="learn2.html" style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#38bdf8;color:#082f49;text-decoration:none;border:none">Lesson 2: addEventListener &#8594;</a>
+  <div style="display:flex;gap:10px;justify-content:center;padding:24px;border-top:1px solid #1f2d45;flex-wrap:wrap">
+    <a href="index.html"
+      style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:rgba(255,255,255,0.02);color:#94a3b8;text-decoration:none">&#127968;
+      Home</a>
+    <a href="WEBSOCKET_STUDY_NOTES.md"
+      style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:transparent;color:#94a3b8;text-decoration:none">&#128218;
+      Notes</a>
+    <a href="learn2.html"
+      style="padding:9px 18px;border-radius:8px;font-family:Inter,sans-serif;font-size:.83rem;font-weight:600;background:#38bdf8;color:#082f49;text-decoration:none;border:none">Lesson
+      2: addEventListener &#8594;</a>
   </div>
 </body>
 

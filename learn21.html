@@ -15,7 +15,7 @@
       box-sizing: border-box
     }
 
-        :root {
+    :root {
       --bg: #ffffff;
       --card: #f8fafc;
       --card2: #f1f5f9;
@@ -345,28 +345,59 @@
       background: rgba(34, 197, 94, .05);
       color: var(--dim)
     }
-  
+
     /* ── MOBILE RESPONSIVE ── */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 1.6rem !important; }
-      .hero p { font-size: .88rem !important; }
-      .page { padding: 24px 16px !important; }
-      .two-col { grid-template-columns: 1fr !important; }
-      .stats { flex-wrap: wrap; gap: 12px; }
-      .code, pre { font-size: .7rem !important; }
-      .nav-bar, [style*="justify-content:center"][style*="padding:24px"] { 
-        flex-direction: column; align-items: center; 
+      .hero h1 {
+        font-size: 1.6rem !important;
+      }
+
+      .hero p {
+        font-size: .88rem !important;
+      }
+
+      .page {
+        padding: 24px 16px !important;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr !important;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .code,
+      pre {
+        font-size: .7rem !important;
+      }
+
+      .nav-bar,
+      [style*="justify-content:center"][style*="padding:24px"] {
+        flex-direction: column;
+        align-items: center;
       }
     }
+
     @media (max-width: 480px) {
-      .hero { padding: 40px 16px 32px !important; }
-      .hero h1 { font-size: 1.3rem !important; }
-      section { margin-bottom: 24px !important; }
+      .hero {
+        padding: 40px 16px 32px !important;
+      }
+
+      .hero h1 {
+        font-size: 1.3rem !important;
+      }
+
+      section {
+        margin-bottom: 24px !important;
+      }
     }
-</style>
+  </style>
   <script src="config.js"></script>
   <script src="progress.js"></script>
-  
+
 </head>
 
 <body>
@@ -560,41 +591,49 @@
     </section>
   </div>
 
-  
 
-  
 
-  
-  
 
-  <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Signal Messenger</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Signal uses end-to-end encryption even over WebSocket. The server can't read message content — only the sender and receiver can decrypt it.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏥</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">HIPAA Healthcare Apps</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Medical data over WebSocket must be encrypted (wss://), rate-limited to prevent data exfiltration, and authenticated with session tokens that expire every 15 minutes.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
-          <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🔐</span>
-          <div>
-            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">1Password / LastPass</div>
-            <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Password sync between devices uses encrypted WebSocket. Input validation prevents malicious payloads from corrupting your vault.</div>
-          </div>
-        </div>
-      </div>
+
+
+
+
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">💬</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">Signal Messenger</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Signal uses end-to-end encryption even over WebSocket.
+        The server can't read message content — only the sender and receiver can decrypt it.</div>
     </div>
   </div>
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🏥</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">HIPAA Healthcare Apps</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Medical data over WebSocket must be encrypted
+        (wss://), rate-limited to prevent data exfiltration, and authenticated with session tokens that expire every 15
+        minutes.</div>
+    </div>
+  </div>
+  <div
+    style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06)">
+    <span style="font-size:1.3rem;flex-shrink:0;margin-top:2px">🔐</span>
+    <div>
+      <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:3px">1Password / LastPass</div>
+      <div style="font-size:.82rem;color:#94a3b8;line-height:1.6">Password sync between devices uses encrypted
+        WebSocket. Input validation prevents malicious payloads from corrupting your vault.</div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
 
-<!-- ✅ MARK COMPLETE -->
+  <!-- ✅ MARK COMPLETE -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 20px">
-    <button id="markCompleteBtn" onclick="toggleLessonComplete()" style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button id="markCompleteBtn" onclick="toggleLessonComplete()"
+      style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,.03);color:var(--dim);font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px">
       <span id="markCompleteIcon">☐</span>
       <span id="markCompleteText">Mark Lesson 21 as Complete</span>
     </button>
@@ -630,26 +669,42 @@
 
   </div>
 
-  
+
   <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+    <div
+      style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
         <span>🏗️</span>
         <span>Scenario 1: Testing Disconnections (Chaos Monkey)</span>
       </div>
       <div style="padding:20px">
         <div style="margin-bottom:22px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
-          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The team has written incredible exponential backoff logic for when the Wi-Fi drops. But they need to run an automated Jest integration test to mathematically prove that the UI shows the red 'Offline' banner immediately, and reconnects at exactly 1s, 2s, and 4s intervals. They cannot unplug physical Ethernet cables during an automated CI/CD pipeline run.<br><br>**The End-to-End Flow:** The QA Engineer uses testing tools (like Mock-Socket or Puppeteer) to inject Chaos. Inside the test suite, they script the mock server server to forcefully execute `.close()` on the active connection exactly 500ms into the test. They then use Jest's timer controls `jest.advanceTimersByTime(1000)` to instantly snap time forward. They write an `expect(banner.isVisible()).toBe(true)` to prove the UI reacted to the drop. They snap time forward 4 more times to verify the backoff multiplier is working perfectly without having to wait in real time.</div>
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The team has written
+            incredible exponential backoff logic for when the Wi-Fi drops. But they need to run an automated Jest
+            integration test to mathematically prove that the UI shows the red 'Offline' banner immediately, and
+            reconnects at exactly 1s, 2s, and 4s intervals. They cannot unplug physical Ethernet cables during an
+            automated CI/CD pipeline run.<br><br>**The End-to-End Flow:** The QA Engineer uses testing tools (like
+            Mock-Socket or Puppeteer) to inject Chaos. Inside the test suite, they script the mock server server to
+            forcefully execute `.close()` on the active connection exactly 500ms into the test. They then use Jest's
+            timer controls `jest.advanceTimersByTime(1000)` to instantly snap time forward. They write an
+            `expect(banner.isVisible()).toBe(true)` to prove the UI reacted to the drop. They snap time forward 4 more
+            times to verify the backoff multiplier is working perfectly without having to wait in real time.</div>
         </div>
         <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
-          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>import { Server } from 'mock-socket';
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            💻 Implementation Code</div>
+          <pre
+            style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>import { Server } from 'mock-socket';
 
 test('UI properly executes 2x exponential backoff on drop', async () =&gt; {
   // 1. Boot up a Fake WebSocket Server that intercepts browser calls
-  const mockServer = new Server('ws://localhost:8080');
+  const mockServer = new Server(getWsUrl(8080));
   
   // 2. Initialize our App React Component which connects automatically
   render(&lt;App /&gt;); 
@@ -674,19 +729,34 @@ test('UI properly executes 2x exponential backoff on drop', async () =&gt; {
 
   <!-- 🏗️ STORY-DRIVEN SCENARIO IMPLEMENTATION -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 28px">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
+    <div
+      style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px; background:var(--card2)">
         <span>🏗️</span>
         <span>Scenario 2: Validating Strict JSON Contracts</span>
       </div>
       <div style="padding:20px">
         <div style="margin-bottom:22px">
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">📖 The Logic & Flow</div>
-          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The frontend expects `{ type: 'METRICS', data: [1, 2, 3] }`. Another developer accidentally pushes backend code that sends `{ type: 'METRICS', val: [1, 2, 3] }`. The frontend code tries to parse `data.map()` and throws a fatal `TypeError: undefined is not a function`, crashing the entire client application silently.<br><br>**The End-to-End Flow:** The architecture mandates strict Schema Validation during testing using libraries like Zod or Joi. During the automated CI/CD loop, a Node test script connects to the Staging WebSocket server. It blasts 50 permutations of 'garbage' packets, malformed JSON, missing nested objects, and integers-as-strings. If the backend fails to catch ANY of the invalid frames or crashes with an unhandled exception, the build instantly fails and refuses to deploy to Production.</div>
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            📖 The Logic & Flow</div>
+          <div style="font-size:.9rem;color:var(--dim);line-height:1.75">**The Business Problem:** The frontend expects
+            `{ type: 'METRICS', data: [1, 2, 3] }`. Another developer accidentally pushes backend code that sends `{
+            type: 'METRICS', val: [1, 2, 3] }`. The frontend code tries to parse `data.map()` and throws a fatal
+            `TypeError: undefined is not a function`, crashing the entire client application silently.<br><br>**The
+            End-to-End Flow:** The architecture mandates strict Schema Validation during testing using libraries like
+            Zod or Joi. During the automated CI/CD loop, a Node test script connects to the Staging WebSocket server. It
+            blasts 50 permutations of 'garbage' packets, malformed JSON, missing nested objects, and
+            integers-as-strings. If the backend fails to catch ANY of the invalid frames or crashes with an unhandled
+            exception, the build instantly fails and refuses to deploy to Production.</div>
         </div>
         <div>
-          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
-          <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const WebSocket = require('ws');
+          <div
+            style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">
+            💻 Implementation Code</div>
+          <pre
+            style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const WebSocket = require('ws');
 
 describe('Security Payload Integrity', () =&gt; {
   let ws;
@@ -717,44 +787,75 @@ describe('Security Payload Integrity', () =&gt; {
       </div>
     </div>
   </div>
-<!-- 🧠 TEST YOURSELF QUIZ -->
+  <!-- 🧠 TEST YOURSELF QUIZ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
+      <div
+        style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:space-between">
         <span>🧠 Test Yourself</span>
         <span id="quiz_9817_score" style="font-size:.8rem;color:#94a3b8">0/2 answered</span>
       </div>
       <div style="padding:18px">
         <div id="quiz_9817_q0" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What does <code>wss://</code> protect against?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">1. What does
+            <code>wss://</code> protect against?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. SQL injection</button>
-            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. Man-in-the-middle attacks (encrypts data in transit)</button>
-            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. DDoS attacks</button>
-            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Cross-site scripting</button>
+            <button id="quiz_9817_q0_o0" onclick="quiz_9817_check(0,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. SQL
+              injection</button>
+            <button id="quiz_9817_q0_o1" onclick="quiz_9817_check(0,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B.
+              Man-in-the-middle attacks (encrypts data in transit)</button>
+            <button id="quiz_9817_q0_o2" onclick="quiz_9817_check(0,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. DDoS
+              attacks</button>
+            <button id="quiz_9817_q0_o3" onclick="quiz_9817_check(0,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. Cross-site
+              scripting</button>
           </div>
-          <div id="quiz_9817_q0_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q0_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
         <div id="quiz_9817_q1" style="margin-bottom:20px">
-          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Why should you validate the Origin header on the server?</div>
+          <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px">2. Why should you validate
+            the Origin header on the server?</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. For performance</button>
-            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. To prevent unauthorized domains from connecting</button>
-            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. To compress messages</button>
-            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)" style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. It's required by the protocol</button>
+            <button id="quiz_9817_q1_o0" onclick="quiz_9817_check(1,0)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">A. For
+              performance</button>
+            <button id="quiz_9817_q1_o1" onclick="quiz_9817_check(1,1)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">B. To prevent
+              unauthorized domains from connecting</button>
+            <button id="quiz_9817_q1_o2" onclick="quiz_9817_check(1,2)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">C. To
+              compress messages</button>
+            <button id="quiz_9817_q1_o3" onclick="quiz_9817_check(1,3)"
+              style="text-align:left;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#cbd5e1;font-family:Inter,sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s"
+              onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#1f2d45'">D. It's
+              required by the protocol</button>
           </div>
-          <div id="quiz_9817_q1_explain" style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6"></div>
+          <div id="quiz_9817_q1_explain"
+            style="display:none;margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82rem;line-height:1.6">
+          </div>
         </div>
       </div>
     </div>
   </div>
   <script>
-    (function() {
+    (function () {
       const answers = [1, 1];
       const explains = ['wss:// uses TLS encryption (like HTTPS) to prevent eavesdropping on WebSocket traffic.', 'WebSocket bypasses CORS. Checking the Origin header rejects connections from unknown/malicious websites.'];
       let answered = new Set();
       let correct = 0;
-      window.quiz_9817_check = function(qi, oi) {
+      window.quiz_9817_check = function (qi, oi) {
         if (answered.has(qi)) return;
         answered.add(qi);
         const isCorrect = oi === answers[qi];
@@ -773,9 +874,9 @@ describe('Security Payload Integrity', () =&gt; {
           correctBtn.style.color = "#22c55e";
         }
         // Disable all options for this question
-        for(let j=0; j<4; j++) {
+        for (let j = 0; j < 4; j++) {
           const b = document.getElementById("quiz_9817_q" + qi + "_o" + j);
-          if(b) b.style.pointerEvents = "none";
+          if (b) b.style.pointerEvents = "none";
         }
         // Show explanation
         const exp = document.getElementById("quiz_9817_q" + qi + "_explain");
@@ -795,37 +896,100 @@ describe('Security Payload Integrity', () =&gt; {
     })();
   </script>
 
-<!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
+  <!-- ═══ BEGINNER REFERENCE SECTIONS ═══ -->
   <div style="max-width:880px;margin:0 auto;padding:0 24px 32px">
     <!-- 📋 Quick Cheat Sheet -->
-    <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
-      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">📋 Quick Cheat Sheet — WebSocket Security</div>
+    <div
+      style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
+      <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">
+        📋 Quick Cheat Sheet — WebSocket Security</div>
       <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-          <thead><tr><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">Code</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">What it does</th><th style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">When</th></tr></thead>
+          <thead>
+            <tr>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                Code</th>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                What it does</th>
+              <th
+                style="padding:10px 14px;background:rgba(255,255,255,0.02);color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1f2d45;text-align:left">
+                When</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>Origin header check</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Verify request comes from your domain</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Prevent cross-origin attacks</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>wss:// (TLS)</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Encrypted WebSocket connections</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Always use in production</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>Input validation</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Sanitize all incoming messages</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Prevent XSS/injection</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem"><code>Rate limiting</code></td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Throttle messages per client</td><td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Prevent DDoS</td></tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>Origin header check</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Verify request comes from
+                your domain</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Prevent
+                cross-origin attacks</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>wss:// (TLS)</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Encrypted WebSocket
+                connections</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Always use in
+                production</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>Input validation</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Sanitize all incoming
+                messages</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Prevent
+                XSS/injection</td>
+            </tr>
+            <tr>
+              <td
+                style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#7dd3fc;font-family:'Fira Code',monospace;font-size:.78rem">
+                <code>Rate limiting</code></td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:var(--text)">Throttle messages per
+                client</td>
+              <td style="padding:10px 14px;border-bottom:1px solid #1f2d45;color:#94a3b8;font-size:.78rem">Prevent DDoS
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- 💡 Key Takeaways -->
-    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
-      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners</div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><strong>Always use wss://</strong> (WebSocket Secure) in production — it encrypts data like HTTPS does for HTTP.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Validate the <code>Origin</code> header on the server — reject connections from unknown domains to prevent CSRF attacks.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span><strong>Never trust client data.</strong> Always validate and sanitize every message before processing or broadcasting.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>Combine authentication (Lesson 8) + rate limiting (Lesson 13) + input validation = a secure WebSocket server.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65"><span style="color:var(--text);flex-shrink:0">▸</span><span>WebSocket connections bypass CORS — this makes them more dangerous if not properly secured.</span></div>
+    <div
+      style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px;margin-bottom:24px">
+      <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:12px">💡 Key Takeaways for Beginners
+      </div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span><strong>Always use wss://</strong> (WebSocket
+          Secure) in production — it encrypts data like HTTPS does for HTTP.</span></div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Validate the <code>Origin</code> header on the
+          server — reject connections from unknown domains to prevent CSRF attacks.</span></div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span><strong>Never trust client data.</strong> Always
+          validate and sanitize every message before processing or broadcasting.</span></div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>Combine authentication (Lesson 8) + rate limiting
+          (Lesson 13) + input validation = a secure WebSocket server.</span></div>
+      <div
+        style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.86rem;color:#cbd5e1;line-height:1.65">
+        <span style="color:var(--text);flex-shrink:0">▸</span><span>WebSocket connections bypass CORS — this makes them
+          more dangerous if not properly secured.</span></div>
     </div>
 
   </div>
 
-<div class="nav-bar">
+  <div class="nav-bar">
     <a href="index.html" class="nav-btn home">🏠 Home</a>
     <a href="learn20.html" class="nav-btn">← Lesson 20</a>
     <a href="WEBSOCKET_STUDY_NOTES.md" class="nav-btn">📚 Notes</a>
