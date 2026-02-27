@@ -12,6 +12,8 @@
 require('dotenv').config();
 const WebSocket = require("ws");
 const http = require("http");
+const fs = require("fs");
+const path = require("path");
 const { HfInference } = require("@huggingface/inference");
 
 // create HF client when token is present
@@ -92,6 +94,43 @@ function getKnowledgeBasedResponse(question) {
 const wssWithOn = new WebSocket.Server({ noServer: true });
 const wssWithoutOn = new WebSocket.Server({ noServer: true });
 
+// ─── Static File Serving ──────────────────────────────────────────────────────
+function serveStaticFile(req, res) {
+  let filePath = req.url === '/' ? '/index.html' : req.url;
+  filePath = path.join(__dirname, filePath);
+  
+  // Security: Prevent path traversal attacks
+  if (!filePath.startsWith(__dirname)) {
+    res.writeHead(403);
+    return res.end("Forbidden");
+  }
+
+  // Try to serve the file
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      // If file not found, try to send 404 or index.html for other routes
+      if (err.code === 'ENOENT') {
+        res.writeHead(404);
+        res.end("File not found");
+      } else {
+        res.writeHead(500);
+        res.end("Server error");
+      }
+      return;
+    }
+
+    // Determine content type
+    let contentType = 'text/plain';
+    if (filePath.endsWith('.html')) contentType = 'text/html';
+    else if (filePath.endsWith('.js')) contentType = 'application/javascript';
+    else if (filePath.endsWith('.css')) contentType = 'text/css';
+    else if (filePath.endsWith('.json')) contentType = 'application/json';
+
+    res.writeHead(200, { "Content-Type": contentType });
+    res.end(data);
+  });
+}
+
 const httpServer = http.createServer(async (req, res) => {
   // ─── AI Chat API endpoint ──────────────────────────────────────────────────
   if (req.method === "POST" && req.url === "/api/chat") {
@@ -163,8 +202,13 @@ const httpServer = http.createServer(async (req, res) => {
     return res.end("ok");
   }
 
+  // ─── Serve static files (HTML, JS, CSS, etc) ──────────────────────────────────
+  if (req.method === "GET") {
+    return serveStaticFile(req, res);
+  }
+
   res.writeHead(404);
-  res.end("WS Teaching Server - Use WebSocket to connect\n");
+  res.end("Not Found\n");
 });
 
 // ✅ PATTERN 1, 3, 4 — Logic for wssWithOn

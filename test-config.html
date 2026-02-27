@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test config.js & WebSocket</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .box {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+    .ok { color: green; font-weight: bold; }
+    .err { color: red; font-weight: bold; }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover { background: #0056b3; }
+    #log {
+      background: #000;
+      color: #0f0;
+      padding: 10px;
+      border-radius: 4px;
+      min-height: 200px;
+      overflow-y: auto;
+      margin: 10px 0;
+    }
+    .log-line {
+      padding: 2px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 WebSocket Configuration Test</h1>
+  
+  <div class="box">
+    <h2>1. Check if config.js loaded</h2>
+    <div id="check-config"></div>
+  </div>
+
+  <div class="box">
+    <h2>2. Check localStorage</h2>
+    <div id="check-storage"></div>
+  </div>
+
+  <div class="box">
+    <h2>3. Test getWsUrl()</h2>
+    <div id="check-getws"></div>
+  </div>
+
+  <div class="box">
+    <h2>4. Test WebSocket Connection</h2>
+    <button onclick="testConnection()">Connect to WebSocket</button>
+    <div id="log"></div>
+  </div>
+
+  <div class="box">
+    <h2>5. Settings</h2>
+    <button onclick="setCustomIP()">Set Custom IP (192.168.1.5:8082)</button>
+    <button onclick="clearCustomIP()">Clear Custom IP</button>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    function log(msg, type = 'info') {
+      const logDiv = document.getElementById('log');
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      if (type === 'ok') line.style.color = '#0f0';
+      if (type === 'err') line.style.color = '#f00';
+      logDiv.appendChild(line);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // Check 1: config.js loaded
+    const check1 = document.getElementById('check-config');
+    if (typeof getWsUrl === 'function') {
+      check1.innerHTML = '<span class="ok">✅ config.js loaded successfully</span>';
+    } else {
+      check1.innerHTML = '<span class="err">❌ config.js NOT loaded - getWsUrl not defined</span>';
+    }
+
+    // Check 2: localStorage
+    const check2 = document.getElementById('check-storage');
+    const stored = localStorage.getItem('ws_server_url');
+    if (stored) {
+      check2.innerHTML = `<span class="ok">✅ Custom URL in localStorage:</span> <code>${stored}</code>`;
+    } else {
+      check2.innerHTML = '<span class="ok">✅ No custom URL (using localhost)</span>';
+    }
+
+    // Check 3: getWsUrl()
+    const check3 = document.getElementById('check-getws');
+    try {
+      const url = getWsUrl(8082);
+      check3.innerHTML = `<span class="ok">✅ getWsUrl(8082) returned:</span> <code>${url}</code>`;
+    } catch (err) {
+      check3.innerHTML = `<span class="err">❌ getWsUrl() error:</span> ${err.message}`;
+    }
+
+    // Test 4: WebSocket connection
+    let ws = null;
+    function testConnection() {
+      if (ws) ws.close();
+      
+      log('Connecting...', 'info');
+      const url = getWsUrl(8082);
+      log(`URL: ${url}`, 'info');
+      
+      try {
+        ws = new WebSocket(url);
+        
+        ws.onopen = () => {
+          log('✅ CONNECTED!', 'ok');
+        };
+        
+        ws.onmessage = (event) => {
+          log(`Message: ${event.data.substring(0, 100)}...`, 'ok');
+        };
+        
+        ws.onerror = (event) => {
+          log(`❌ ERROR: ${event.message || 'Unknown error'}`, 'err');
+        };
+        
+        ws.onclose = (event) => {
+          log(`Closed (code: ${event.code})`, 'err');
+        };
+      } catch (err) {
+        log(`Exception: ${err.message}`, 'err');
+      }
+    }
+
+    // Settings
+    function setCustomIP() {
+      localStorage.setItem('ws_server_url', 'ws://192.168.1.5:8082');
+      log('Set custom IP to ws://192.168.1.5:8082', 'ok');
+      document.getElementById('check-storage').innerHTML = '<span class="ok">✅ Custom URL set: ws://192.168.1.5:8082</span>';
+    }
+
+    function clearCustomIP() {
+      localStorage.removeItem('ws_server_url');
+      log('Cleared custom IP', 'ok');
+      document.getElementById('check-storage').innerHTML = '<span class="ok">✅ No custom URL (using localhost)</span>';
+    }
+  </script>
+</body>
+</html>
