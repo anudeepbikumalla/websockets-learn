@@ -185,16 +185,6 @@ ${C.bold}${C.blue}╔═══════════════════�
   `);
 });
 
-// If local, open 8081 for backward compat with legacy files
-if (!process.env.PORT) {
-  try {
-    const wssLocal8081 = new WebSocket.Server({ port: 8081 });
-    wssLocal8081.on("connection", (ws, req) => {
-      // Just emit to the Pattern 2 logic
-      wssWithoutOn.emit("connection", ws, req);
-    });
-    console.log(`${C.yellow}[LOCAL] Also listening on Port 8081 for legacy learn files${C.reset}`);
-  } catch (e) { }
-}
+// Port 8081 legacy support removed — all lessons now use 8082
 
 
