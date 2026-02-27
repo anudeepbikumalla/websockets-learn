@@ -12,6 +12,10 @@
 require('dotenv').config();
 const WebSocket = require("ws");
 const http = require("http");
+const { HfInference } = require("@huggingface/inference");
+
+// create HF client when token is present
+const hf = process.env.HF_API_TOKEN ? new HfInference({ apiKey: process.env.HF_API_TOKEN }) : null;
 
 // ─── Color-coded logger ───────────────────────────────────────────────────────
 const C = { reset: "\x1b[0m", cyan: "\x1b[36m", yellow: "\x1b[33m", green: "\x1b[32m", magenta: "\x1b[35m", red: "\x1b[31m", blue: "\x1b[34m", bold: "\x1b[1m" };
@@ -89,43 +93,30 @@ const httpServer = http.createServer(async (req, res) => {
           }));
         }
 
-        // Call Hugging Face API with updated endpoint
-        const response = await fetch("https://router.huggingface.co/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${HF_API_TOKEN}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
+        // Use official HF inference client
+        if (!hf) {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ response: "HF client not initialized" }));
+        }
+
+        try {
+          const result = await hf.chat.completions.create({
             model: "meta-llama/Llama-2-7b-chat-hf",
             messages: [
-              {
-                role: "system",
-                content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly."
-              },
-              {
-                role: "user",
-                content: question
-              }
+              { role: "system", content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly." },
+              { role: "user", content: question }
             ],
             max_tokens: 300,
             temperature: 0.7
-          })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-          console.error("HF API error:", data);
+          });
+          const aiResponse = result.choices?.[0]?.message?.content || "No response";
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ response: aiResponse }));
+        } catch (err) {
+          console.error("HF client error:", err);
           res.writeHead(500, { "Content-Type": "application/json" });
-          return res.end(JSON.stringify({ 
-            response: "🤖 API temporarily busy. Try again in a moment!"
-          }));
+          res.end(JSON.stringify({ response: "Error contacting HF API" }));
         }
-
-        const aiResponse = data.choices?.[0]?.message?.content || "No response generated";
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ response: aiResponse }));
 
       } catch (error) {
         console.error("Chat error:", error.message);
