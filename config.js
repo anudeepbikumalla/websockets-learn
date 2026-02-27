@@ -36,3 +36,15 @@ function getWsUrl(defaultPort = 8082) {
 
 // Expose globally for all learn*.html files
 window.getWsUrl = getWsUrl;
+
+// Load AI chatbox helper (adds a floating assistant to every page that includes config.js)
+(function loadAIChatbox(){
+  try {
+    const s = document.createElement('script');
+    s.src = 'ai-chatbox.js';
+    s.defer = true;
+    document.head.appendChild(s);
+  } catch (e) {
+    console.warn('AI chatbox failed to load:', e);
+  }
+})();

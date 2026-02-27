@@ -21,16 +21,23 @@ async function getPublicIP() {
     return response.data.ip;
   } catch (error) {
     console.error('❌ Failed to get public IP:', error.message);
-    process.exit(1);
+    // Do not exit the process for IP lookup failures — continue without Atlas update
+    return null;
   }
 }
 
 async function updateAtlasAllowlist(ip) {
   console.log(`📡 Detected Public IP: ${ip}`);
 
+  if (!ip) {
+    console.log('ℹ️ No public IP detected, skipping Atlas allowlist update.');
+    return;
+  }
+
   if (!PUBLIC_KEY || !PRIVATE_KEY || !PROJECT_ID) {
-    console.error('❌ Missing Atlas credentials in .env file!');
-    process.exit(1);
+    console.warn('⚠️ Missing Atlas credentials in .env — skipping Atlas allowlist update.');
+    console.warn('Tip: set ATLAS_PUBLIC_KEY, ATLAS_PRIVATE_KEY and ATLAS_PROJECT_ID in your .env with correct values.');
+    return;
   }
 
   const client = new DigestFetch(PUBLIC_KEY, PRIVATE_KEY);
@@ -53,6 +60,10 @@ async function updateAtlasAllowlist(ip) {
       console.log('✅ Atlas Access List updated successfully!');
     } else {
       console.error('❌ Atlas API Error:', data.detail || data.reason || response.statusText);
+      if (response.status === 403 || (data && typeof data.detail === 'string' && data.detail.includes('User cannot access this group'))) {
+        console.error('❌ Permission error: your API key does not have access to this project. Verify ATLAS_PUBLIC_KEY, ATLAS_PRIVATE_KEY, and that the key has Project Owner or Organization Owner role. Skipping update.');
+      }
+      // Continue without exiting — user can still run the server locally
     }
   } catch (error) {
     console.error('❌ Request failed:', error.message);
@@ -87,7 +98,11 @@ async function main() {
   console.log('🛠️  MongoDB Automation Tool');
   console.log('--------------------------');
   const ip = await getPublicIP();
-  await updateAtlasAllowlist(ip);
+  if (ip) {
+    await updateAtlasAllowlist(ip);
+  } else {
+    console.log('ℹ️ Skipping Atlas allowlist update due to missing public IP.');
+  }
   launchCompass();
 }
 
