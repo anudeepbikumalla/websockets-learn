@@ -171,7 +171,7 @@ httpServer.on("upgrade", (request, socket, head) => {
   }
 });
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`
 ${C.bold}${C.blue}╔══════════════════════════════════════════════════════════════════╗
 ║         WebSocket Teaching Server — DEPLOYMENT READY             ║

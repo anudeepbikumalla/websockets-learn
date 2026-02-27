@@ -1,6 +1,4 @@
 node_modules/
 .env
-*.log
-.gemini/
-debug-atlas.js
-test.js
+.env.example
+.DS_Store
