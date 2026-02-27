@@ -88,26 +88,42 @@ to automatically add your IP address to the allowlist.
 }
 
 function launchCompass() {
-  console.log('🚀 Launching MongoDB Compass and connecting...');
+  const isWindows = os.platform() === 'win32';
+  const checkCmd = isWindows ? 'tasklist | findstr /i "compass"' : 'pgrep -i compass';
 
-  const connectionString = process.env.MONGODB_CONNECTION_STRING;
+  console.log('🔍 Checking if MongoDB Compass is already running...');
 
-  // On Windows, 'start' can find registered apps. 
-  // We pass the connection string as an argument.
-  let cmd;
-  if (COMPASS_PATH === 'mongodb-compass') {
-    cmd = connectionString ? `start mongodb-compass "${connectionString}"` : `start mongodb-compass`;
-  } else {
-    cmd = connectionString ? `"${COMPASS_PATH}" "${connectionString}"` : `"${COMPASS_PATH}"`;
-  }
-
-  exec(cmd, (err) => {
-    if (err) {
-      console.warn('⚠️ Could not launch Compass automatically. You might need to check your COMPASS_PATH or MONGODB_CONNECTION_STRING in .env');
-      console.error('Error detail:', err.message);
-    } else {
-      console.log('✨ Compass opened and connecting!');
+  exec(checkCmd, (checkErr, stdout) => {
+    // If output exists, Compass is running
+    if (stdout && stdout.toLowerCase().includes('compass')) {
+      console.log('✅ MongoDB Compass is already running. Skipping duplicate launch.');
+      return;
     }
+
+    // Compass is not running, proceed to launch
+    console.log('🚀 Launching MongoDB Compass and connecting...');
+    const connectionString = process.env.MONGODB_CONNECTION_STRING;
+    let cmd;
+
+    if (isWindows) {
+      if (COMPASS_PATH === 'mongodb-compass') {
+        cmd = connectionString ? `start mongodb-compass "${connectionString}"` : `start mongodb-compass`;
+      } else {
+        cmd = connectionString ? `"${COMPASS_PATH}" "${connectionString}"` : `"${COMPASS_PATH}"`;
+      }
+    } else {
+      // macOS / Linux generic fallback
+      cmd = connectionString ? `"${COMPASS_PATH}" "${connectionString}"` : `"${COMPASS_PATH}"`;
+    }
+
+    exec(cmd, (launchErr) => {
+      if (launchErr) {
+        console.warn('⚠️ Could not launch Compass automatically. You might need to check your COMPASS_PATH or MONGODB_CONNECTION_STRING in .env');
+        console.error('Error detail:', launchErr.message);
+      } else {
+        console.log('✨ Compass opened and connecting!');
+      }
+    });
   });
 }
 
