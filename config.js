@@ -3,7 +3,7 @@
  * Handles WebSocket URL resolution for local development.
  */
 
-function getWsUrl(defaultPort = 8080) {
+function getWsUrl(defaultPort = 8082) {
   // 1. Check for user-defined URL in localStorage
   const customUrl = localStorage.getItem('ws_server_url');
   if (customUrl) {

@@ -1036,7 +1036,7 @@
           style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.2rem">&times;</button>
       </div>
 
-      <p>By default, lessons connect to <strong>localhost:8080</strong>. To connect from a <strong>mobile phone</strong>
+      <p>By default, lessons connect to <strong>localhost:8082</strong>. To connect from a <strong>mobile phone</strong>
         or another laptop, you must use your PC's <strong>Local IP Address</strong>.</p>
 
       <div
@@ -1049,13 +1049,13 @@
               style="background:var(--card2); padding:2px 4px; border-radius:4px; font-family:monospace">ipconfig</code>
             and press Enter</li>
           <li>Look for <strong>IPv4 Address</strong> (e.g., 192.168.1.5)</li>
-          <li>Use it below <strong>with port 8080</strong>: <code style="opacity:.7">ws://192.168.1.5:8080</code></li>
+          <li>Use it below <strong>with port 8082</strong>: <code style="opacity:.7">ws://192.168.1.5:8082</code></li>
         </ol>
       </div>
 
       <div class="input-group">
         <label>WebSocket Server URL</label>
-        <input type="text" id="ws-input" placeholder="e.g. ws://192.168.x.x:8080" />
+        <input type="text" id="ws-input" placeholder="e.g. ws://192.168.x.x:8082" />
       </div>
 
       <div class="modal-btns">
@@ -1094,7 +1094,7 @@
 
     function clearSettings() {
       localStorage.removeItem('ws_server_url');
-      alert('🔄 Reset to default (localhost:8080)');
+      alert('🔄 Reset to default (localhost:8082)');
       location.reload();
     }
   </script>

@@ -608,7 +608,7 @@
             <span class="kw">const</span> WebSocket = <span class="fn">require</span>(<span
               class="str">'ws'</span>);<br>
             <span class="kw">const</span> wss = <span class="kw">new</span> WebSocket.<span class="fn">Server</span>({
-            port: <span class="ev">8080</span> });<br><br>
+            port: <span class="ev">8082</span> });<br><br>
 
             <span class="cm">// wss.clients = a Set of ALL connected sockets</span><br>
             wss.<span class="fn">on</span>(<span class="str">'connection'</span>, (ws) => {<br>
@@ -950,7 +950,7 @@ setTimeout(() => {
         <div>
           <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--blue);margin-bottom:8px">💻 Implementation Code</div>
           <pre style="margin:0;padding:16px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-family:'Fira Code',monospace;font-size:.8rem;color:#334155;overflow-x:auto;line-height:1.8"><code>const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 8082 });
 
 // Triggered via a private REST API when an official logs a goal
 function broadcastGoal(team, newScore) {
@@ -1124,7 +1124,7 @@ function broadcastNews(headline, isPremium) {
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Server-side broadcasting</div>
       <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 8082 });
 
 wss.on('connection', (ws) => {
   console.log('New client connected');
@@ -1179,7 +1179,7 @@ wss.on('connection', (ws) => {
       [0, 1, 2].forEach(i => {
         document.getElementById(`dot${i}`).className = 'client-dot on';
         document.getElementById(`msgs${i}`).innerHTML = '';
-        addMsg(i, '✅ Connected to ' + getWsUrl(8080), false);
+        addMsg(i, '✅ Connected to ' + getWsUrl(8082), false);
       });
       document.getElementById('connCount').textContent = '3 connected';
       document.getElementById('btnConnect').disabled = true;

@@ -619,7 +619,7 @@
             <span class="kw">let</span> ws, pingTimer, pongTimer;<br><br>
             <span class="kw">function</span> <span class="fn">connect</span>() {<br>
             &nbsp;&nbsp;ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(<span
-              class="str">getWsUrl(8080)</span>);<br><br>
+              class="str">getWsUrl(8082)</span>);<br><br>
             &nbsp;&nbsp;ws.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () => {<br>
             &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">startHeartbeat</span>(); <span class="cm">// begin
               pinging</span><br>
@@ -1042,7 +1042,7 @@ ws.addEventListener('close', () =&gt; {
     <!-- 💻 Production Pattern -->
     <div style="background:transparent;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
       <div style="padding:14px 18px;border-bottom:1px solid #1f2d45;font-weight:700;font-size:.95rem;color:var(--text)">💻 Server-side heartbeat</div>
-      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>const wss = new WebSocket.Server({ port: 8080 });
+      <pre style="margin:0;padding:16px 18px;font-family:'Fira Code',monospace;font-size:.78rem;color:#94a3b8;overflow-x:auto;line-height:1.8;background:rgba(0,0,0,0.15)"><code>const wss = new WebSocket.Server({ port: 8082 });
 
 // Every new connection starts as alive
 wss.on('connection', (ws) => {
