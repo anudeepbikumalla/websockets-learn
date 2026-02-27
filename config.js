@@ -38,161 +38,221 @@ function getWsUrl(defaultPort = 8082) {
 // Expose globally for all learn*.html files
 window.getWsUrl = getWsUrl;
 
-// Load AI chatbox — embedded directly for reliable initialization
+// =====================================================================
+// AI CHATBOX - Simple and Reliable
+// =====================================================================
 (function initAIChatbox(){
-  'use strict';
-  
-  console.log('🤖 AI Chatbox: Initializing...');
-  
-  function createChatbox(){
-    try {
-      console.log('🤖 AI Chatbox: Creating DOM elements...');
-      
-      // Styles
-      const css = `
-      #aiChatBtn{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;background:#7c3aed;color:#fff;border:none;box-shadow:0 6px 18px rgba(124,58,237,0.24);cursor:pointer;font-size:22px;z-index:9999;transition:transform .2s}
-      #aiChatBtn:hover{transform:scale(1.1)}
-      #aiChatPanel{position:fixed;right:20px;bottom:88px;width:360px;max-height:60vh;background:#0b1220;color:#e6eef8;border-radius:12px;box-shadow:0 12px 36px rgba(2,6,23,0.6);overflow:hidden;display:none;flex-direction:column;font-family:Inter, sans-serif;z-index:9999}
-      #aiChatPanel.show{display:flex}
-      #aiChatHeader{padding:12px 14px;background:linear-gradient(90deg,#7c3aed,#0284c7);color:#fff;font-weight:700;font-size:.9rem}
-      #aiChatBody{padding:12px;flex:1;overflow-y:auto;font-size:.88rem;line-height:1.5}
-      .aiMsg{margin-bottom:10px;padding:8px 10px;border-radius:8px;word-wrap:break-word}
-      .aiMsg.user{background:#152431;color:#cfe8ff;text-align:right}
-      .aiMsg.bot{background:#071025;color:#e6eef8}
-      #aiChatInputWrap{display:flex;padding:10px;border-top:1px solid rgba(255,255,255,0.03);gap:8px}
-      #aiChatInput{flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#dbeafe;font-family:Inter;font-size:.8rem}
-      #aiChatInput::placeholder{color:rgba(220,230,255,0.4)}
-      #aiChatInput:focus{outline:none;border-color:#7c3aed;background:rgba(124,58,237,0.08)}
-      #aiExplainSel{background:#7c3aed;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;color:#fff;font-size:.8rem;font-weight:600;white-space:nowrap}
-      #aiExplainSel:hover{background:#6d28d9}
-      .explainBtn{position:absolute;right:8px;top:8px;padding:4px 8px;border-radius:6px;border:none;background:#7c3aed;color:#fff;cursor:pointer;font-size:.7rem;z-index:9999;transition:background .2s}
-      .explainBtn:hover{background:#6d28d9}
-      @media(max-width:480px){#aiChatPanel{width:calc(100vw - 40px);bottom:70px}}
-      `;
-      const style = document.createElement('style'); 
-      style.textContent = css; 
-      document.head.appendChild(style);
-
-      // Create button
-      const btn = document.createElement('button'); 
-      btn.id = 'aiChatBtn'; 
-      btn.title = 'Ask the lesson assistant'; 
-      btn.textContent = '💬';
-      
-      // Create panel
-      const panel = document.createElement('div'); 
-      panel.id = 'aiChatPanel';
-      panel.innerHTML = `<div id="aiChatHeader">Lesson Assistant 💡</div>
-        <div id="aiChatBody"><div class="aiMsg bot">👋 Hi! Select code in the lesson and click "Explain Selection", or type a question like "Explain addEventListener" or "Pros and cons of callbacks"</div></div>
-        <div id="aiChatInputWrap"><input id="aiChatInput" placeholder="Ask about code..." /><button id="aiExplainSel">Explain Selection</button></div>`;
-      
-      document.body.appendChild(btn); 
-      document.body.appendChild(panel);
-      
-      console.log('🤖 AI Chatbox: DOM created, button at bottom-right ✓');
-
-      const body = panel.querySelector('#aiChatBody');
-      const input = panel.querySelector('#aiChatInput');
-      const explainSelBtn = panel.querySelector('#aiExplainSel');
-
-      // Toggle panel
-      btn.addEventListener('click', () => { 
-        panel.classList.toggle('show'); 
-        if (panel.classList.contains('show')) input.focus(); 
-      });
-
-      // Append message to chat
-      function appendMessage(text, who='bot'){
-        const d = document.createElement('div'); 
-        d.className = 'aiMsg ' + (who==='bot' ? 'bot' : 'user'); 
-        d.textContent = text; 
-        body.appendChild(d); 
-        body.scrollTop = body.scrollHeight; 
-      }
-
-      // Knowledge base
-      const KB = {
-        'addEventListener': {title:'addEventListener / .on()',text:'Registers one or more handlers. Preferred for modular code.',pros:['Multiple listeners','Individually removable','Standard DOM/Node pattern'],cons:['More verbose','Must track references']},
-        'onmessage': {title:'ws.onmessage / onopen',text:'Single handler via property assignment.',pros:['Short syntax','Easy for demos'],cons:['Only ONE handler','Overwrites previous']},
-        'callbacks': {title:'Callbacks',text:'Function passed as argument to be called on completion.',pros:['Simple','Universal'],cons:['Callback hell','Manual errors']},
-        'async/await': {title:'Async/Await / Promises',text:'Modern pattern using Promises with try/catch.',pros:['Very readable','Easy errors','Good for chaining'],cons:['Requires Promise-aware code','Callers must be async']},
-        'joinroom': {title:'joinRoom / rooms',text:'Map of roomName → Set<WebSocket>.',pros:['Targeted broadcasts','Simple/flexible','One socket in many rooms'],cons:['Cleanup needed','Memory management']},
-        'broadcast': {title:'broadcastRoom / wss.clients',text:'Send to selected sockets. Check readyState === OPEN.',pros:['Simple delivery','Works for announcements'],cons:['Wastes bandwidth if naive','Filter carefully']},
-        'reconnect': {title:'Auto-reconnect',text:'Exponential backoff to avoid overload.',pros:['Prevents overload','Better UX'],cons:['Avoid infinite loops','Complex with expiring tokens']},
-        'auth': {title:'Auth (tokens in URL)',text:'Pass JWT in query. Always use wss:// in production.',pros:['Works without headers','Simple'],cons:['Tokens leak in logs','Must use TLS']},
-        'getwsurl': {title:'getWsUrl() helper',text:'Resolves ws/wss URL. Respects overrides. Uses wss when https.',pros:['Centralizes logic','Supports overrides'],cons:['If wrong, all lessons fail','Keep updated']}
-      };
-
-      function findKnowledge(text){
-        if (!text) return [];
-        const t = (text || '').toLowerCase();
-        const hits = [];
-        Object.keys(KB).forEach(k => { 
-          if (t.includes(k)) hits.push(KB[k]); 
-        });
-        return hits;
-      }
-
-      function generateReply(input){
-        if (!input || !input.trim()) return "Select code or type a function name like 'addEventListener' or 'joinRoom'";
-        const sel = input.trim();
-        const hits = findKnowledge(sel);
-        if (hits.length) {
-          return hits.map(h => `🎯 **${h.title}**\n${h.text}\n\n✅ Pros: ${h.pros.join(', ')}\n\n❌ Cons: ${h.cons.join(', ')}`).join('\n\n---\n');
-        }
-        return "Try: 'Explain addEventListener' or 'Pros/cons of callbacks'";
-      }
-
-      // Input handler
-      input.addEventListener('keydown', (e)=>{
-        if (e.key === 'Enter'){
-          const txt = input.value.trim(); 
-          if (!txt) return;
-          appendMessage(txt, 'user'); 
-          input.value = '';
-          setTimeout(()=>appendMessage(generateReply(txt), 'bot'), 100);
-        }
-      });
-
-      // Explain selection
-      explainSelBtn.addEventListener('click', ()=>{
-        const sel = (window.getSelection && window.getSelection().toString()) || '';
-        if (!sel) return appendMessage('❌ Select some code first'); 
-        appendMessage(sel.substring(0, 100) + (sel.length > 100 ? '...' : ''), 'user'); 
-        setTimeout(()=>appendMessage(generateReply(sel), 'bot'), 100);
-      });
-
-      // Add explain buttons to code blocks
-      document.addEventListener('mouseover', (e)=>{
-        const el = e.target.closest('.code, pre');
-        if (!el || el.__explainBtn) return;
-        const b = document.createElement('button'); 
-        b.className = 'explainBtn';
-        b.textContent = '📖';
-        b.title = 'Explain this code';
-        b.addEventListener('click', (ev)=>{ 
-          ev.stopPropagation(); 
-          const text = el.innerText || el.textContent; 
-          appendMessage(text.substring(0, 100), 'user'); 
-          if (!panel.classList.contains('show')) panel.classList.add('show');
-          setTimeout(()=>appendMessage(generateReply(text), 'bot'), 100); 
-        });
-        el.style.position = 'relative';
-        el.appendChild(b); 
-        el.__explainBtn = b;
-        el.addEventListener('mouseleave', ()=>{ if (el.__explainBtn){ el.__explainBtn.remove(); el.__explainBtn = null; }}, {once:true});
-      });
-      
-      console.log('🤖 AI Chatbox: Ready! Look for the 💬 button at the bottom-right corner');
-    } catch (err) {
-      console.error('🤖 AI Chatbox error:', err);
+  // Inject styles
+  const styles = document.createElement('style');
+  styles.textContent = `
+    #lessonChatBtn {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      color: white;
+      border: 2px solid white;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 10000;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
     }
+    #lessonChatBtn:hover {
+      transform: scale(1.15);
+      box-shadow: 0 6px 30px rgba(124, 58, 237, 0.6);
+    }
+    #lessonChatPanel {
+      position: fixed;
+      right: 20px;
+      bottom: 90px;
+      width: 400px;
+      height: 550px;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      z-index: 10000;
+      border: 1px solid #e5e7eb;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    #lessonChatPanel.show { display: flex; }
+    #lessonChatHeader {
+      padding: 16px;
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 15px 15px 0 0;
+    }
+    #lessonChatMessages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .msgItem {
+      padding: 12px 14px;
+      border-radius: 10px;
+      word-wrap: break-word;
+      line-height: 1.5;
+      font-size: 14px;
+      max-width: 90%;
+    }
+    .msgUser {
+      align-self: flex-end;
+      background: #7c3aed;
+      color: white;
+      border-radius: 10px 0 10px 10px;
+    }
+    .msgBot {
+      align-self: flex-start;
+      background: #f3f4f6;
+      color: #1f2937;
+      border-radius: 0 10px 10px 10px;
+    }
+    #lessonChatInput {
+      padding: 14px 16px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    #lessonChatInput input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+    #lessonChatInput input:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+    #lessonChatSendBtn {
+      padding: 10px 16px;
+      background: #7c3aed;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    #lessonChatSendBtn:hover { background: #6d28d9; }
+  `;
+  document.head.appendChild(styles);
+
+  const KB = {
+    addEventListener: "👌 Multiple listeners allowed. Remove each individually. Modular and best practice.",
+    onmessage: "⚠️ Single handler only. New assignment overwrites the old. Simple but limited.",
+    callback: "📞 Function param called on completion. Universal but leads to callback hell.",
+    async: "✨ Modern async/await with Promises. Clean, readable, try/catch errors.",
+    joinroom: "🏠 Map<roomName, Set<clients>>. Group clients by room for targeted messages.",
+    broadcast: "📢 Send to all in room. Always check readyState === OPEN first.",
+    reconnect: "🔄 Exponential backoff prevents server overload and improves UX.",
+    auth: "🔐 JWT tokens in URL. Always use wss:// in production to avoid leaking tokens.",
+    getwsurl: "🌐 Helper that detects page protocol and returns ws:// or wss:// automatically.",
+    map: "🗺️ Key-value storage. Better than objects for dynamic room names.",
+    set: "📋 Unique values only. Perfect for tracking unique client connections."
+  };
+
+  function findAnswer(query) {
+    const q = query.toLowerCase();
+    for (const [key, answer] of Object.entries(KB)) {
+      if (q.includes(key)) return answer;
+    }
+    return "😊 Try asking about: addEventListener, onmessage, callbacks, async, joinroom, broadcast, reconnect, auth, or getwsurl.";
   }
 
-  // Create chatbox when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createChatbox);
+  function init() {
+    const btn = document.createElement('button');
+    btn.id = 'lessonChatBtn';
+    btn.textContent = '💬';
+
+    const panel = document.createElement('div');
+    panel.id = 'lessonChatPanel';
+
+    const header = document.createElement('div');
+    header.id = 'lessonChatHeader';
+    header.textContent = '💡 Lesson Assistant';
+
+    const msgs = document.createElement('div');
+    msgs.id = 'lessonChatMessages';
+
+    const botMsg = document.createElement('div');
+    botMsg.className = 'msgItem msgBot';
+    botMsg.textContent = 'Hi! Ask me about WebSocket patterns. Examples: "addEventListener", "async/await", "joinroom"';
+    msgs.appendChild(botMsg);
+
+    const input = document.createElement('div');
+    input.id = 'lessonChatInput';
+
+    const inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.placeholder = 'Ask anything...';
+
+    const sendBtn = document.createElement('button');
+    sendBtn.id = 'lessonChatSendBtn';
+    sendBtn.textContent = 'Send';
+
+    input.appendChild(inputField);
+    input.appendChild(sendBtn);
+
+    panel.appendChild(header);
+    panel.appendChild(msgs);
+    panel.appendChild(input);
+
+    document.body.appendChild(btn);
+    document.body.appendChild(panel);
+
+    btn.addEventListener('click', () => {
+      panel.classList.toggle('show');
+      if (panel.classList.contains('show')) inputField.focus();
+    });
+
+    function sendMessage() {
+      const text = inputField.value.trim();
+      if (!text) return;
+
+      const userMsg = document.createElement('div');
+      userMsg.className = 'msgItem msgUser';
+      userMsg.textContent = text;
+      msgs.appendChild(userMsg);
+
+      inputField.value = '';
+
+      setTimeout(() => {
+        const reply = findAnswer(text);
+        const botMsg = document.createElement('div');
+        botMsg.className = 'msgItem msgBot';
+        botMsg.textContent = reply;
+        msgs.appendChild(botMsg);
+        msgs.scrollTop = msgs.scrollHeight;
+      }, 200);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    inputField.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+  }
+
+  if (document.body) {
+    init();
   } else {
-    createChatbox();
+    document.addEventListener('DOMContentLoaded', init);
   }
 })();
