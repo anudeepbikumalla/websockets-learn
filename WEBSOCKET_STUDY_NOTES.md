@@ -1,17 +1,26 @@
 <div align="center">
+  
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0284c7,100:7c3aed&height=250&section=header&text=WebSocket%20Mastery&fontSize=65&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=The%20Ultimate%20Reference%20Guide&descAlignY=55&descAlign=50" width="100%" />
 
-# 📚 WebSocket Mastery Guide
-*The ultimate reference for building real-time, event-driven applications.*
+  <br>
 
-[![Protocol](https://img.shields.io/badge/Protocol-WebSocket-blue?style=for-the-badge&logo=websocket&logoColor=white)](#)
-[![Level](https://img.shields.io/badge/Level-Advanced-orange?style=for-the-badge)](#)
-[![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)](#)
+  [![Protocol](https://img.shields.io/badge/Protocol-WebSocket-0284c7?style=for-the-badge&logo=websocket&logoColor=white)](#)
+  [![Level](https://img.shields.io/badge/Level-Advanced-7c3aed?style=for-the-badge)](#)
+  [![Status](https://img.shields.io/badge/Status-Complete-10b981?style=for-the-badge)](#)
 
+  <br><br>
+
+  **A comprehensive, beautifully structured guide for building real-time, event-driven applications.**
 </div>
 
----
+<br><br>
 
 ## 📑 Quick Navigation
+
+<details>
+<summary><kbd>👇 Click to open Table of Contents</kbd></summary>
+<br>
+
 - [1️⃣ Core Concepts](#1️⃣-core-concepts-what-is-a-websocket)
 - [2️⃣ The Lifecycle](#2️⃣-the-websocket-lifecycle)
 - [3️⃣ Async Patterns](#3️⃣-implementation-patterns)
@@ -20,6 +29,10 @@
 - [6️⃣ Scaling & Redis](#6️⃣-scaling--architecture)
 - [7️⃣ Alternatives (SSE, Polling)](#7️⃣-websockets-vs-alternatives)
 - [8️⃣ Demo Reference](#8️⃣-project-demo-overview)
+
+</details>
+
+<br>
 
 ---
 
@@ -37,19 +50,23 @@ WebSockets provide a continuous, **full-duplex** communication channel over a si
 
 > 💡 **Golden Rule:** If your application requires data to update "live" without the user refreshing the page (e.g. Chat, dashboards, multiplayer games), **use WebSockets**.
 
+<br>
+
 ---
 
 ## 2️⃣ The WebSocket Lifecycle
 
 Every WebSocket connection follows a strict 4-step sequence.
 
-### 🔌 Step 1: Connect
+<h3><kbd>🔌 Step 1</kbd> Connect</h3>
+
 ```javascript
 // Connect to a WebSocket server (usually wss:// in production)
 const ws = new WebSocket('ws://localhost:8082');
 ```
 
-### 🔓 Step 2: Open
+<h3><kbd>🔓 Step 2</kbd> Open</h3>
+
 ```javascript
 // Fired when the connection is successfully established
 ws.addEventListener('open', () => {
@@ -57,7 +74,8 @@ ws.addEventListener('open', () => {
 });
 ```
 
-### 💬 Step 3: Send & Receive
+<h3><kbd>💬 Step 3</kbd> Send & Receive</h3>
+
 ```javascript
 // Sending data to the server
 ws.send(JSON.stringify({ type: 'greeting', payload: 'Hello Server!' }));
@@ -69,7 +87,8 @@ ws.addEventListener('message', (event) => {
 });
 ```
 
-### 🛑 Step 4: Close
+<h3><kbd>🛑 Step 4</kbd> Close</h3>
+
 ```javascript
 // Listen for disconnections
 ws.addEventListener('close', (event) => {
@@ -82,13 +101,18 @@ ws.addEventListener('error', (error) => {
 });
 ```
 
+<br>
+
 ---
 
 ## 3️⃣ Implementation Patterns
 
 When handling asynchronous operations over WebSockets, modern JavaScript code should ALWAYS prefer **Async/Await**.
 
-### ❌ The Old Way: Callbacks
+<details open>
+<summary><b>❌ The Old Way: Callbacks</b></summary>
+<br>
+
 Causes **Callback Hell** (deep nesting) and makes error handling tedious.
 ```javascript
 processData("hello", (err, result) => {
@@ -96,8 +120,12 @@ processData("hello", (err, result) => {
   console.log(result); 
 });
 ```
+</details>
 
-### ✅ The Modern Way: Async/Await
+<details open>
+<summary><b>✅ The Modern Way: Async/Await</b></summary>
+<br>
+
 Reads top-to-bottom, flattening the nesting and standardizing error handling via `try/catch`.
 ```javascript
 async function handleMessage(data) {
@@ -109,6 +137,9 @@ async function handleMessage(data) {
   }
 }
 ```
+</details>
+
+<br>
 
 ---
 
@@ -165,6 +196,8 @@ ws.addEventListener('message', (e) => {
 });
 ```
 
+<br>
+
 ---
 
 ## 5️⃣ Advanced Features
@@ -200,6 +233,8 @@ const buffer = await file.arrayBuffer();
 ws.send(buffer);
 ```
 
+<br>
+
 ---
 
 ## 6️⃣ Scaling & Architecture
@@ -216,6 +251,8 @@ When scaling beyond one server, you need a **Pub/Sub** mechanism (like **Redis**
 ```
 *When Server A receives a message, it publishes it to Redis. Redis forwards it to Server B, which then broadcasts it to its own connected clients!*
 
+<br>
+
 ---
 
 ## 7️⃣ WebSockets vs Alternatives
@@ -225,6 +262,8 @@ When scaling beyond one server, you need a **Pub/Sub** mechanism (like **Redis**
 | **WebSocket** | 🔀 Two-way | Chat, Games, Active Trading | ❌ Manual |
 | **SSE** | ⬇️ Server → Client | AI Streaming (ChatGPT), Live Feeds | ✅ Built-in |
 | **Long Polling** | 🔄 Fake Two-way | Legacy Fallback ONLY | ❌ No |
+
+<br>
 
 ---
 
@@ -239,3 +278,9 @@ The following files are available in this repository to demonstrate the notes ab
 * 🔐 `learn8.html` — Lesson 8: Authentication
 * 🚀 `learn11.html` — Lesson 11: Scaling WebSockets
 * 🤖 `client.html` — Advanced Demo: Operational concepts combined
+
+<br>
+
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:7c3aed,100:0284c7&height=100&section=footer" width="100%" />
+</div>
