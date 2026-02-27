@@ -30,9 +30,10 @@ function getWsUrl(defaultPort = 8082) {
     return url;
   }
 
-  // 2. Default: use localhost with proper protocol (http->ws, https->wss)
+  // 2. Default: use the current hostname (works for localhost AND local network IPs like 192.168.x.x)
   const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-  return `${protocol}localhost:${defaultPort}`;
+  const host = window.location.hostname || 'localhost';
+  return `${protocol}${host}:${defaultPort}`;
 }
 
 // Expose globally for all learn*.html files
@@ -41,7 +42,7 @@ window.getWsUrl = getWsUrl;
 // =====================================================================
 // AI CHATBOX - Simple and Reliable
 // =====================================================================
-(function initAIChatbox(){
+(function initAIChatbox() {
   // Inject styles
   const styles = document.createElement('style');
   styles.textContent = `
@@ -155,7 +156,7 @@ window.getWsUrl = getWsUrl;
   `;
   document.head.appendChild(styles);
 
-// AI Chat - powered by real AI on the backend
+  // AI Chat - powered by real AI on the backend
   // No predefined values - genuine responses from AI model
 
   function init() {
@@ -226,7 +227,7 @@ window.getWsUrl = getWsUrl;
         });
 
         const data = await response.json();
-        
+
         // Show bot response
         const botMsg = document.createElement('div');
         botMsg.className = 'msgItem msgBot';

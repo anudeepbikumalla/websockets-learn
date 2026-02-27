@@ -98,7 +98,7 @@ const wssWithoutOn = new WebSocket.Server({ noServer: true });
 function serveStaticFile(req, res) {
   let filePath = req.url === '/' ? '/index.html' : req.url;
   filePath = path.join(__dirname, filePath);
-  
+
   // Security: Prevent path traversal attacks
   if (!filePath.startsWith(__dirname)) {
     res.writeHead(403);
@@ -147,7 +147,7 @@ const httpServer = http.createServer(async (req, res) => {
         const HF_API_TOKEN = process.env.HF_API_TOKEN;
         if (!HF_API_TOKEN) {
           res.writeHead(500, { "Content-Type": "application/json" });
-          return res.end(JSON.stringify({ 
+          return res.end(JSON.stringify({
             response: "⚠️ AI not configured yet. Instructor needs to add HF_API_TOKEN to .env file"
           }));
         }
@@ -188,7 +188,7 @@ const httpServer = http.createServer(async (req, res) => {
       } catch (error) {
         console.error("Chat error:", error.message);
         res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ 
+        res.end(JSON.stringify({
           response: `❌ Chat error: ${error.message}`
         }));
       }
@@ -307,12 +307,27 @@ httpServer.on("upgrade", (request, socket, head) => {
 });
 
 httpServer.listen(PORT, '0.0.0.0', () => {
+  // Automatically detect Local IP (LAN) for friendly console output
+  const nets = os.networkInterfaces();
+  let localIp = 'localhost';
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+      if (net.family === 'IPv4' && !net.internal) {
+        localIp = net.address;
+        break;
+      }
+    }
+  }
+
   console.log(`
 ${C.bold}${C.blue}╔══════════════════════════════════════════════════════════════════╗
 ║         WebSocket Teaching Server — DEPLOYMENT READY             ║
 ╠══════════════════════════════════════════════════════════════════╣
-║  ${C.cyan}Main Port: ${PORT}${C.blue}                                             ║
-║  ${C.green}Health Check: /health${C.blue}                                           ║
+║  ${C.cyan}Local URL:     http://localhost:${PORT}${C.blue}                               ║
+║  ${C.green}Network URL:   http://${localIp}:${PORT}${C.blue}                             ║
+║                                                                  ║
+║  ${C.yellow}Health Check:  /health${C.blue}                                           ║
 ║                                                                  ║
 ║  Default: Pattern 1 (With .on)                                   ║
 ║  Path /p2: Pattern 2 (Without .on)                               ║
