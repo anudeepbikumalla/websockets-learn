@@ -95,19 +95,21 @@ function launchCompass() {
 }
 
 async function main() {
-  console.log('🛠️  MongoDB Automation Tool');
-  console.log('--------------------------');
-  const ip = await getPublicIP();
-  if (ip) {
-    await updateAtlasAllowlist(ip);
-  } else {
-    console.log('ℹ️ Skipping Atlas allowlist update due to missing public IP.');
+  try {
+    console.log('🛠️  MongoDB Automation Tool');
+    console.log('--------------------------');
+    const ip = await getPublicIP();
+    if (ip) {
+      await updateAtlasAllowlist(ip);
+    } else {
+      console.log('ℹ️ Skipping Atlas allowlist update due to missing public IP.');
+    }
+    launchCompass();
+  } catch (err) {
+    console.error('⚠️ Atlas automation warning:', err.message);
+    console.log('✅ Continuing without Atlas — you can still run the server locally.');
   }
-  launchCompass();
 }
 
-main().catch(err => {
-  console.error('💥 TOP-LEVEL ERROR:');
-  console.error(err);
-  process.exit(1);
-});
+// Run main but don't exit on error — let server.js continue
+main();
