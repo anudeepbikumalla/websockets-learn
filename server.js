@@ -67,11 +67,81 @@ function processWithPromise(data) {
 const wssWithOn = new WebSocket.Server({ noServer: true });
 const wssWithoutOn = new WebSocket.Server({ noServer: true });
 
-const httpServer = http.createServer((req, res) => {
+const httpServer = http.createServer(async (req, res) => {
+  // ─── AI Chat API endpoint ──────────────────────────────────────────────────
+  if (req.method === "POST" && req.url === "/api/chat") {
+    let body = "";
+    req.on("data", chunk => body += chunk);
+    req.on("end", async () => {
+      try {
+        const { question } = JSON.parse(body);
+        if (!question) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ error: "Question required" }));
+        }
+
+        const HF_API_TOKEN = process.env.HF_API_TOKEN;
+        if (!HF_API_TOKEN) {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ 
+            response: "⚠️ AI not configured yet. Instructor needs to add HF_API_TOKEN to .env file"
+          }));
+        }
+
+        // Call Hugging Face API
+        const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${HF_API_TOKEN}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "system",
+                content: "You are an expert WebSocket programming tutor. Answer questions about WebSocket patterns, event handling, async programming, real-time communication, and JavaScript. Keep answers concise (2-3 sentences), practical, and beginner-friendly."
+              },
+              {
+                role: "user",
+                content: question
+              }
+            ],
+            max_tokens: 300,
+            temperature: 0.7
+          })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+          console.error("HF API error:", data);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          return res.end(JSON.stringify({ 
+            response: "🤖 API temporarily busy. Try again in a moment!"
+          }));
+        }
+
+        const aiResponse = data.choices?.[0]?.message?.content || "No response generated";
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ response: aiResponse }));
+
+      } catch (error) {
+        console.error("Chat error:", error.message);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ 
+          response: `❌ Chat error: ${error.message}`
+        }));
+      }
+    });
+    return;
+  }
+
+  // ─── Health check ─────────────────────────────────────────────────────────
   if (req.url === "/health") {
     res.writeHead(200, { "Content-Type": "text/plain" });
     return res.end("ok");
   }
+
   res.writeHead(404);
   res.end("WS Teaching Server - Use WebSocket to connect\n");
 });
