@@ -322,17 +322,12 @@ httpServer.listen(PORT, '0.0.0.0', () => {
   }
 
   console.log(`
-${C.bold}${C.blue}╔══════════════════════════════════════════════════════════════════╗
-║         WebSocket Teaching Server — DEPLOYMENT READY             ║
-╠══════════════════════════════════════════════════════════════════╣
-║  ${C.cyan}Local URL:     http://localhost:${PORT}${C.blue}                               ║
-║  ${C.green}Network URL:   http://${localIp}:${PORT}${C.blue}                             ║
-║                                                                  ║
-║  ${C.yellow}Health Check:  /health${C.blue}                                           ║
-║                                                                  ║
-║  Default: Pattern 1 (With .on)                                   ║
-║  Path /p2: Pattern 2 (Without .on)                               ║
-╚══════════════════════════════════════════════════════════════════╝${C.reset}
+${C.bold}${C.blue}╭─────────────────────────────────────────────────────────────────╮
+│         🚀 WEBSOCKET SERVER — DEPLOYMENT READY                  │
+├─────────────────────────────────────────────────────────────────┤
+│  ${C.cyan}Local URL:   http://localhost:${PORT}${C.blue}                               │
+│  ${C.green}Network URL: http://${localIp}:${PORT}${C.blue}                             │
+╰─────────────────────────────────────────────────────────────────╯${C.reset}
   `);
 });
 
